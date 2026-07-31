@@ -2,6 +2,7 @@ export class Renderer {
   constructor(arenaElement) {
     this.arenaElement = arenaElement;
     this.elements = new Map();
+    this.towerElements = new Map();
   }
 
   syncUnit(unit) {
@@ -20,6 +21,28 @@ export class Renderer {
 
     const hpRatio = Math.max(0, unit.hp / unit.maxHp) * 100;
     el.querySelector(".hp-fill").style.width = `${hpRatio}%`;
+
+    return el;
+  }
+
+  syncTower(tower) {
+    let el = this.towerElements.get(tower.instanceId);
+    if (!el) {
+      el = document.createElement("div");
+      el.className = `game-tower team-${tower.team}`;
+      el.innerHTML = `<img src="${tower.sprite}" alt="${tower.name}" />
+        <div class="hp-bar"><div class="hp-fill"></div></div>`;
+      this.arenaElement.appendChild(el);
+      this.towerElements.set(tower.instanceId, el);
+    }
+
+    el.style.left = `${tower.x}px`;
+    el.style.top = `${tower.y}px`;
+
+    const hpRatio = Math.max(0, tower.hp / tower.maxHp) * 100;
+    el.querySelector(".hp-fill").style.width = `${hpRatio}%`;
+
+    if (tower.isDestroyed) el.classList.add("destroyed");
   }
 
   removeUnit(instanceId) {
@@ -37,7 +60,14 @@ export class Renderer {
     }
   }
 
+  getUnitElement(instanceId) {
+    return this.elements.get(instanceId);
+  }
+
   render(gameState) {
+    for (const tower of gameState.towers) {
+      this.syncTower(tower);
+    }
     for (const unit of gameState.units) {
       if (!unit.isDead) this.syncUnit(unit);
     }
