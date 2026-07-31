@@ -6,6 +6,9 @@ import { Renderer } from "./render/Renderer.js";
 import { DragDropController } from "./input/DragDropController.js";
 import { UnitDefinitions, TowerDefinition } from "./config/unitDefinitions.js";
 
+import { AIController } from "./core/AIController.js";
+import { DifficultyLevels } from "./config/difficultyLevels.js";
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js");
@@ -24,7 +27,9 @@ const energyValue = document.getElementById("energyValue");
 const energyFill = document.getElementById("energyFill");
 const handContainer = document.getElementById("handContainer");
 
-const deployableUnits = ["chauffage", "motobineuse"];
+const deployableUnits = ["chauffage", "motobineuse", "compacteur"];
+
+const currentDifficulty = DifficultyLevels[1];
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
@@ -58,6 +63,11 @@ function setupArena(gameState, renderer) {
   gameState.addTower(playerTower);
 }
 
+function getArenaSize() {
+  const rect = arenaElement.getBoundingClientRect();
+  return { width: rect.width, height: rect.height };
+}
+
 function updateEnergyUI() {
   const ratio = (gameState.energy / gameState.maxEnergy) * 100;
   energyFill.style.width = `${ratio}%`;
@@ -82,11 +92,22 @@ function handleGameOver(winner) {
 const gameState = new GameState();
 const renderer = new Renderer(arenaElement);
 
+const aiController = new AIController({
+  gameState,
+  unitDefinitions: UnitDefinitions,
+  difficultyConfig: currentDifficulty,
+  onSpawn: (definition, x, y) => {
+    const unit = new Unit(definition, "enemy", x, y);
+    gameState.addUnit(unit);
+  }
+});
+
 const gameLoop = new GameLoop({
   gameState,
   renderer,
   onEnergyChange: updateEnergyUI,
-  onGameOver: handleGameOver
+  onGameOver: handleGameOver,
+  aiController
 });
 
 const dragDropController = new DragDropController({

@@ -2,17 +2,23 @@ export const MovementSystem = {
   update(gameState, deltaSeconds) {
     for (const unit of gameState.units) {
       if (unit.isDead || !unit.canMove) continue;
-      if (unit.target && unit.distanceTo(unit.target) <= unit.attackRange) {
-        continue; // à portée, on n'avance plus
+
+      const hasValidTarget = unit.target && !unit.target.isDead && !unit.target.isDestroyed;
+
+      const inRange = hasValidTarget && unit.distanceTo(unit.target) <= unit.attackRange;
+
+      if (!inRange) {
+        const target = this.findClosestTarget(unit, gameState);
+        if (target) {
+          unit.target = target;
+          this.moveToward(unit, target, deltaSeconds);
+        } else {
+          unit.target = null;
+        }
       }
-
-      const target = this.findClosestTarget(unit, gameState);
-      if (!target) continue;
-
-      unit.target = target;
-      this.moveToward(unit, target, deltaSeconds);
-      this.resolveCollisions(unit, gameState);
     }
+
+    this.resolveAllCollisions(gameState);
   },
 
   findClosestTarget(unit, gameState) {
@@ -45,23 +51,30 @@ export const MovementSystem = {
     unit.y += (dy / distance) * step;
   },
 
-  resolveCollisions(unit, gameState) {
-    for (const other of gameState.units) {
-      if (other === unit || other.isDead) continue;
+  resolveAllCollisions(gameState) {
+    const units = gameState.units.filter((u) => !u.isDead);
+    const pushFactor = 0.15;
+    const overlapTolerance = 0.6;
 
-      const dx = unit.x - other.x;
-      const dy = unit.y - other.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const minDistance = unit.hitboxRadius + other.hitboxRadius;
+    for (let i = 0; i < units.length; i++) {
+      for (let j = i + 1; j < units.length; j++) {
+        const a = units[i];
+        const b = units[j];
 
-      if (distance < minDistance && distance > 0) {
-        const overlap = minDistance - distance;
-        const pushX = (dx / distance) * overlap * 0.5;
-        const pushY = (dy / distance) * overlap * 0.5;
-        unit.x += pushX;
-        unit.y += pushY;
-        other.x -= pushX;
-        other.y -= pushY;
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const distance = Math.sqrt(dx * dx + dy * dy) || 0.01;
+        const minDistance = (a.hitboxRadius + b.hitboxRadius) * overlapTolerance;
+
+        if (distance < minDistance) {
+          const overlap = minDistance - distance;
+          const pushX = (dx / distance) * overlap * pushFactor;
+          const pushY = (dy / distance) * overlap * pushFactor;
+          a.x += pushX;
+          a.y += pushY;
+          b.x -= pushX;
+          b.y -= pushY;
+        }
       }
     }
   }

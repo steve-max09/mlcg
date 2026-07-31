@@ -7,7 +7,8 @@ export const CombatSystem = {
 
       unit.attackCooldown = Math.max(0, unit.attackCooldown - deltaSeconds);
 
-      if (!unit.target || unit.target.isDead || unit.target.isDestroyed) {
+      if (this.isTargetInvalid(unit.target)) {
+        unit.target = null;
         continue;
       }
 
@@ -16,11 +17,22 @@ export const CombatSystem = {
         this.attack(unit, unit.target);
         unit.attackCooldown = 1 / unit.attackSpeed;
         if (onAttack) onAttack(unit, unit.target);
+
+        if (this.isTargetInvalid(unit.target)) {
+          unit.target = null;
+        }
       }
     }
 
     gameState.removeDeadUnits();
     gameState.checkVictory();
+  },
+
+  isTargetInvalid(target) {
+    if (!target) return true;
+    if (target.isDead) return true;
+    if (target.isDestroyed) return true;
+    return false;
   },
 
   attack(attacker, target) {
