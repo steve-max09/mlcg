@@ -1,3 +1,14 @@
+// bases
+export const TowerDefinition = {
+  id: "mainBase",
+  name: "Base principale",
+  sprite: "assets/bases/factory.png",
+  hp: 2000,
+  hitboxRadius: 60,
+  canAttack: false,
+  canMove: false
+};
+
 // stats de chaque unité
 export const UnitDefinitions = {
   chauffage: {

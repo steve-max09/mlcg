@@ -256,14 +256,6 @@ button {
   background: var(--tower-core);
 }
 
-.tower.enemy.left { top: 12%; left: 12%; }
-.tower.enemy.center { top: 6%; left: 43%; width: 16%; }
-.tower.enemy.right { top: 12%; right: 12%; }
-
-.tower.player.left { bottom: 12%; left: 12%; }
-.tower.player.center { bottom: 6%; left: 43%; width: 16%; }
-.tower.player.right { bottom: 12%; right: 12%; }
-
 .unit-preview {
   position: absolute;
   left: 50%;
@@ -393,4 +385,118 @@ button {
   width: 100%;
   background: #22c55e;
   transition: width 0.15s linear;
+}
+
+/* bases animations d'attaque et animation de victoire */
+.game-tower {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.game-tower img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 10px rgba(0,0,0,0.4));
+}
+
+.game-tower.team-enemy img {
+  filter: drop-shadow(0 8px 10px rgba(0,0,0,0.4)) hue-rotate(180deg);
+}
+
+.game-tower.destroyed img {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.game-tower .hp-bar {
+  position: absolute;
+  top: -14px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.game-tower .hp-fill {
+  height: 100%;
+  width: 100%;
+  background: #f59e0b;
+  transition: width 0.15s linear;
+}
+
+.anim-spin {
+  animation: spin360 0.35s ease-in-out;
+}
+
+@keyframes spin360 {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.anim-pulse {
+  animation: pulseAttack 0.2s ease-in-out;
+}
+
+@keyframes pulseAttack {
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.fire-spurt {
+  position: absolute;
+  height: 10px;
+  background: linear-gradient(90deg, #f59e0b, #ef4444, transparent);
+  border-radius: 6px;
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.card img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.card-cost {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.card.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+#victory-screen {
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at center, rgba(245,158,11,0.25), #020617);
+}
+
+.victory-content {
+  text-align: center;
+}
+
+.victory-content h1 {
+  font-size: clamp(2rem, 10vw, 3.5rem);
+  margin-bottom: 8px;
+}
+
+.victory-content p {
+  color: var(--muted);
+  margin-bottom: 24px;
 }

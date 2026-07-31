@@ -48,24 +48,6 @@
         <div class="lane enemy-side"></div>
         <div class="river"></div>
         <div class="lane player-side"></div>
-
-        <div class="bridge left"></div>
-        <div class="bridge right"></div>
-
-        <div class="tower enemy left"></div>
-        <div class="tower enemy center"></div>
-        <div class="tower enemy right"></div>
-
-        <div class="tower player left"></div>
-        <div class="tower player center"></div>
-        <div class="tower player right"></div>
-
-        <div class="unit-preview" id="unitPreview">
-          <img
-            src="assets/loxams/Chauffage mobile fioul 50 000 kcal.png"
-            alt="Unité Loxam"
-          />
-        </div>
       </main>
 
       <footer class="bottom-ui">
@@ -77,13 +59,16 @@
           <div class="energy-value" id="energyValue">5/10</div>
         </div>
 
-        <div class="hand">
-          <button class="card selected">Chauffage</button>
-          <button class="card">Nacelle</button>
-          <button class="card">Mini-pelle</button>
-          <button class="card">Compresseur</button>
-        </div>
+        <div class="hand" id="handContainer"></div>
       </footer>
+    </section>
+
+    <section id="victory-screen" class="screen">
+      <div class="victory-content">
+        <h1 id="victoryTitle">Victoire !</h1>
+        <p id="victorySubtitle">La base ennemie est détruite.</p>
+        <button class="menu-btn primary" id="backToMenuBtn">Retour au menu</button>
+      </div>
     </section>
   </div>
 

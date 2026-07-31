@@ -6,10 +6,16 @@ export class GameState {
     this.maxEnergy = 10;
     this.energyRegenRate = 1;
     this.energyRegenInterval = 1800;
+    this.isGameOver = false;
+    this.winner = null;
   }
 
   addUnit(unit) {
     this.units.push(unit);
+  }
+
+  addTower(tower) {
+    this.towers.push(tower);
   }
 
   removeDeadUnits() {
@@ -34,5 +40,20 @@ export class GameState {
 
   getTowersOf(team) {
     return this.towers.filter((t) => t.team === team && !t.isDestroyed);
+  }
+
+  checkVictory() {
+    if (this.isGameOver) return;
+
+    const playerTower = this.towers.find((t) => t.team === "player");
+    const enemyTower = this.towers.find((t) => t.team === "enemy");
+
+    if (playerTower && playerTower.isDestroyed) {
+      this.isGameOver = true;
+      this.winner = "enemy";
+    } else if (enemyTower && enemyTower.isDestroyed) {
+      this.isGameOver = true;
+      this.winner = "player";
+    }
   }
 }

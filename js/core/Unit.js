@@ -24,6 +24,7 @@ export class Unit {
 
     this.passiveAbilities = definition.passiveAbilities || [];
     this.triggeredAbilities = definition.triggeredAbilities || [];
+    this.attackAnimation = definition.attackAnimation || "default";
 
     this.attackCooldown = 0;
     this.target = null;
