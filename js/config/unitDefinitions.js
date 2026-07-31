@@ -13,8 +13,8 @@ export const TowerDefinition = {
 export const UnitDefinitions = {
   chauffage: {
     id: "chauffage",
-    name: "Chauffage mobile fioul 50000 kcal",
-    sprite: "assets/loxams/monto.png",
+    name: "Chauffage mobile fioul 50000 kcal/h",
+    sprite: "assets/loxams/Chauffage mobile fioul 50 000 kcal.png",
     cost: 3,
     hp: 400,
     damage: 20,
@@ -35,9 +35,9 @@ export const UnitDefinitions = {
     name: "Motobineuse",
     sprite: "assets/loxams/Motobineuse.png",
     cost: 2,
-    hp: 250,
-    damage: 25,
-    attackSpeed: 1.4,
+    hp: 280,
+    damage: 20,
+    attackSpeed: 1.5,
     movementSpeed: 70,
     attackRange: 30,
     hitboxRadius: 22,
@@ -47,5 +47,24 @@ export const UnitDefinitions = {
     passiveAbilities: [],
     triggeredAbilities: [],
     attackAnimation: "spinSlash"
+  },
+
+  compacteur: {
+    id: "compacteur",
+    name: "Compacteur monocylindre Grand Travaux",
+    sprite: "assets/loxams/Compacteur monocylindre Grand Travaux.png",
+    cost: 5,
+    hp: 1000,
+    damage: 60,
+    attackSpeed: 1,
+    movementSpeed: 30,
+    attackRange: 50,
+    hitboxRadius: 26,
+    targetType: "ground",
+    canMove: true,
+    canAttack: true,
+    passiveAbilities: [],
+    triggeredAbilities: [],
+    attackAnimation: null
   }
 };
