@@ -1,0 +1,359 @@
+:root {
+  --bg: #0f172a;
+  --panel: rgba(15, 23, 42, 0.82);
+  --panel-2: rgba(30, 41, 59, 0.88);
+  --accent: #f59e0b;
+  --accent-2: #ef4444;
+  --text: #f8fafc;
+  --muted: #cbd5e1;
+  --arena-grass-1: #3f9142;
+  --arena-grass-2: #4ea64f;
+  --river: #3b82f6;
+  --bridge: #c19a6b;
+  --tower: #475569;
+  --tower-core: #e11d48;
+  --card: #1e293b;
+  --card-selected: #334155;
+  --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  --radius: 18px;
+  --ui-max: 520px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #020617;
+  color: var(--text);
+  font-family: Inter, Arial, sans-serif;
+  overflow: hidden;
+}
+
+body {
+  touch-action: manipulation;
+}
+
+button {
+  font: inherit;
+  border: none;
+  outline: none;
+}
+
+#app {
+  width: 100%;
+  height: 100dvh;
+  position: relative;
+  overflow: hidden;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+#main-menu {
+  justify-content: space-between;
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    20px
+    calc(20px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at top, rgba(245, 158, 11, 0.18), transparent 35%),
+    linear-gradient(180deg, #0f172a 0%, #111827 100%);
+}
+
+.menu-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(2, 6, 23, 0.45), rgba(2, 6, 23, 0.8)),
+    url("assets/loxams/Chauffage mobile fioul 50 000 kcal.png") no-repeat center 32%;
+  background-size: min(72vw, 360px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.menu-header,
+.menu-content,
+.menu-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-header {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.menu-header h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 8vw, 4rem);
+  letter-spacing: 0.08em;
+}
+
+.menu-header p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: clamp(0.95rem, 3.2vw, 1.1rem);
+}
+
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(100%, 420px);
+  margin: 0 auto;
+}
+
+.menu-btn {
+  min-height: 56px;
+  border-radius: 16px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+}
+
+.menu-btn.primary {
+  background: linear-gradient(135deg, var(--accent), #fb7185);
+  color: white;
+}
+
+.menu-footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+#arena-screen {
+  background: linear-gradient(180deg, #1d4ed8 0%, #0f172a 100%);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.top-ui,
+.bottom-ui {
+  width: 100%;
+  max-width: var(--ui-max);
+  margin: 0 auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.top-ui {
+  padding-top: 10px;
+  padding-bottom: 8px;
+}
+
+.player-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tower-hp {
+  flex: 1;
+  text-align: center;
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 8px 6px;
+  font-size: 0.82rem;
+  box-shadow: var(--shadow);
+}
+
+#arena {
+  position: relative;
+  width: min(100vw, var(--ui-max));
+  aspect-ratio: 9 / 16;
+  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, var(--arena-grass-2), var(--arena-grass-1));
+  box-shadow: var(--shadow);
+  flex: 1;
+  min-height: 0;
+}
+
+.lane {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: calc(50% - 7%);
+}
+
+.enemy-side {
+  top: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.04) 0 14px,
+      rgba(255,255,255,0.02) 14px 28px
+    );
+}
+
+.player-side {
+  bottom: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0,0,0,0.05) 0 14px,
+      rgba(255,255,255,0.02) 14px 28px
+    );
+}
+
+.river {
+  position: absolute;
+  top: 43%;
+  left: 0;
+  width: 100%;
+  height: 14%;
+  background:
+    linear-gradient(180deg, #60a5fa, var(--river));
+  box-shadow: inset 0 0 18px rgba(255,255,255,0.16);
+}
+
+.bridge {
+  position: absolute;
+  top: 45.5%;
+  width: 18%;
+  height: 9%;
+  background: var(--bridge);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 3px rgba(0,0,0,0.15);
+}
+
+.bridge.left { left: 17%; }
+.bridge.right { right: 17%; }
+
+.tower {
+  position: absolute;
+  width: 14%;
+  aspect-ratio: 1 / 1;
+  background: var(--tower);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.tower::after {
+  content: "";
+  position: absolute;
+  inset: 25%;
+  border-radius: 50%;
+  background: var(--tower-core);
+}
+
+.tower.enemy.left { top: 12%; left: 12%; }
+.tower.enemy.center { top: 6%; left: 43%; width: 16%; }
+.tower.enemy.right { top: 12%; right: 12%; }
+
+.tower.player.left { bottom: 12%; left: 12%; }
+.tower.player.center { bottom: 6%; left: 43%; width: 16%; }
+.tower.player.right { bottom: 12%; right: 12%; }
+
+.unit-preview {
+  position: absolute;
+  left: 50%;
+  bottom: 20%;
+  transform: translateX(-50%);
+  width: 22%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.unit-preview img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 12px rgba(0,0,0,0.35));
+}
+
+.bottom-ui {
+  padding-top: 8px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.energy-bar-wrap {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+}
+
+.energy-label,
+.energy-value {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.energy-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.energy-fill {
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+  border-radius: inherit;
+}
+
+.hand {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.card {
+  min-height: 64px;
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.82rem;
+  padding: 8px;
+  box-shadow: var(--shadow);
+}
+
+.card.selected {
+  background: var(--card-selected);
+  outline: 2px solid var(--accent);
+}
+
+@media (min-width: 700px) {
+  #main-menu {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .menu-btn {
+    min-height: 62px;
+    font-size: 1.05rem;
+  }
+
+  .card {
+    min-height: 72px;
+    font-size: 0.9rem;
+  }
+}

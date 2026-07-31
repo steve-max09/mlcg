@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+  />
+  <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="apple-touch-icon" href="./assets/icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>MLCG - Mega Loxam Confrontation Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <section id="main-menu" class="screen active">
+      <div class="menu-bg"></div>
+
+      <header class="menu-header">
+        <h1>MLCG</h1>
+        <p>Mega Loxam Confrontation Game</p>
+      </header>
+
+      <main class="menu-content">
+        <button class="menu-btn primary" id="playBtn">Jouer</button>
+        <button class="menu-btn">Deck Loxam</button>
+        <button class="menu-btn">Options</button>
+      </main>
+
+      <footer class="menu-footer">
+        <span>Prototype hors ligne</span>
+      </footer>
+    </section>
+
+    <section id="arena-screen" class="screen">
+      <header class="top-ui">
+        <div class="player-info enemy">
+          <div class="tower-hp">Tour G: 2400</div>
+          <div class="tower-hp">Base: 4000</div>
+          <div class="tower-hp">Tour D: 2400</div>
+        </div>
+      </header>
+
+      <main id="arena">
+        <div class="lane enemy-side"></div>
+        <div class="river"></div>
+        <div class="lane player-side"></div>
+
+        <div class="bridge left"></div>
+        <div class="bridge right"></div>
+
+        <div class="tower enemy left"></div>
+        <div class="tower enemy center"></div>
+        <div class="tower enemy right"></div>
+
+        <div class="tower player left"></div>
+        <div class="tower player center"></div>
+        <div class="tower player right"></div>
+
+        <div class="unit-preview" id="unitPreview">
+          <img
+            src="assets/loxams/Chauffage mobile fioul 50 000 kcal.png"
+            alt="Unité Loxam"
+          />
+        </div>
+      </main>
+
+      <footer class="bottom-ui">
+        <div class="energy-bar-wrap">
+          <div class="energy-label">Énergie</div>
+          <div class="energy-bar">
+            <div class="energy-fill" id="energyFill"></div>
+          </div>
+          <div class="energy-value" id="energyValue">5/10</div>
+        </div>
+
+        <div class="hand">
+          <button class="card selected">Chauffage</button>
+          <button class="card">Nacelle</button>
+          <button class="card">Mini-pelle</button>
+          <button class="card">Compresseur</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
