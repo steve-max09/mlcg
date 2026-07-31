@@ -2,7 +2,7 @@
 export const TowerDefinition = {
   id: "mainBase",
   name: "Base principale",
-  sprite: "assets/bases/factory.png",
+  sprite: "assets/bases/usine.png",
   hp: 2000,
   hitboxRadius: 60,
   canAttack: false,
