@@ -3,6 +3,7 @@ export class GameState {
     this.units = [];
     this.towers = [];
     this.energy = 5;
+    this.enemyEnergy = 5;
     this.maxEnergy = 10;
     this.energyRegenRate = 1;
     this.energyRegenInterval = 1800;

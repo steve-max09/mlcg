@@ -1,16 +1,18 @@
+import { isInsideRiver, getClosestBridgeX } from "../config/arenaLayout.js";
+
 export const MovementSystem = {
-  update(gameState, deltaSeconds) {
+  update(gameState, deltaSeconds, arenaSize) {
     for (const unit of gameState.units) {
       if (unit.isDead || !unit.canMove) continue;
       if (unit.target && unit.distanceTo(unit.target) <= unit.attackRange) {
-        continue; // à portée, on n'avance plus
+        continue;
       }
 
       const target = this.findClosestTarget(unit, gameState);
       if (!target) continue;
 
       unit.target = target;
-      this.moveToward(unit, target, deltaSeconds);
+      this.moveToward(unit, target, deltaSeconds, arenaSize);
       this.resolveCollisions(unit, gameState);
     }
   },
@@ -34,15 +36,45 @@ export const MovementSystem = {
     return closest;
   },
 
-  moveToward(unit, target, deltaSeconds) {
-    const dx = target.x - unit.x;
-    const dy = target.y - unit.y;
+  getWaypoint(unit, target, arenaSize) {
+    const unitInRiver = isInsideRiver(unit.y, arenaSize.height);
+    const willCrossRiver =
+      (unit.y < arenaSize.height * 0.5 && target.y > arenaSize.height * 0.5) ||
+      (unit.y > arenaSize.height * 0.5 && target.y < arenaSize.height * 0.5);
+
+    if (unitInRiver || willCrossRiver) {
+      const bridgeX = getClosestBridgeX(unit.x, arenaSize.width);
+      const needsBridgeAlignment = Math.abs(unit.x - bridgeX) > 20;
+      if (needsBridgeAlignment) {
+        return { x: bridgeX, y: unit.y };
+      }
+    }
+
+    return { x: target.x, y: target.y };
+  },
+
+  moveToward(unit, target, deltaSeconds, arenaSize) {
+    const waypoint = this.getWaypoint(unit, target, arenaSize);
+
+    const dx = waypoint.x - unit.x;
+    const dy = waypoint.y - unit.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     if (distance === 0) return;
 
     const step = unit.movementSpeed * deltaSeconds;
-    unit.x += (dx / distance) * step;
-    unit.y += (dy / distance) * step;
+    const nextX = unit.x + (dx / distance) * step;
+    const nextY = unit.y + (dy / distance) * step;
+
+    if (isInsideRiver(nextY, arenaSize.height)) {
+      const bridgeX = getClosestBridgeX(unit.x, arenaSize.width);
+      if (Math.abs(unit.x - bridgeX) > 20) {
+        unit.x += Math.sign(bridgeX - unit.x) * step;
+        return;
+      }
+    }
+
+    unit.x = nextX;
+    unit.y = nextY;
   },
 
   resolveCollisions(unit, gameState) {

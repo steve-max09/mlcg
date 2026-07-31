@@ -5,6 +5,10 @@ import { GameLoop } from "./core/GameLoop.js";
 import { Renderer } from "./render/Renderer.js";
 import { DragDropController } from "./input/DragDropController.js";
 import { UnitDefinitions, TowerDefinition } from "./config/unitDefinitions.js";
+import { ArenaLayout } from "./config/arenaLayout.js";
+
+import { AIController } from "./core/AIController.js";
+import { DifficultyLevels } from "./config/difficultyLevels.js";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -25,6 +29,8 @@ const energyFill = document.getElementById("energyFill");
 const handContainer = document.getElementById("handContainer");
 
 const deployableUnits = ["chauffage", "motobineuse"];
+
+const currentDifficulty = DifficultyLevels[1];
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
@@ -56,6 +62,19 @@ function setupArena(gameState, renderer) {
 
   gameState.addTower(enemyTower);
   gameState.addTower(playerTower);
+
+  ArenaLayout.bridges.forEach((b) => {
+    const bridgeEl = document.createElement("div");
+    bridgeEl.className = "bridge";
+    bridgeEl.style.left = `${b.xRatio * 100 - (b.widthRatio * 100) / 2}%`;
+    bridgeEl.style.width = `${b.widthRatio * 100}%`;
+    arenaElement.appendChild(bridgeEl);
+  });
+}
+
+function getArenaSize() {
+  const rect = arenaElement.getBoundingClientRect();
+  return { width: rect.width, height: rect.height };
 }
 
 function updateEnergyUI() {
@@ -82,11 +101,22 @@ function handleGameOver(winner) {
 const gameState = new GameState();
 const renderer = new Renderer(arenaElement);
 
+const aiController = new AIController({
+  gameState,
+  unitDefinitions: UnitDefinitions,
+  difficultyConfig: currentDifficulty,
+  onSpawn: (definition, x, y) => {
+    const unit = new Unit(definition, "enemy", x, y);
+    gameState.addUnit(unit);
+  }
+});
+
 const gameLoop = new GameLoop({
   gameState,
   renderer,
   onEnergyChange: updateEnergyUI,
-  onGameOver: handleGameOver
+  onGameOver: handleGameOver,
+  aiController
 });
 
 const dragDropController = new DragDropController({
