@@ -46,7 +46,7 @@ export class GameLoop {
   update(deltaSeconds) {
     const arenaSize = this.getArenaSize();
 
-    MovementSystem.update(this.gameState, deltaSeconds, arenaSize);
+    MovementSystem.update(this.gameState, deltaSeconds);
     CombatSystem.update(this.gameState, deltaSeconds, (attacker, target) => {
       const el = this.renderer.getUnitElement(attacker.instanceId);
       AnimationSystem.triggerAttackAnimation(attacker, target, el);

@@ -5,7 +5,6 @@ import { GameLoop } from "./core/GameLoop.js";
 import { Renderer } from "./render/Renderer.js";
 import { DragDropController } from "./input/DragDropController.js";
 import { UnitDefinitions, TowerDefinition } from "./config/unitDefinitions.js";
-import { ArenaLayout } from "./config/arenaLayout.js";
 
 import { AIController } from "./core/AIController.js";
 import { DifficultyLevels } from "./config/difficultyLevels.js";
@@ -62,14 +61,6 @@ function setupArena(gameState, renderer) {
 
   gameState.addTower(enemyTower);
   gameState.addTower(playerTower);
-
-  ArenaLayout.bridges.forEach((b) => {
-    const bridgeEl = document.createElement("div");
-    bridgeEl.className = "bridge";
-    bridgeEl.style.left = `${b.xRatio * 100 - (b.widthRatio * 100) / 2}%`;
-    bridgeEl.style.width = `${b.widthRatio * 100}%`;
-    arenaElement.appendChild(bridgeEl);
-  });
 }
 
 function getArenaSize() {
