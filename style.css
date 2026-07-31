@@ -357,3 +357,40 @@ button {
     font-size: 0.9rem;
   }
 }
+
+/* arena stuff (units) */
+.game-unit {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.game-unit img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.game-unit.team-enemy img {
+  filter: hue-rotate(180deg);
+}
+
+.hp-bar {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.hp-fill {
+  height: 100%;
+  width: 100%;
+  background: #22c55e;
+  transition: width 0.15s linear;
+}

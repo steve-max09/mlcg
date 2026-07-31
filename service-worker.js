@@ -3,7 +3,7 @@ const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
   "./style.css",
-  "./main.js",
+  "./js/main.js",
   "./manifest.json",
   "./assets/loxams/Chauffage mobile fioul 50 000 kcal.png",
   "./assets/icons/icon-192.png",
