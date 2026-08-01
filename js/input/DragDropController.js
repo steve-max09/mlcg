@@ -14,6 +14,8 @@ export class DragDropController {
   }
 
   bindCard(cardElement, definitionId) {
+    cardElement.style.touchAction = "none";
+
     cardElement.addEventListener("pointerdown", (event) => {
       event.preventDefault();
       this.startDrag(definitionId, event);

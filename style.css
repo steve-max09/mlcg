@@ -493,3 +493,15 @@ button {
   color: var(--muted);
   margin-bottom: 24px;
 }
+
+.drag-ghost {
+  position: fixed;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.85;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.4));
+}
