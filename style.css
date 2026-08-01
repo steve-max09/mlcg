@@ -32,11 +32,13 @@ html, body {
   background: #020617;
   color: var(--text);
   font-family: Inter, Arial, sans-serif;
+  touch-action: none;
   overflow: hidden;
 }
 
-body {
-  touch-action: manipulation;
+.card,
+#arena {
+  touch-action: none !important;
 }
 
 button {

@@ -133,7 +133,6 @@ const dragDropController = new DragDropController({
   }
 });
 
-dragDropController.bindArena();
 buildHand();
 
 playBtn.addEventListener("click", () => {
