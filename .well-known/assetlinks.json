@@ -1,0 +1,8 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+    "namespace": "android_app",
+    "package_name": "io.github.steve_max09.twa",
+    "sha256_cert_fingerprints": ["5F:49:3A:0B:67:B2:71:93:1F:8B:8E:F3:39:3F:ED:F8:6F:1A:AC:3D:5C:16:CB:7E:CA:46:3C:83:76:6B:4D:4A"]
+    }
+}]
