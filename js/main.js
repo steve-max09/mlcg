@@ -118,6 +118,17 @@ function handleGameOver(winner) {
 const gameState = new GameState();
 const renderer = new Renderer(arenaElement);
 
+const aiController = new AIController({
+  gameState,
+  unitDefinitions: UnitDefinitions,
+  difficultyConfig: currentDifficulty,
+  onSpawn: (definition, x, y) => {
+    const unit = new Unit(definition, "enemy", x, y);
+    gameState.addUnit(unit);
+    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
+  }
+});
+
 const gameLoop = new GameLoop({
   gameState,
   renderer,
@@ -135,17 +146,6 @@ const dragDropController = new DragDropController({
     const unit = new Unit(definition, "player", x, y);
     gameState.addUnit(unit);
     updateEnergyUI();
-    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
-  }
-});
-
-const aiController = new AIController({
-  gameState,
-  unitDefinitions: UnitDefinitions,
-  difficultyConfig: currentDifficulty,
-  onSpawn: (definition, x, y) => {
-    const unit = new Unit(definition, "enemy", x, y);
-    gameState.addUnit(unit);
     if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
   }
 });
