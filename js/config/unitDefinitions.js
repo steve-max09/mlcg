@@ -65,7 +65,9 @@ export const UnitDefinitions = {
     canAttack: true,
     passiveAbilities: [],
     triggeredAbilities: [],
-    attackAnimation: "groundSmash"
+    attackAnimation: "groundSmash",
+    aoeRadius: 70,
+    aoeCenter: "self"
   },
 
   broyeur: {
@@ -94,8 +96,8 @@ export const UnitDefinitions = {
     cost: 4,
     hp: 300,
     damage: 100,
-    attackSpeed: 0.7,
-    movementSpeed: 30,
+    attackSpeed: 1,
+    movementSpeed: 80,
     attackRange: 50,
     hitboxRadius: 22,
     targetType: "ground",
@@ -122,6 +124,8 @@ export const UnitDefinitions = {
     canAttack: true,
     passiveAbilities: [],
     triggeredAbilities: [],
-    attackAnimation: "coalShot"
+    attackAnimation: "coalShot",
+    aoeRadius: 60,
+    aoeCenter: "target"
   }
 };

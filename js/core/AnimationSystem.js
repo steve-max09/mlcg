@@ -43,12 +43,55 @@ export const AnimationSystem = {
   },
 
   playGrassSpurt(el, attacker, target) {
-    this.spawnProjectileBeam(el, attacker, target, "grass-spurt");
+    const arena = el.closest("#arena");
+    if (!arena) return;
+
+    const dx = target.x - attacker.x;
+    const dy = target.y - attacker.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx);
+
+    const leafCount = 5;
+    for (let i = 0; i < leafCount; i++) {
+      const leaf = document.createElement("div");
+      leaf.className = "leaf-particle";
+
+      const spread = (Math.random() - 0.5) * 40;
+      const travelDistance = distance * (0.7 + Math.random() * 0.3);
+      const perpAngle = angle + Math.PI / 2;
+
+      const startX = attacker.x + Math.cos(perpAngle) * spread * 0.3;
+      const startY = attacker.y + Math.sin(perpAngle) * spread * 0.3;
+      const endX = startX + Math.cos(angle) * travelDistance + Math.cos(perpAngle) * spread;
+      const endY = startY + Math.sin(angle) * travelDistance + Math.sin(perpAngle) * spread;
+
+      leaf.style.left = `${startX}px`;
+      leaf.style.top = `${startY}px`;
+      leaf.style.setProperty("--travel-x", `${endX - startX}px`);
+      leaf.style.setProperty("--travel-y", `${endY - startY}px`);
+      leaf.style.animationDelay = `${i * 30}ms`;
+
+      arena.appendChild(leaf);
+      setTimeout(() => leaf.remove(), 500);
+    }
   },
 
   playMetalSlash(el, attacker, target) {
-    this.spawnProjectileBeam(el, attacker, target, "metal-slash");
-    this.playPulse(el);
+    const arena = el.closest("#arena");
+    if (!arena) return;
+
+    const dx = target.x - attacker.x;
+    const dy = target.y - attacker.y;
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    const slash = document.createElement("div");
+    slash.className = "metal-arc";
+    slash.style.left = `${target.x}px`;
+    slash.style.top = `${target.y}px`;
+    slash.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+
+    arena.appendChild(slash);
+    setTimeout(() => slash.remove(), 300);
   },
 
   playCoalShot(el, attacker, target) {
