@@ -103,7 +103,7 @@ export const UnitDefinitions = {
     triggeredAbilities: [],
     attackAnimation: "grassSpurt",
     sounds: {
-      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      spawn: "assets/sounds/units/broyeur-spawn.mp3",
       attack: "assets/sounds/units/broyeur-attack.mp3",
       death: "assets/sounds/units/chauffage-death.mp3"
     }
@@ -153,7 +153,7 @@ export const UnitDefinitions = {
     aoeRadius: 60,
     aoeCenter: "target",
     sounds: {
-      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      spawn: "assets/sounds/units/tombereau-spawn.mp3",
       attack: "assets/sounds/units/tombereau-attack.mp3",
       death: "assets/sounds/units/chauffage-death.mp3"
     }
