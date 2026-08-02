@@ -79,7 +79,7 @@ export const UnitDefinitions = {
     damage: 100,
     attackSpeed: 0.5,
     movementSpeed: 50,
-    attackRange: 120,
+    attackRange: 180,
     hitboxRadius: 22,
     targetType: "ground",
     canMove: true,
