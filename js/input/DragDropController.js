@@ -68,16 +68,24 @@ export class DragDropController {
   trySpawn(event) {
     const definition = this.unitDefinitions[this.draggedDefinitionId];
     if (!definition) return;
+    if (!this.gameState.canAfford(definition.cost)) return;
 
     const rect = this.arenaElement.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
 
-    const insideArena = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
+    const isOutsideArena =
+      x < -40 || x > rect.width + 40 || y < -40 || y > rect.height + 40;
 
-    if (!insideArena) return;
-    if (y < rect.height * 0.5) return;
-    if (!this.gameState.canAfford(definition.cost)) return;
+    if (isOutsideArena) return;
+
+    const minY = rect.height * 0.5 + 10;
+    const maxY = rect.height - 20;
+    const minX = 20;
+    const maxX = rect.width - 20;
+
+    x = Math.min(Math.max(x, minX), maxX);
+    y = Math.min(Math.max(y, minY), maxY);
 
     this.gameState.spendEnergy(definition.cost);
     this.onSpawn(definition, x, y);
