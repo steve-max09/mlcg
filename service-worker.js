@@ -16,7 +16,11 @@ const ASSETS_TO_CACHE = [
   "./assets/sounds/units/chauffage-attack.mp3",
   "./assets/sounds/units/chauffage-death.mp3",
   "./assets/sounds/units/broyeur-attack.mp3",
-  "./assets/sounds/units/minipelle-attack.mp3"
+  "./assets/sounds/units/minipelle-attack.mp3",
+  "./assets/sounds/units/tombereau-attack.mp3",
+  "./assets/sounds/units/compacteur-attack.mp3",
+  "./assets/sounds/units/motobineuse-attack.mp3",
+  "./assets/sounds/units/motobineuse-death.mp3"
 ];
 
 self.addEventListener("install", (event) => {

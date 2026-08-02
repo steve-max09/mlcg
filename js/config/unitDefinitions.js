@@ -54,8 +54,8 @@ export const UnitDefinitions = {
     attackAnimation: "spinSlash",
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
-      attack: "assets/sounds/units/chauffage-attack.mp3",
-      death: "assets/sounds/units/chauffage-death.mp3"
+      attack: "assets/sounds/units/motobineuse-attack.mp3",
+      death: "assets/sounds/units/motobineuse-death.mp3"
     }
   },
 
@@ -66,7 +66,7 @@ export const UnitDefinitions = {
     cost: 5,
     hp: 1000,
     damage: 60,
-    attackSpeed: 1,
+    attackSpeed: 0.7,
     movementSpeed: 30,
     attackRange: 50,
     hitboxRadius: 26,
@@ -80,7 +80,7 @@ export const UnitDefinitions = {
     aoeCenter: "self",
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
-      attack: "assets/sounds/units/chauffage-attack.mp3",
+      attack: "assets/sounds/units/compacteur-attack.mp3",
       death: "assets/sounds/units/chauffage-death.mp3"
     }
   },
@@ -154,7 +154,7 @@ export const UnitDefinitions = {
     aoeCenter: "target",
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
-      attack: "assets/sounds/units/chauffage-attack.mp3",
+      attack: "assets/sounds/units/tombereau-attack.mp3",
       death: "assets/sounds/units/chauffage-death.mp3"
     }
   }
