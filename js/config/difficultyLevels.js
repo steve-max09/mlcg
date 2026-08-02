@@ -1,9 +1,9 @@
 export const DifficultyLevels = {
   1: {
-    unitPool: ["chauffage"],
+    unitPool: ["chauffage", "motobineuse"],
     decisionInterval: 2.5,
     energyRegenRate: 1,
-    energyRegenInterval: 1800
+    energyRegenInterval: 1700
   },
   2: {
     unitPool: ["chauffage", "motobineuse"],

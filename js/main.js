@@ -39,7 +39,7 @@ const energyValue = document.getElementById("energyValue");
 const energyFill = document.getElementById("energyFill");
 const handContainer = document.getElementById("handContainer");
 
-const deployableUnits = ["chauffage", "motobineuse", "compacteur"];
+const deployableUnits = ["chauffage", "motobineuse", "compacteur", "broyeur", "minipelle", "tombereau"];
 
 const currentDifficulty = DifficultyLevels[1];
 

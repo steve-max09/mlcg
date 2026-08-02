@@ -505,3 +505,101 @@ button {
   opacity: 0.85;
   filter: drop-shadow(0 6px 8px rgba(0,0,0,0.4));
 }
+
+/* autres animations de combat */
+/* grassSpurt : lame d'herbe verte */
+.grass-spurt {
+  position: absolute;
+  height: 10px;
+  background: linear-gradient(90deg, #22c55e, #86efac, transparent);
+  border-radius: 6px;
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* metalSlash : lame métallique tranchante */
+.metal-slash {
+  position: absolute;
+  height: 6px;
+  background: linear-gradient(90deg, #e2e8f0, #94a3b8, transparent);
+  border-radius: 3px;
+  box-shadow: 0 0 6px rgba(226, 232, 240, 0.8);
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* coalShot : projectile de charbon qui vole puis explose */
+.coal-projectile {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, #1f2937, #000000);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0,0,0,0.6);
+  pointer-events: none;
+  z-index: 6;
+  transform: translate(-50%, -50%);
+  animation: coalTravel 0.22s linear forwards;
+}
+
+@keyframes coalTravel {
+  from { transform: translate(-50%, -50%); }
+  to { transform: translate(calc(-50% + var(--travel-x)), calc(-50% + var(--travel-y))); }
+}
+
+.coal-impact {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,180,60,0.9), rgba(60,30,10,0.4), transparent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 6;
+  animation: coalImpact 0.3s ease-out forwards;
+}
+
+@keyframes coalImpact {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(0.4); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+}
+
+/* groundSmash : secousse de l'unité + onde de choc au sol */
+.anim-smash {
+  animation: smashShake 0.3s ease-in-out;
+}
+
+@keyframes smashShake {
+  0% { transform: translate(-50%, -50%); }
+  25% { transform: translate(-52%, -48%); }
+  50% { transform: translate(-48%, -52%); }
+  75% { transform: translate(-51%, -49%); }
+  100% { transform: translate(-50%, -50%); }
+}
+
+.ground-shock {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 4;
+  animation: shockExpand 0.4s ease-out forwards;
+}
+
+@keyframes shockExpand {
+  from {
+    width: 10px;
+    height: 10px;
+    opacity: 0.9;
+  }
+  to {
+    width: 90px;
+    height: 90px;
+    opacity: 0;
+  }
+}

@@ -65,6 +65,63 @@ export const UnitDefinitions = {
     canAttack: true,
     passiveAbilities: [],
     triggeredAbilities: [],
-    attackAnimation: null
+    attackAnimation: "groundSmash"
+  },
+
+  broyeur: {
+    id: "broyeur",
+    name: "Broyeur de végétaux",
+    sprite: "assets/loxams/Broyeur de végétaux.png",
+    cost: 4,
+    hp: 300,
+    damage: 100,
+    attackSpeed: 0.7,
+    movementSpeed: 50,
+    attackRange: 50,
+    hitboxRadius: 22,
+    targetType: "ground",
+    canMove: true,
+    canAttack: true,
+    passiveAbilities: [],
+    triggeredAbilities: [],
+    attackAnimation: "grassSpurt"
+  },
+
+  minipelle: {
+    id: "minipelle",
+    name: "Minipelle sur chenilles",
+    sprite: "assets/loxams/Minipelle sur chenilles.png",
+    cost: 4,
+    hp: 300,
+    damage: 100,
+    attackSpeed: 0.7,
+    movementSpeed: 30,
+    attackRange: 50,
+    hitboxRadius: 22,
+    targetType: "ground",
+    canMove: true,
+    canAttack: true,
+    passiveAbilities: [],
+    triggeredAbilities: [],
+    attackAnimation: "metalSlash"
+  },
+  
+  tombereau: {
+    id: "tombereau",
+    name: "Tombereau articulé",
+    sprite: "assets/loxams/Tombereau articulé.png",
+    cost: 6,
+    hp: 800,
+    damage: 100,
+    attackSpeed: 0.8,
+    movementSpeed: 60,
+    attackRange: 50,
+    hitboxRadius: 22,
+    targetType: "ground",
+    canMove: true,
+    canAttack: true,
+    passiveAbilities: [],
+    triggeredAbilities: [],
+    attackAnimation: "coalShot"
   }
 };
