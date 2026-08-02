@@ -1,4 +1,4 @@
-const CACHE_NAME = "mlcg-cache-v11";
+const CACHE_NAME = "mlcg-cache-v12";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -7,7 +7,16 @@ const ASSETS_TO_CACHE = [
   "./manifest.json",
   "./assets/loxams/Chauffage mobile fioul 50 000 kcal.png",
   "./assets/icons/icon-192.png",
-  "./assets/icons/icon-512.png"
+  "./assets/icons/icon-512.png",
+  "./assets/sounds/ui/button-click.mp3",
+  "./assets/sounds/ui/tower-destroyed.mp3",
+  "./assets/sounds/ui/victory.mp3",
+  "./assets/sounds/ui/defeat.mp3",
+  "./assets/sounds/units/chauffage-spawn.mp3",
+  "./assets/sounds/units/chauffage-attack.mp3",
+  "./assets/sounds/units/chauffage-death.mp3",
+  "./assets/sounds/units/broyeur-attack.mp3",
+  "./assets/sounds/units/minipelle-attack.mp3"
 ];
 
 self.addEventListener("install", (event) => {

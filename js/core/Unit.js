@@ -1,7 +1,7 @@
 let unitIdCounter = 0;
 
 export class Unit {
-  constructor(definition, team, x, y) {
+  constructor(definition, team, x, y, audioManager) {
     this.instanceId = `unit-${++unitIdCounter}`;
     this.definitionId = definition.id;
     this.name = definition.name;
@@ -28,6 +28,9 @@ export class Unit {
     this.attackAnimation = definition.attackAnimation || "default";
     this.aoeRadius = definition.aoeRadius || 0;
     this.aoeCenter = definition.aoeCenter || "target";
+
+    this.audioManager = audioManager;
+    this.sounds = definition.sounds || {};
 
     this.attackCooldown = 0;
     this.target = null;

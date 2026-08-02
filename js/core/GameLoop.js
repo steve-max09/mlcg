@@ -3,16 +3,18 @@ import { CombatSystem } from "./CombatSystem.js";
 import { AnimationSystem } from "./AnimationSystem.js";
 
 export class GameLoop {
-  constructor({ gameState, renderer, onEnergyChange, onGameOver, aiController }) {
+  constructor({ gameState, renderer, onEnergyChange, onGameOver, aiController, audioManager }) {
     this.gameState = gameState;
     this.renderer = renderer;
     this.onEnergyChange = onEnergyChange;
     this.onGameOver = onGameOver;
     this.aiController = aiController;
+    this.audioManager = audioManager;
 
     this.lastTimestamp = null;
     this.energyAccumulator = 0;
     this.isRunning = false;
+    this.previousTowerStates = new Map();
   }
 
   start() {
@@ -50,11 +52,41 @@ export class GameLoop {
     CombatSystem.update(this.gameState, deltaSeconds, (attacker, target) => {
       const el = this.renderer.getUnitElement(attacker.instanceId);
       AnimationSystem.triggerAttackAnimation(attacker, target, el);
+
+      if (this.audioManager && attacker.sounds.attack) {
+        this.audioManager.play(attacker.sounds.attack);
+      }
     });
+
+    this.checkDeaths();
+    this.checkTowerDestruction();
     this.updateEnergy(deltaSeconds);
 
     if (this.aiController) {
       this.aiController.update(deltaSeconds, arenaSize);
+    }
+  }
+
+  checkDeaths() {
+    for (const unit of this.gameState.units) {
+      if (unit.isDead && !unit.deathSoundPlayed) {
+        unit.deathSoundPlayed = true;
+        if (this.audioManager && unit.sounds.death) {
+          this.audioManager.play(unit.sounds.death);
+        }
+      }
+    }
+  }
+
+  checkTowerDestruction() {
+    for (const tower of this.gameState.towers) {
+      const wasDestroyed = this.previousTowerStates.get(tower.instanceId);
+      if (tower.isDestroyed && !wasDestroyed) {
+        this.previousTowerStates.set(tower.instanceId, true);
+        if (this.audioManager) {
+          this.audioManager.play(this.audioManager.uiSounds.towerDestroyed);
+        }
+      }
     }
   }
 

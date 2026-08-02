@@ -27,7 +27,12 @@ export const UnitDefinitions = {
     canAttack: true,
     passiveAbilities: [],
     triggeredAbilities: [],
-    attackAnimation: "fireSpurt"
+    attackAnimation: "fireSpurt",
+    sounds: {
+      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      attack: "assets/sounds/units/chauffage-attack.mp3",
+      death: "assets/sounds/units/chauffage-death.mp3"
+    }
   },
 
   motobineuse: {
@@ -46,7 +51,12 @@ export const UnitDefinitions = {
     canAttack: true,
     passiveAbilities: [],
     triggeredAbilities: [],
-    attackAnimation: "spinSlash"
+    attackAnimation: "spinSlash",
+    sounds: {
+      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      attack: "assets/sounds/units/chauffage-attack.mp3",
+      death: "assets/sounds/units/chauffage-death.mp3"
+    }
   },
 
   compacteur: {
@@ -67,7 +77,12 @@ export const UnitDefinitions = {
     triggeredAbilities: [],
     attackAnimation: "groundSmash",
     aoeRadius: 70,
-    aoeCenter: "self"
+    aoeCenter: "self",
+    sounds: {
+      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      attack: "assets/sounds/units/chauffage-attack.mp3",
+      death: "assets/sounds/units/chauffage-death.mp3"
+    }
   },
 
   broyeur: {
@@ -86,7 +101,12 @@ export const UnitDefinitions = {
     canAttack: true,
     passiveAbilities: [],
     triggeredAbilities: [],
-    attackAnimation: "grassSpurt"
+    attackAnimation: "grassSpurt",
+    sounds: {
+      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      attack: "assets/sounds/units/broyeur-attack.mp3",
+      death: "assets/sounds/units/chauffage-death.mp3"
+    }
   },
 
   minipelle: {
@@ -105,7 +125,12 @@ export const UnitDefinitions = {
     canAttack: true,
     passiveAbilities: [],
     triggeredAbilities: [],
-    attackAnimation: "metalSlash"
+    attackAnimation: "metalSlash",
+    sounds: {
+      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      attack: "assets/sounds/units/minipelle-attack.mp3",
+      death: "assets/sounds/units/chauffage-death.mp3"
+    }
   },
   
   tombereau: {
@@ -126,6 +151,11 @@ export const UnitDefinitions = {
     triggeredAbilities: [],
     attackAnimation: "coalShot",
     aoeRadius: 60,
-    aoeCenter: "target"
+    aoeCenter: "target",
+    sounds: {
+      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      attack: "assets/sounds/units/chauffage-attack.mp3",
+      death: "assets/sounds/units/chauffage-death.mp3"
+    }
   }
 };

@@ -9,6 +9,9 @@ import { UnitDefinitions, TowerDefinition } from "./config/unitDefinitions.js";
 import { AIController } from "./core/AIController.js";
 import { DifficultyLevels } from "./config/difficultyLevels.js";
 
+import { AudioManager } from "./core/AudioManager.js";
+import { UiSounds } from "./config/uiSounds.js";
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").then((registration) => {
@@ -42,6 +45,14 @@ const handContainer = document.getElementById("handContainer");
 const deployableUnits = ["chauffage", "motobineuse", "compacteur", "broyeur", "minipelle", "tombereau"];
 
 const currentDifficulty = DifficultyLevels[1];
+
+const audioManager = new AudioManager();
+audioManager.uiSounds = UiSounds;
+
+Object.values(UiSounds).forEach((src) => audioManager.preload(src));
+Object.values(UnitDefinitions).forEach((def) => {
+  if (def.sounds) Object.values(def.sounds).forEach((src) => audioManager.preload(src));
+});
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
@@ -98,28 +109,22 @@ function handleGameOver(winner) {
     winner === "player"
       ? "La base ennemie est détruite."
       : "Votre base a été détruite.";
+
+  audioManager.play(winner === "player" ? UiSounds.victory : UiSounds.defeat);
+
   showScreen("victory-screen");
 }
 
 const gameState = new GameState();
 const renderer = new Renderer(arenaElement);
 
-const aiController = new AIController({
-  gameState,
-  unitDefinitions: UnitDefinitions,
-  difficultyConfig: currentDifficulty,
-  onSpawn: (definition, x, y) => {
-    const unit = new Unit(definition, "enemy", x, y);
-    gameState.addUnit(unit);
-  }
-});
-
 const gameLoop = new GameLoop({
   gameState,
   renderer,
   onEnergyChange: updateEnergyUI,
   onGameOver: handleGameOver,
-  aiController
+  aiController,
+  audioManager
 });
 
 const dragDropController = new DragDropController({
@@ -130,6 +135,18 @@ const dragDropController = new DragDropController({
     const unit = new Unit(definition, "player", x, y);
     gameState.addUnit(unit);
     updateEnergyUI();
+    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
+  }
+});
+
+const aiController = new AIController({
+  gameState,
+  unitDefinitions: UnitDefinitions,
+  difficultyConfig: currentDifficulty,
+  onSpawn: (definition, x, y) => {
+    const unit = new Unit(definition, "enemy", x, y);
+    gameState.addUnit(unit);
+    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
   }
 });
 
@@ -145,3 +162,13 @@ playBtn.addEventListener("click", () => {
 backToMenuBtn.addEventListener("click", () => {
   window.location.reload();
 });
+
+// sons des boutons =======
+function bindButtonSound(button) {
+  button.addEventListener("click", () => {
+    audioManager.play(UiSounds.buttonClick);
+  });
+}
+
+[playBtn, backToMenuBtn].forEach(bindButtonSound);
+// ========================
