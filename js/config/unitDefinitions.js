@@ -91,7 +91,7 @@ export const UnitDefinitions = {
     sprite: "assets/loxams/Broyeur de végétaux.png",
     cost: 4,
     hp: 200,
-    damage: 100,
+    damage: 200,
     attackSpeed: 0.5,
     movementSpeed: 50,
     attackRange: 180,
