@@ -79,7 +79,7 @@ function setupArena(gameState, renderer) {
   const arenaRect = arenaElement.getBoundingClientRect();
   const centerX = arenaRect.width / 2;
 
-  const enemyTower = new Tower(TowerDefinition, "enemy", centerX, arenaRect.height * 0.08);
+  const enemyTower = new Tower(TowerDefinition, "enemy", centerX, arenaRect.height * 0.14);
   const playerTower = new Tower(TowerDefinition, "player", centerX, arenaRect.height * 0.92);
 
   gameState.addTower(enemyTower);
