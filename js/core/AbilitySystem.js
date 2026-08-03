@@ -1,21 +1,22 @@
-const passiveHandlers = {
-  ranged: () => {}
-};
-
-const triggeredHandlers = {};
-
 export const AbilitySystem = {
-  applyPassives(unit) {
-    for (const ability of unit.passiveAbilities) {
-      const handler = passiveHandlers[ability];
-      if (handler) handler(unit);
-    }
-  },
+  onSpawn(unit, gameState, onEffect) {
+    if (!unit.triggeredAbilities.includes("spawnFreeze")) return;
 
-  triggerOnDeath(unit, gameState) {
-    for (const ability of unit.triggeredAbilities) {
-      const handler = triggeredHandlers[ability];
-      if (handler) handler(unit, gameState);
+    const freezeRadius = unit.spawnFreezeRadius || 90;
+    const freezeDuration = unit.spawnFreezeDuration || 2.5;
+
+    const enemies = gameState.getEnemiesOf(unit.team);
+
+    for (const enemy of enemies) {
+      const dx = enemy.x - unit.x;
+      const dy = enemy.y - unit.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance <= freezeRadius) {
+        enemy.applyFreeze(freezeDuration);
+      }
     }
+
+    if (onEffect) onEffect(unit, freezeRadius);
   }
 };

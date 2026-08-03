@@ -35,6 +35,9 @@ export class Unit {
     this.attackCooldown = 0;
     this.target = null;
     this.isDead = false;
+
+    this.isFrozen = false;
+    this.freezeTimer = 0;
   }
 
   takeDamage(amount) {
@@ -49,5 +52,20 @@ export class Unit {
     const dx = this.x - other.x;
     const dy = this.y - other.y;
     return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  // frozen
+  applyFreeze(duration) {
+    this.isFrozen = true;
+    this.freezeTimer = Math.max(this.freezeTimer, duration);
+  }
+
+  updateFreeze(deltaSeconds) {
+    if (!this.isFrozen) return;
+    this.freezeTimer -= deltaSeconds;
+    if (this.freezeTimer <= 0) {
+      this.isFrozen = false;
+      this.freezeTimer = 0;
+    }
   }
 }

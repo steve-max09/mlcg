@@ -12,6 +12,9 @@ import { DifficultyLevels } from "./config/difficultyLevels.js";
 import { AudioManager } from "./core/AudioManager.js";
 import { UiSounds } from "./config/uiSounds.js";
 
+import { AnimationSystem } from "./core/AnimationSystem.js";
+import { AbilitySystem } from "./core/AbilitySystem.js";
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").then((registration) => {
@@ -125,7 +128,12 @@ const aiController = new AIController({
   onSpawn: (definition, x, y) => {
     const unit = new Unit(definition, "enemy", x, y);
     gameState.addUnit(unit);
+    updateEnergyUI();
     if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
+
+    AbilitySystem.onSpawn(unit, gameState, (u, radius) => {
+      AnimationSystem.playSpawnFreeze(renderer.arenaElement, u, radius);
+    });
   }
 });
 
@@ -147,6 +155,10 @@ const dragDropController = new DragDropController({
     gameState.addUnit(unit);
     updateEnergyUI();
     if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
+
+    AbilitySystem.onSpawn(unit, gameState, (u, radius) => {
+      AnimationSystem.playSpawnFreeze(renderer.arenaElement, u, radius);
+    });
   }
 });
 

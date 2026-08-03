@@ -4,6 +4,7 @@ export const CombatSystem = {
 
     for (const unit of gameState.units) {
       if (unit.isDead || !unit.canAttack) continue;
+      if (unit.isFrozen) continue;
 
       unit.attackCooldown = Math.max(0, unit.attackCooldown - deltaSeconds);
 

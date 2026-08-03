@@ -3,17 +3,16 @@ export const MovementSystem = {
     for (const unit of gameState.units) {
       if (unit.isDead || !unit.canMove) continue;
 
-      const hasValidTarget = unit.target && !unit.target.isDead && !unit.target.isDestroyed;
+      unit.updateFreeze(deltaSeconds);
+      if (unit.isFrozen) continue;
 
-      const inRange = hasValidTarget && unit.distanceTo(unit.target) <= unit.attackRange;
+      const inRange = unit.target && unit.distanceTo(unit.target) <= unit.attackRange;
 
       if (!inRange) {
         const target = this.findClosestTarget(unit, gameState);
         if (target) {
           unit.target = target;
           this.moveToward(unit, target, deltaSeconds);
-        } else {
-          unit.target = null;
         }
       }
     }

@@ -19,6 +19,8 @@ export class Renderer {
     el.style.left = `${unit.x}px`;
     el.style.top = `${unit.y}px`;
 
+    el.classList.toggle("frozen", unit.isFrozen);
+
     const hpRatio = Math.max(0, unit.hp / unit.maxHp) * 100;
     el.querySelector(".hp-fill").style.width = `${hpRatio}%`;
 
