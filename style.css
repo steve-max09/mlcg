@@ -290,7 +290,6 @@ button {
   box-shadow: var(--shadow);
 }
 
-.energy-label,
 .energy-value {
   font-size: 0.85rem;
   color: var(--muted);
