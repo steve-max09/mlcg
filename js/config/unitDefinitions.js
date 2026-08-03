@@ -25,8 +25,6 @@ export const UnitDefinitions = {
     targetType: "buildings",
     canMove: true,
     canAttack: true,
-    passiveAbilities: [],
-    triggeredAbilities: [],
     attackAnimation: "fireSpurt",
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
@@ -49,8 +47,6 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: true,
     canAttack: true,
-    passiveAbilities: [],
-    triggeredAbilities: [],
     attackAnimation: "spinSlash",
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
@@ -73,8 +69,6 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: true,
     canAttack: true,
-    passiveAbilities: [],
-    triggeredAbilities: [],
     attackAnimation: "groundSmash",
     aoeRadius: 70,
     aoeCenter: "self",
@@ -99,8 +93,6 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: true,
     canAttack: true,
-    passiveAbilities: [],
-    triggeredAbilities: [],
     attackAnimation: "grassSpurt",
     sounds: {
       spawn: "assets/sounds/units/broyeur-spawn.mp3",
@@ -123,8 +115,6 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: true,
     canAttack: true,
-    passiveAbilities: [],
-    triggeredAbilities: [],
     attackAnimation: "metalSlash",
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
@@ -147,8 +137,6 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: true,
     canAttack: true,
-    passiveAbilities: [],
-    triggeredAbilities: [],
     attackAnimation: "coalShot",
     aoeRadius: 80,
     aoeCenter: "target",
@@ -173,15 +161,36 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: true,
     canAttack: true,
-    passiveAbilities: [],
     triggeredAbilities: ["spawnFreeze"],
-    spawnFreezeRadius: 90,
+    spawnFreezeRadius: 100,
     spawnFreezeDuration: 3.5,
     attackAnimation: "iceWind",
     sounds: {
       spawn: "assets/sounds/units/climatiseur-spawn.mp3",
       attack: "assets/sounds/units/climatiseur-attack.mp3",
       death: "assets/sounds/units/climatiseur-death.mp3"
+    },
+  },
+
+  brumisateur: {
+    id: "brumisateur",
+    name: "Brumisateur mobile",
+    sprite: "assets/loxams/Brumisateur mobile.png",
+    cost: 3,
+    hp: 90,
+    damage: 70,
+    attackSpeed: 0.8,
+    movementSpeed: 10,
+    attackRange: 160,
+    hitboxRadius: 22,
+    targetType: "ground",
+    canMove: true,
+    canAttack: true,
+    attackAnimation: "iceWind",
+    sounds: {
+      spawn: "assets/sounds/units/brumisateur-spawn.mp3",
+      attack: "assets/sounds/units/brumisateur-attack.mp3",
+      death: "assets/sounds/units/brumisateur-death.mp3"
     },
   },
 };

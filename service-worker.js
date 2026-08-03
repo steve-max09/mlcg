@@ -1,4 +1,4 @@
-const CACHE_NAME = "mlcg-cache-v19";
+const CACHE_NAME = "mlcg-cache-v20";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -6,6 +6,13 @@ const ASSETS_TO_CACHE = [
   "./js/main.js",
   "./manifest.json",
   "./assets/loxams/Chauffage mobile fioul 50 000 kcal.png",
+  "./assets/loxams/Broyeur de végétaux.png",
+  "./assets/loxams/Brumisateur mobile.png",
+  "./assets/loxams/Compacteur monocylindre Grand Travaux.png",
+  "./assets/loxams/Climatiseur mobile 6 kW.png",
+  "./assets/loxams/Minipelle sur chenilles.png",
+  "./assets/loxams/Motobineuse.png",
+  "./assets/loxams/Tombereau articulé.png",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
   "./assets/sounds/ui/button-click.mp3",
@@ -20,9 +27,17 @@ const ASSETS_TO_CACHE = [
   "./assets/sounds/units/minipelle-attack.mp3",
   "./assets/sounds/units/tombereau-spawn.mp3",
   "./assets/sounds/units/tombereau-attack.mp3",
+  "./assets/sounds/units/tombereau-death.mp3",
   "./assets/sounds/units/compacteur-attack.mp3",
+  "./assets/sounds/units/compacteur-death.mp3",
   "./assets/sounds/units/motobineuse-attack.mp3",
-  "./assets/sounds/units/motobineuse-death.mp3"
+  "./assets/sounds/units/motobineuse-death.mp3",
+  "./assets/sounds/units/climatiseur-spawn.mp3",
+  "./assets/sounds/units/climatiseur-attack.mp3",
+  "./assets/sounds/units/climatiseur-death.mp3",
+  "./assets/sounds/units/brumisateur-spawn.mp3",
+  "./assets/sounds/units/brumisateur-attack.mp3",
+  "./assets/sounds/units/brumisateur-death.mp3"
 ];
 
 self.addEventListener("install", (event) => {
