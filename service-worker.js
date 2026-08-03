@@ -13,6 +13,7 @@ const ASSETS_TO_CACHE = [
   "./assets/loxams/Minipelle sur chenilles.png",
   "./assets/loxams/Motobineuse.png",
   "./assets/loxams/Tombereau articulé.png",
+  "./assets/loxams/Chariot téléscopique diesel compact.png",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
   "./assets/sounds/ui/button-click.mp3",

@@ -57,4 +57,13 @@ export class GameState {
       this.winner = "player";
     }
   }
+
+  reset() {
+    this.units = [];
+    this.towers = [];
+    this.energy = 5;
+    this.enemyEnergy = 5;
+    this.isGameOver = false;
+    this.winner = null;
+  }
 }

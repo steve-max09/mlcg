@@ -15,6 +15,9 @@ import { UiSounds } from "./config/uiSounds.js";
 import { AnimationSystem } from "./core/AnimationSystem.js";
 import { AbilitySystem } from "./core/AbilitySystem.js";
 
+import { PlayerProgress } from "./core/PlayerProgress.js";
+import { DeckScreen } from "./core/DeckScreen.js";
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").then((registration) => {
@@ -33,6 +36,43 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+const playerProgress = new PlayerProgress();
+
+const deckScreen = new DeckScreen({
+  playerProgress,
+  elements: {
+    backBtn: document.getElementById("deck-back-btn"),
+    battleBtn: document.getElementById("battle-btn"),
+    yangaAmount: document.getElementById("yanga-amount"),
+    deckSlots: document.getElementById("deck-slots"),
+    collectionGrid: document.getElementById("collection-grid"),
+    collectionCount: document.getElementById("collection-count"),
+    modalOverlay: document.getElementById("unit-detail-modal"),
+    modalClose: document.getElementById("unit-detail-close"),
+    detailName: document.getElementById("unit-detail-name"),
+    detailCost: document.getElementById("unit-detail-cost"),
+    detailSprite: document.getElementById("unit-detail-sprite"),
+    detailDescription: document.getElementById("unit-detail-description"),
+    detailHp: document.getElementById("unit-detail-hp"),
+    detailDamage: document.getElementById("unit-detail-damage"),
+    detailAtkSpeed: document.getElementById("unit-detail-atkspeed"),
+    detailRange: document.getElementById("unit-detail-range"),
+    detailMoveSpeed: document.getElementById("unit-detail-movespeed"),
+    detailAction: document.getElementById("unit-detail-action")
+  },
+  onBattleStart: () => {
+    showScreen("arena-screen");
+    startBattleWithDeck(playerProgress.deck);
+  },
+  onBack: () => showScreen("main-menu")
+});
+
+document.getElementById("open-deck-btn").addEventListener("click", () => {
+  audioManager.play(UiSounds.buttonClick);
+  showScreen("deck-screen");
+  deckScreen.render();
+});
+
 const mainMenu = document.getElementById("main-menu");
 const arenaScreen = document.getElementById("arena-screen");
 const victoryScreen = document.getElementById("victory-screen");
@@ -45,6 +85,7 @@ const energyValue = document.getElementById("energyValue");
 const energyFill = document.getElementById("energyFill");
 const handContainer = document.getElementById("handContainer");
 
+// obsolete, en dur juste pour le mode "Jouer" à supprimer
 const deployableUnits = ["chauffage", "motobineuse", "compacteur", "broyeur", "minipelle", "tombereau", "climatiseur", "brumisateur"];
 
 const currentDifficulty = DifficultyLevels[1];
@@ -60,22 +101,6 @@ Object.values(UnitDefinitions).forEach((def) => {
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-}
-
-function buildHand() {
-  handContainer.innerHTML = "";
-  deployableUnits.forEach((defId) => {
-    const def = UnitDefinitions[defId];
-    const cardEl = document.createElement("button");
-    cardEl.className = "card";
-    cardEl.dataset.definitionId = defId;
-    cardEl.innerHTML = `
-      <img src="${def.sprite}" alt="${def.name}" />
-      <span class="card-cost">${def.cost}</span>
-    `;
-    handContainer.appendChild(cardEl);
-    dragDropController.bindCard(cardEl, defId);
-  });
 }
 
 function setupArena(gameState, renderer) {
@@ -100,9 +125,10 @@ function updateEnergyUI() {
   energyValue.textContent = `${gameState.energy}/${gameState.maxEnergy}`;
 
   document.querySelectorAll(".card").forEach((cardEl) => {
-    const defId = cardEl.dataset.definitionId;
-    const cost = UnitDefinitions[defId].cost;
-    cardEl.classList.toggle("disabled", !gameState.canAfford(cost));
+    const unitId = cardEl.dataset.unitId;
+    const def = UnitDefinitions[unitId];
+    if (!def) return;
+    cardEl.classList.toggle("disabled", !gameState.canAfford(def.cost));
   });
 }
 
@@ -162,13 +188,9 @@ const dragDropController = new DragDropController({
   }
 });
 
-buildHand();
-
 playBtn.addEventListener("click", () => {
   showScreen("arena-screen");
-  setupArena(gameState, renderer);
-  updateEnergyUI();
-  gameLoop.start();
+  startBattleWithDeck(playerProgress.deck);
 });
 
 backToMenuBtn.addEventListener("click", () => {
@@ -205,3 +227,36 @@ function lockViewportHeight() {
 
 lockViewportHeight();
 // ========================
+
+// pour jouer avec le deck choisi
+function renderHand(deck) {
+  const handEl = document.querySelector(".hand");
+  handEl.innerHTML = "";
+
+  deck.forEach((unitId) => {
+    const definition = UnitDefinitions[unitId];
+    if (!definition) return;
+
+    const card = document.createElement("button");
+    card.className = "card";
+    card.dataset.unitId = unitId;
+    card.innerHTML = `
+      <img src="${definition.sprite}" alt="${definition.name}" />
+      <span class="card-cost">${definition.cost}</span>
+    `;
+
+    dragDropController.bindCard(card, unitId);
+    handEl.appendChild(card);
+  });
+}
+
+function startBattleWithDeck(deck) {
+  renderHand(deck);
+
+  gameState.reset();
+  setupArena(gameState, renderer);
+
+  gameLoop.stop();
+  gameLoop.start();
+}
+// =====

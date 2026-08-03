@@ -771,3 +771,253 @@ button {
   font-size: 14px;
   filter: drop-shadow(0 0 3px rgba(186, 230, 253, 0.9));
 }
+
+/*=============== deck screen stuff =================*/
+#deck-screen {
+  padding: calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.deck-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.deck-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 1.2rem;
+}
+
+.yanga-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 6px 12px;
+}
+
+.yanga-display img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.deck-slots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.deck-slot {
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: var(--shadow);
+}
+
+.deck-slot.filled {
+  background: var(--card-selected);
+}
+
+.deck-slot img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+}
+
+.deck-slot-cost {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.deck-slot-plus {
+  font-size: 1.8rem;
+  color: var(--muted);
+}
+
+#battle-btn {
+  width: 100%;
+}
+
+#battle-btn.disabled,
+#battle-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.collection-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.collection-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.collection-header span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding-bottom: 20px;
+}
+
+.collection-card {
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: var(--shadow);
+}
+
+.collection-card img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+}
+
+.collection-card.locked img {
+  filter: grayscale(1) brightness(0.4);
+}
+
+.collection-card.in-deck {
+  outline: 2px solid var(--accent);
+}
+
+.collection-card-cost {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.lock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: rgba(0,0,0,0.35);
+  border-radius: 12px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.unit-detail-card {
+  background: var(--panel-2);
+  border-radius: 20px;
+  padding: 20px;
+  width: min(100%, 380px);
+  position: relative;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.unit-detail-card h2 {
+  margin: 4px 0 8px;
+}
+
+.unit-detail-badges {
+  margin-bottom: 12px;
+}
+
+.badge {
+  background: var(--accent);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.unit-detail-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin: 8px auto;
+  filter: drop-shadow(0 8px 10px rgba(0,0,0,0.4));
+}
+
+.unit-detail-card p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 12px 0;
+}
+
+.unit-detail-stats {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 10px;
+  margin: 12px 0;
+  text-align: left;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 4px;
+  font-size: 0.88rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+/*=============== end deck screen stuff =================*/

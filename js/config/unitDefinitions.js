@@ -14,6 +14,7 @@ export const UnitDefinitions = {
   chauffage: {
     id: "chauffage",
     name: "Chauffage mobile fioul 50000 kcal/h",
+    description: "Description manquante",
     sprite: "assets/loxams/Chauffage mobile fioul 50 000 kcal.png",
     cost: 3,
     hp: 400,
@@ -36,6 +37,7 @@ export const UnitDefinitions = {
   motobineuse: {
     id: "motobineuse",
     name: "Motobineuse",
+    description: "Description manquante",
     sprite: "assets/loxams/Motobineuse.png",
     cost: 2,
     hp: 280,
@@ -58,10 +60,11 @@ export const UnitDefinitions = {
   compacteur: {
     id: "compacteur",
     name: "Compacteur monocylindre Grand Travaux",
+    description: "Description manquante",
     sprite: "assets/loxams/Compacteur monocylindre Grand Travaux.png",
     cost: 5,
     hp: 1000,
-    damage: 60,
+    damage: 50,
     attackSpeed: 0.7,
     movementSpeed: 20,
     attackRange: 50,
@@ -82,10 +85,11 @@ export const UnitDefinitions = {
   broyeur: {
     id: "broyeur",
     name: "Broyeur de végétaux",
+    description: "Description manquante",
     sprite: "assets/loxams/Broyeur de végétaux.png",
     cost: 4,
     hp: 200,
-    damage: 120,
+    damage: 110,
     attackSpeed: 0.5,
     movementSpeed: 40,
     attackRange: 180,
@@ -104,6 +108,7 @@ export const UnitDefinitions = {
   minipelle: {
     id: "minipelle",
     name: "Minipelle sur chenilles",
+    description: "Description manquante",
     sprite: "assets/loxams/Minipelle sur chenilles.png",
     cost: 4,
     hp: 300,
@@ -126,6 +131,7 @@ export const UnitDefinitions = {
   tombereau: {
     id: "tombereau",
     name: "Tombereau articulé",
+    description: "Description manquante",
     sprite: "assets/loxams/Tombereau articulé.png",
     cost: 6,
     hp: 800,
@@ -133,7 +139,7 @@ export const UnitDefinitions = {
     attackSpeed: 0.2,
     movementSpeed: 20,
     attackRange: 110,
-    hitboxRadius: 22,
+    hitboxRadius: 26,
     targetType: "ground",
     canMove: true,
     canAttack: true,
@@ -150,6 +156,7 @@ export const UnitDefinitions = {
   climatiseur: {
     id: "climatiseur",
     name: "Climatiseur mobile 6 kW",
+    description: "Description manquante",
     sprite: "assets/loxams/Climatiseur mobile 6 kW.png",
     cost: 3,
     hp: 90,
@@ -175,6 +182,7 @@ export const UnitDefinitions = {
   brumisateur: {
     id: "brumisateur",
     name: "Brumisateur mobile",
+    description: "Description manquante",
     sprite: "assets/loxams/Brumisateur mobile.png",
     cost: 2,
     hp: 140,
@@ -193,4 +201,50 @@ export const UnitDefinitions = {
       death: "assets/sounds/units/brumisateur-death.mp3"
     },
   },
+
+  chariot: {
+    id: "chariot",
+    name: "Chariot téléscopique diesel compact",
+    description: "Description manquante",
+    sprite: "assets/loxams/Chariot téléscopique diesel compact.png",
+    cost: 7,
+    hp: 1240,
+    damage: 85,
+    attackSpeed: 0.6,
+    movementSpeed: 20,
+    attackRange: 90,
+    hitboxRadius: 26,
+    targetType: "ground",
+    canMove: true,
+    canAttack: true,
+    attackAnimation: "metalSlash",
+    sounds: {
+      spawn: "assets/sounds/units/brumisateur-spawn.mp3",
+      attack: "assets/sounds/units/brumisateur-attack.mp3",
+      death: "assets/sounds/units/brumisateur-death.mp3"
+    },
+  },
+
+  mat: {
+    id: "mat",
+    name: "Mât d'éclairage 2 200 m² hybride",
+    description: "Production autonome de lumières destinée aux travaux nocturnes et manifestations événementielles.",
+    sprite: "assets/loxams/Mât d'éclairage 2 200 m² hybride.png",
+    cost: 7,
+    hp: 1240,
+    damage: 60,
+    attackSpeed: 0.5,
+    movementSpeed: 20,
+    attackRange: 190,
+    hitboxRadius: 22,
+    targetType: "ground",
+    canMove: false,
+    canAttack: true,
+    attackAnimation: "fireSpurt",
+    sounds: {
+      spawn: "assets/sounds/units/brumisateur-spawn.mp3",
+      attack: "assets/sounds/units/brumisateur-attack.mp3",
+      death: "assets/sounds/units/brumisateur-death.mp3"
+    },
+  }
 };

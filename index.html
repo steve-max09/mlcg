@@ -26,8 +26,8 @@
       </header>
 
       <main class="menu-content">
-        <button class="menu-btn primary" id="playBtn">Jouier</button>
-        <button class="menu-btn">Deck Loxam</button>
+        <button class="menu-btn primary" id="playBtn">Jouer</button>
+        <button class="menu-btn" id="open-deck-btn">Deck</button>
         <button class="menu-btn">Options</button>
       </main>
 
@@ -35,6 +35,48 @@
         <span>Prototype hors ligne</span>
       </footer>
     </section>
+
+    <section id="deck-screen" class="screen">
+      <div class="deck-header">
+        <button class="icon-btn" id="deck-back-btn">←</button>
+        <h2>Deck</h2>
+        <div class="yanga-display">
+          <img src="assets/ui/yanga.png" alt="Yanga" />
+          <span id="yanga-amount">0</span>
+        </div>
+      </div>
+
+      <div class="deck-slots" id="deck-slots"></div>
+
+      <button class="menu-btn primary" id="battle-btn" disabled>Combat</button>
+
+      <div class="collection-header">
+        <h3>Collection</h3>
+        <span id="collection-count">0/8</span>
+      </div>
+
+      <div class="collection-grid" id="collection-grid"></div>
+    </section>
+
+    <div class="modal-overlay" id="unit-detail-modal">
+      <div class="unit-detail-card">
+        <button class="modal-close" id="unit-detail-close">×</button>
+        <h2 id="unit-detail-name"></h2>
+        <div class="unit-detail-badges">
+          <span class="badge" id="unit-detail-cost"></span>
+        </div>
+        <img id="unit-detail-sprite" src="" alt="" />
+        <p id="unit-detail-description"></p>
+        <div class="unit-detail-stats">
+          <div class="stat-row"><span>PV</span><span id="unit-detail-hp"></span></div>
+          <div class="stat-row"><span>Dégâts</span><span id="unit-detail-damage"></span></div>
+          <div class="stat-row"><span>Vitesse d'attaque</span><span id="unit-detail-atkspeed"></span></div>
+          <div class="stat-row"><span>Portée</span><span id="unit-detail-range"></span></div>
+          <div class="stat-row"><span>Vitesse</span><span id="unit-detail-movespeed"></span></div>
+        </div>
+        <button class="menu-btn primary" id="unit-detail-action"></button>
+      </div>
+    </div>
 
     <section id="arena-screen" class="screen">
       <main id="arena">
