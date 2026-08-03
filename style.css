@@ -404,10 +404,17 @@ button {
 /* bases animations d'attaque et animation de victoire */
 .game-tower {
   position: absolute;
-  width: 90px;
-  height: 90px;
+  width: 70px;
+  height: 70px;
   transform: translate(-50%, -50%);
   pointer-events: none;
+}
+/* si on est pas sur mobile (petit écran) on augmente la taille des usines */
+@media (min-width: 700px) {
+  .game-tower {
+    width: 90px;
+    height: 90px;
+  }
 }
 
 .game-tower img {
