@@ -34,6 +34,10 @@ html, body {
   font-family: Inter, Arial, sans-serif;
   touch-action: none;
   overflow: hidden;
+  -webkit-overflow-scrolling: none;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .card,
@@ -156,7 +160,7 @@ button {
 }
 
 .top-ui {
-  padding-top: 10px;
+  padding-top: max(env(safe-area-inset-top), 22px);
   padding-bottom: 8px;
 }
 
@@ -171,9 +175,10 @@ button {
   text-align: center;
   background: var(--panel);
   border-radius: 12px;
-  padding: 8px 6px;
-  font-size: 0.82rem;
+  padding: 10px 6px;
+  font-size: 0.85rem;
   box-shadow: var(--shadow);
+  margin-top: 4px;
 }
 
 #arena {

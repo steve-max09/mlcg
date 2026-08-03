@@ -172,3 +172,24 @@ function bindButtonSound(button) {
 
 [playBtn, backToMenuBtn].forEach(bindButtonSound);
 // ========================
+
+// figer la hauteur =======
+function lockViewportHeight() {
+  const setHeight = () => {
+    document.documentElement.style.setProperty(
+      "--app-height",
+      `${window.innerHeight}px`
+    );
+  };
+
+  setHeight();
+
+  let resizeTimeout;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(setHeight, 300);
+  });
+}
+
+lockViewportHeight();
+// ========================
