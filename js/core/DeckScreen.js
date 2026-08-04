@@ -58,7 +58,7 @@ export class DeckScreen {
 
       if (unitId) {
         const def = UnitDefinitions[unitId];
-        slot.classList.add("filled");
+        slot.classList.add("filled", `rarity-${def.rarity}`);
         slot.innerHTML = `
           <img src="${def.sprite}" alt="${def.name}" />
           <span class="deck-slot-cost">${def.cost}</span>
@@ -89,6 +89,7 @@ export class DeckScreen {
       card.className = "collection-card";
       if (!isUnlocked) card.classList.add("locked");
       if (isInDeck) card.classList.add("in-deck");
+      card.classList.add(`rarity-${def.rarity}`);
 
       card.innerHTML = `
         <img src="${def.sprite}" alt="${def.name}" />

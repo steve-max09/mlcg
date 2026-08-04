@@ -18,6 +18,10 @@ import { AbilitySystem } from "./core/AbilitySystem.js";
 import { PlayerProgress } from "./core/PlayerProgress.js";
 import { DeckScreen } from "./core/DeckScreen.js";
 
+import { ChestShop } from "./core/ChestShop.js";
+import { ChestOpener } from "./core/ChestOpener.js";
+import { ChestDefinitions } from "./config/chestDefinitions.js";
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").then((registration) => {
@@ -71,6 +75,7 @@ document.getElementById("open-deck-btn").addEventListener("click", () => {
   audioManager.play(UiSounds.buttonClick);
   showScreen("deck-screen");
   deckScreen.render();
+  renderOwnedChests();
 });
 
 const mainMenu = document.getElementById("main-menu");
@@ -84,9 +89,6 @@ const victorySubtitle = document.getElementById("victorySubtitle");
 const energyValue = document.getElementById("energyValue");
 const energyFill = document.getElementById("energyFill");
 const handContainer = document.getElementById("handContainer");
-
-// obsolete, en dur juste pour le mode "Jouer" à supprimer
-const deployableUnits = ["chauffage", "motobineuse", "compacteur", "broyeur", "minipelle", "tombereau", "climatiseur", "brumisateur"];
 
 const currentDifficulty = DifficultyLevels[1];
 
@@ -139,8 +141,11 @@ function handleGameOver(winner) {
       ? "La base ennemie est détruite."
       : "Votre base a été détruite.";
 
-  audioManager.play(winner === "player" ? UiSounds.victory : UiSounds.defeat);
+  if (winner === "player") {
+    playerProgress.addYanga(50);
+  }
 
+  audioManager.play(winner === "player" ? UiSounds.victory : UiSounds.defeat);
   showScreen("victory-screen");
 }
 
@@ -238,7 +243,7 @@ function renderHand(deck) {
     if (!definition) return;
 
     const card = document.createElement("button");
-    card.className = "card";
+    card.className = `card rarity-${definition.rarity}`;
     card.dataset.unitId = unitId;
     card.innerHTML = `
       <img src="${definition.sprite}" alt="${definition.name}" />
@@ -260,3 +265,64 @@ function startBattleWithDeck(deck) {
   gameLoop.start();
 }
 // =====
+
+// === CHESTS ===
+const chestOpener = new ChestOpener({
+  playerProgress,
+  elements: {
+    overlay: document.getElementById("chest-open-modal"),
+    chestSprite: document.getElementById("chest-open-sprite"),
+    reveal: document.getElementById("chest-reveal"),
+    revealSprite: document.getElementById("chest-reveal-sprite"),
+    revealName: document.getElementById("chest-reveal-name"),
+    revealRarity: document.getElementById("chest-reveal-rarity"),
+    closeBtn: document.getElementById("chest-reveal-close")
+  },
+  audioManager,
+  uiSounds: UiSounds,
+  onResolved: () => {
+    renderOwnedChests();
+    deckScreen.render();
+    renderOwnedChests();
+  }
+});
+
+const chestShop = new ChestShop({
+  playerProgress,
+  elements: {
+    backBtn: document.getElementById("chest-shop-back-btn"),
+    yangaDisplay: document.getElementById("chest-shop-yanga"),
+    shopGrid: document.getElementById("chest-shop-grid")
+  },
+  audioManager,
+  uiSounds: UiSounds,
+  onBack: () => showScreen("deck-screen")
+});
+chestShop.onChestBought = () => renderOwnedChests();
+
+document.getElementById("open-chests-btn").addEventListener("click", () => {
+  audioManager.play(UiSounds.buttonClick);
+  showScreen("chest-shop-screen");
+  chestShop.render();
+});
+
+function renderOwnedChests() {
+  const row = document.getElementById("owned-chests-row");
+  row.innerHTML = "";
+
+  playerProgress.ownedChests.forEach((chest) => {
+    const def = ChestDefinitions[chest.chestId];
+    if (!def) return;
+
+    const el = document.createElement("button");
+    el.className = "owned-chest";
+    el.innerHTML = `<img src="${def.sprite}" alt="${def.name}" />`;
+    el.addEventListener("click", () => {
+      audioManager.play(UiSounds.buttonClick);
+      chestOpener.openChest(chest.instanceId, chest.chestId);
+    });
+
+    row.appendChild(el);
+  });
+}
+// === end CHESTS ===

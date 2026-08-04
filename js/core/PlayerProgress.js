@@ -8,6 +8,7 @@ export class PlayerProgress {
     this.unlockedUnits = [...DEFAULT_UNLOCKED];
     this.deck = [...DEFAULT_DECK];
     this.yanga = 0;
+    this.ownedChests = [];
     this.load();
   }
 
@@ -19,6 +20,7 @@ export class PlayerProgress {
       if (Array.isArray(data.unlockedUnits)) this.unlockedUnits = data.unlockedUnits;
       if (Array.isArray(data.deck)) this.deck = data.deck;
       if (typeof data.yanga === "number") this.yanga = data.yanga;
+      if (Array.isArray(data.ownedChests)) this.ownedChests = data.ownedChests;
     } catch (error) {
       console.error("Erreur de chargement de la progression:", error);
     }
@@ -30,7 +32,8 @@ export class PlayerProgress {
       JSON.stringify({
         unlockedUnits: this.unlockedUnits,
         deck: this.deck,
-        yanga: this.yanga
+        yanga: this.yanga,
+        ownedChests: this.ownedChests
       })
     );
   }
@@ -79,5 +82,17 @@ export class PlayerProgress {
     this.yanga -= amount;
     this.save();
     return true;
+  }
+
+  buyChest(chestId, price) {
+    if (!this.spendYanga(price)) return false;
+    this.ownedChests.push({ chestId, instanceId: `${chestId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}` });
+    this.save();
+    return true;
+  }
+
+  removeChest(instanceId) {
+    this.ownedChests = this.ownedChests.filter((c) => c.instanceId !== instanceId);
+    this.save();
   }
 }

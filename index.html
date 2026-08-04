@@ -46,9 +46,14 @@
         </div>
       </div>
 
+      <div class="owned-chests-row" id="owned-chests-row"></div>
+
       <div class="deck-slots" id="deck-slots"></div>
 
-      <button class="menu-btn primary" id="battle-btn" disabled>Combat</button>
+      <div class="deck-actions-row">
+        <button class="menu-btn primary" id="battle-btn" disabled>Combat</button>
+        <button class="menu-btn secondary" id="open-chests-btn">Coffres</button>
+      </div>
 
       <div class="collection-header">
         <h3>Collection</h3>
@@ -106,6 +111,31 @@
         <button class="menu-btn primary" id="backToMenuBtn">Retour au menu</button>
       </div>
     </section>
+
+    <section id="chest-shop-screen" class="screen">
+      <div class="deck-header">
+        <button class="icon-btn" id="chest-shop-back-btn">←</button>
+        <h2>Coffres</h2>
+        <div class="yanga-display">
+          <img src="assets/ui/yanga.png" alt="Yanga" />
+          <span id="chest-shop-yanga">0</span>
+        </div>
+      </div>
+
+      <div class="chest-shop-grid" id="chest-shop-grid"></div>
+    </section>
+
+    <div class="modal-overlay" id="chest-open-modal">
+      <div class="chest-open-card">
+        <img id="chest-open-sprite" src="" alt="" class="chest-open-sprite" />
+        <div class="chest-reveal" id="chest-reveal">
+          <img id="chest-reveal-sprite" src="" alt="" />
+          <h3 id="chest-reveal-name"></h3>
+          <span class="rarity-label" id="chest-reveal-rarity"></span>
+        </div>
+        <button class="menu-btn primary hidden" id="chest-reveal-close">Continuer</button>
+      </div>
+    </div>
   </div>
 
   <script type="module" src="js/main.js"></script>
