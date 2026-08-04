@@ -7,7 +7,7 @@ export class PlayerProgress {
   constructor() {
     this.unlockedUnits = [...DEFAULT_UNLOCKED];
     this.deck = [...DEFAULT_DECK];
-    this.yanga = 0;
+    this.yanga = 11000;
     this.ownedChests = [];
     this.load();
   }

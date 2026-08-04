@@ -478,6 +478,16 @@ button {
   z-index: 5;
 }
 
+.light-spurt {
+  position: absolute;
+  height: 10px;
+  background: linear-gradient(90deg, #ffffff, #ffff00, transparent);
+  border-radius: 15px;
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 5;
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -1071,28 +1081,43 @@ button {
   flex: 1;
 }
 
+
 .owned-chests-row {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+  min-height: 100px;
+  height: 100px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  overflow-y: visible;
+  padding: 8px 2px 12px;
+  scrollbar-width: none;
+}
+
+.owned-chests-row.empty {
+  display: none;
+}
+
+.owned-chests-row::-webkit-scrollbar {
+  display: none;
 }
 
 .owned-chest {
-  width: 64px;
-  height: 64px;
+  width: 88px;
+  height: 88px;
   flex-shrink: 0;
-  background: var(--panel);
-  border-radius: 12px;
+  background: var(--card);
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow);
+  border: 2px solid rgba(250, 204, 21, 0.4);
 }
 
 .owned-chest img {
-  width: 70%;
-  height: 70%;
+  width: 78%;
+  height: 78%;
   object-fit: contain;
 }
 

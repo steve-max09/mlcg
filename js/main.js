@@ -296,7 +296,11 @@ const chestShop = new ChestShop({
   },
   audioManager,
   uiSounds: UiSounds,
-  onBack: () => showScreen("deck-screen")
+  onBack: () => {
+    showScreen("deck-screen");
+    deckScreen.render();
+    renderOwnedChests();
+  }
 });
 chestShop.onChestBought = () => renderOwnedChests();
 
@@ -309,6 +313,8 @@ document.getElementById("open-chests-btn").addEventListener("click", () => {
 function renderOwnedChests() {
   const row = document.getElementById("owned-chests-row");
   row.innerHTML = "";
+
+  row.classList.toggle("empty", playerProgress.ownedChests.length === 0);
 
   playerProgress.ownedChests.forEach((chest) => {
     const def = ChestDefinitions[chest.chestId];

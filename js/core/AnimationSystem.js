@@ -24,6 +24,9 @@ export const AnimationSystem = {
       case "iceWind":
         this.playIceWind(rendererEl, attacker, target);
         break;
+      case "lightSpurt":
+        this.playLightSpurt(rendererEl, attacker, target);
+        break;
       default:
         this.playPulse(rendererEl);
     }
@@ -167,55 +170,59 @@ export const AnimationSystem = {
   },
 
   playIceWind(el, attacker, target) {
-  const arena = el.closest("#arena");
-  if (!arena) return;
+    const arena = el.closest("#arena");
+    if (!arena) return;
 
-  const dx = target.x - attacker.x;
-  const dy = target.y - attacker.y;
-  const distance = Math.sqrt(dx * dx + dy * dy);
-  const angle = Math.atan2(dy, dx);
+    const dx = target.x - attacker.x;
+    const dy = target.y - attacker.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx);
 
-  const gust = document.createElement("div");
-  gust.className = "ice-gust";
-  gust.style.left = `${attacker.x}px`;
-  gust.style.top = `${attacker.y}px`;
-  gust.style.width = `${distance}px`;
-  gust.style.transform = `rotate(${angle}rad)`;
-  arena.appendChild(gust);
-  setTimeout(() => gust.remove(), 400);
+    const gust = document.createElement("div");
+    gust.className = "ice-gust";
+    gust.style.left = `${attacker.x}px`;
+    gust.style.top = `${attacker.y}px`;
+    gust.style.width = `${distance}px`;
+    gust.style.transform = `rotate(${angle}rad)`;
+    arena.appendChild(gust);
+    setTimeout(() => gust.remove(), 400);
 
-  const shardCount = 4;
-  for (let i = 0; i < shardCount; i++) {
-    const shard = document.createElement("div");
-    shard.className = "ice-shard";
+    const shardCount = 4;
+    for (let i = 0; i < shardCount; i++) {
+      const shard = document.createElement("div");
+      shard.className = "ice-shard";
 
-    const spread = (Math.random() - 0.5) * 30;
-    const perpAngle = angle + Math.PI / 2;
-    const travelDistance = distance * (0.6 + Math.random() * 0.4);
+      const spread = (Math.random() - 0.5) * 30;
+      const perpAngle = angle + Math.PI / 2;
+      const travelDistance = distance * (0.6 + Math.random() * 0.4);
 
-    const startX = attacker.x + Math.cos(perpAngle) * spread * 0.3;
-    const startY = attacker.y + Math.sin(perpAngle) * spread * 0.3;
-    const endX = startX + Math.cos(angle) * travelDistance + Math.cos(perpAngle) * spread;
-    const endY = startY + Math.sin(angle) * travelDistance + Math.sin(perpAngle) * spread;
+      const startX = attacker.x + Math.cos(perpAngle) * spread * 0.3;
+      const startY = attacker.y + Math.sin(perpAngle) * spread * 0.3;
+      const endX = startX + Math.cos(angle) * travelDistance + Math.cos(perpAngle) * spread;
+      const endY = startY + Math.sin(angle) * travelDistance + Math.sin(perpAngle) * spread;
 
-    shard.style.left = `${startX}px`;
-    shard.style.top = `${startY}px`;
-    shard.style.setProperty("--travel-x", `${endX - startX}px`);
-    shard.style.setProperty("--travel-y", `${endY - startY}px`);
-    shard.style.animationDelay = `${i * 40}ms`;
+      shard.style.left = `${startX}px`;
+      shard.style.top = `${startY}px`;
+      shard.style.setProperty("--travel-x", `${endX - startX}px`);
+      shard.style.setProperty("--travel-y", `${endY - startY}px`);
+      shard.style.animationDelay = `${i * 40}ms`;
 
-    arena.appendChild(shard);
-    setTimeout(() => shard.remove(), 500);
-  }
-},
+      arena.appendChild(shard);
+      setTimeout(() => shard.remove(), 500);
+    }
+  },
 
-playSpawnFreeze(arenaElement, unit, radius) {
-  const ring = document.createElement("div");
-  ring.className = "freeze-ring";
-  ring.style.left = `${unit.x}px`;
-  ring.style.top = `${unit.y}px`;
-  ring.style.setProperty("--freeze-radius", `${radius * 2}px`);
-  arenaElement.appendChild(ring);
-  setTimeout(() => ring.remove(), 700);
-}
+  playSpawnFreeze(arenaElement, unit, radius) {
+    const ring = document.createElement("div");
+    ring.className = "freeze-ring";
+    ring.style.left = `${unit.x}px`;
+    ring.style.top = `${unit.y}px`;
+    ring.style.setProperty("--freeze-radius", `${radius * 2}px`);
+    arenaElement.appendChild(ring);
+    setTimeout(() => ring.remove(), 700);
+  },
+
+  playLightSpurt(el, attacker, target) {
+    this.spawnProjectileBeam(el, attacker, target, "light-spurt");
+  },
 };
