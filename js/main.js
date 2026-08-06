@@ -49,6 +49,12 @@ const deckScreen = new DeckScreen({
     battleBtn: document.getElementById("battle-btn"),
     yangaAmount: document.getElementById("yanga-amount"),
     deckSlots: document.getElementById("deck-slots"),
+    baseSlot: document.getElementById("base-slot"),
+    leftTowerSlot: document.getElementById("left-tower-slot"),
+    rightTowerSlot: document.getElementById("right-tower-slot"),
+    filterUnitsBtn: document.getElementById("filter-units-btn"),
+    filterTowersBtn: document.getElementById("filter-towers-btn"),
+    filterBasesBtn: document.getElementById("filter-bases-btn"),
     collectionGrid: document.getElementById("collection-grid"),
     collectionCount: document.getElementById("collection-count"),
     modalOverlay: document.getElementById("unit-detail-modal"),
@@ -105,15 +111,36 @@ function showScreen(id) {
   document.getElementById(id).classList.add("active");
 }
 
-function setupArena(gameState, renderer) {
+function setupArena(gameState, renderer, playerProgress) {
   const arenaRect = arenaElement.getBoundingClientRect();
   const centerX = arenaRect.width / 2;
 
-  const enemyTower = new Tower(TowerDefinition, "enemy", centerX, arenaRect.height * 0.18);
-  const playerTower = new Tower(TowerDefinition, "player", centerX, arenaRect.height * 0.92);
+  // Base
+  const baseDef = UnitDefinitions[playerProgress.selectedBaseId] || UnitDefinitions["base_usine"];
+  const enemyBase = new Tower(baseDef, "enemy", centerX, arenaRect.height * 0.14);
+  const playerBase = new Tower(baseDef, "player", centerX, arenaRect.height * 0.92);
 
-  gameState.addTower(enemyTower);
-  gameState.addTower(playerTower);
+  gameState.addTower(enemyBase);
+  gameState.addTower(playerBase);
+
+  // Tours gauche/droite
+  const leftDef = UnitDefinitions[playerProgress.selectedLeftTowerId] || UnitDefinitions["tower_standard"];
+  const rightDef = UnitDefinitions[playerProgress.selectedRightTowerId] || UnitDefinitions["tower_standard"];
+
+  const offsetX = arenaRect.width * 0.22; // distance latérale depuis le centre
+  const enemyY = arenaRect.height * 0.30;
+  const playerY = arenaRect.height * 0.76;
+
+  const enemyLeftTower = new Tower(leftDef, "enemy", centerX - offsetX, enemyY);
+  const enemyRightTower = new Tower(rightDef, "enemy", centerX + offsetX, enemyY);
+
+  const playerLeftTower = new Tower(leftDef, "player", centerX - offsetX, playerY);
+  const playerRightTower = new Tower(rightDef, "player", centerX + offsetX, playerY);
+
+  gameState.addTower(enemyLeftTower);
+  gameState.addTower(enemyRightTower);
+  gameState.addTower(playerLeftTower);
+  gameState.addTower(playerRightTower);
 }
 
 function getArenaSize() {
@@ -259,7 +286,7 @@ function startBattleWithDeck(deck) {
   renderHand(deck);
 
   gameState.reset();
-  setupArena(gameState, renderer);
+  setupArena(gameState, renderer, playerProgress);
 
   gameLoop.stop();
   gameLoop.start();

@@ -1,4 +1,4 @@
-// bases
+// bases (obsolète, à supprimer)
 export const TowerDefinition = {
   id: "mainBase",
   name: "Base principale",
@@ -9,9 +9,104 @@ export const TowerDefinition = {
   canMove: false
 };
 
-// stats de chaque unité
+// stats de chaque unité / tour / base
 export const UnitDefinitions = {
+  base_usine: {
+    category: "base",
+    id: "base_usine",
+    name: "Usine",
+    description: "Une usine standard qui fournit l'énergie et défend la ligne centrale.",
+    sprite: "assets/bases/usine.png",
+    rarity: 0,
+    hp: 2000,
+    damage: 40,
+    attackSpeed: 0.8,
+    attackRange: 190,
+    hitboxRadius: 60,
+    targetType: "ground",
+    canMove: false,
+    canAttack: true,
+    attackAnimation: "fireSpurt",
+    sounds: {
+      spawn: null,
+      attack: "assets/sounds/units/chauffage-attack.mp3",
+      death: "assets/sounds/ui/tower-destroyed.mp3"
+    }
+  },
+
+  base_barbie: {
+    category: "base",
+    id: "base_barbie",
+    name: "Usine",
+    description: "La maison de Barbie. Un avant-poste respectable en temps de guerre.",
+    sprite: "assets/bases/barbie.png",
+    rarity: 0,
+    hp: 3000,
+    damage: 70,
+    attackSpeed: 0.6,
+    attackRange: 170,
+    hitboxRadius: 60,
+    targetType: "ground",
+    canMove: false,
+    canAttack: true,
+    attackAnimation: "lightSpurt",
+    sounds: {
+      spawn: null,
+      attack: "assets/sounds/units/chauffage-attack.mp3",
+      death: "assets/sounds/ui/tower-destroyed.mp3"
+    }
+  },
+
+  tower_standard: {
+    category: "tower",
+    id: "tower_standard",
+    name: "Tour du début du jeu (la honte un peu)",
+    description: "Une tour polyvalente qui protège les flancs.",
+    sprite: "assets/bases/tour-standard.png",
+    rarity: 0,
+    hp: 1200,
+    damage: 30,
+    attackSpeed: 1.0,
+    attackRange: 160,
+    hitboxRadius: 40,
+    targetType: "ground",
+    canMove: false,
+    canAttack: true,
+    attackAnimation: "fireSpurt",
+    sounds: {
+      spawn: null,
+      attack: "assets/sounds/units/tombereau-attack.mp3",
+      death: "assets/sounds/ui/tower-destroyed.mp3"
+    }
+  },
+
+  tower_coalshot: {
+    category: "tower",
+    id: "tower_coalshot",
+    name: "Tour mega dégâts",
+    description: "Une tour polyvalente qui protège les flancs.",
+    sprite: "assets/bases/tour-coalshot.png",
+    rarity: 1,
+    hp: 1200,
+    damage: 40,
+    attackSpeed: 1.0,
+    attackRange: 160,
+    hitboxRadius: 40,
+    targetType: "ground",
+    canMove: false,
+    canAttack: true,
+    attackAnimation: "coalShot",
+    aoeRadius: 80,
+    aoeCenter: "target",
+    sounds: {
+      spawn: null,
+      attack: "assets/sounds/units/tombereau-attack.mp3",
+      death: "assets/sounds/ui/tower-destroyed.mp3"
+    }
+  },
+
   chauffage: {
+    category: "unit",
     id: "chauffage",
     name: "Chauffage mobile fioul 50000 kcal/h",
     description: "Description manquante",
@@ -36,6 +131,7 @@ export const UnitDefinitions = {
   },
 
   motobineuse: {
+    category: "unit",
     id: "motobineuse",
     name: "Motobineuse",
     description: "Description manquante",
@@ -60,6 +156,7 @@ export const UnitDefinitions = {
   },
 
   compacteur: {
+    category: "unit",
     id: "compacteur",
     name: "Compacteur monocylindre Grand Travaux",
     description: "Description manquante",
@@ -86,6 +183,7 @@ export const UnitDefinitions = {
   },
 
   broyeur: {
+    category: "unit",
     id: "broyeur",
     name: "Broyeur de végétaux",
     description: "Description manquante",
@@ -110,6 +208,7 @@ export const UnitDefinitions = {
   },
 
   minipelle: {
+    category: "unit",
     id: "minipelle",
     name: "Minipelle sur chenilles",
     description: "Description manquante",
@@ -134,6 +233,7 @@ export const UnitDefinitions = {
   },
   
   tombereau: {
+    category: "unit",
     id: "tombereau",
     name: "Tombereau articulé",
     description: "Description manquante",
@@ -160,6 +260,7 @@ export const UnitDefinitions = {
   },
 
   climatiseur: {
+    category: "unit",
     id: "climatiseur",
     name: "Climatiseur mobile 6 kW",
     description: "Description manquante",
@@ -187,6 +288,7 @@ export const UnitDefinitions = {
   },
 
   brumisateur: {
+    category: "unit",
     id: "brumisateur",
     name: "Brumisateur mobile",
     description: "Description manquante",
@@ -211,6 +313,7 @@ export const UnitDefinitions = {
   },
 
   chariot: {
+    category: "unit",
     id: "chariot",
     name: "Chariot téléscopique diesel compact",
     description: "Description manquante",
@@ -235,6 +338,7 @@ export const UnitDefinitions = {
   },
 
   mat: {
+    category: "unit",
     id: "mat",
     name: "Mât d'éclairage 2 200 m² hybride",
     description: "Production autonome de lumières destinée aux travaux nocturnes et manifestations événementielles.",

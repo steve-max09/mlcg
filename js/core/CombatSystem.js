@@ -25,8 +25,41 @@ export const CombatSystem = {
       }
     }
 
+    for (const tower of gameState.towers) {
+      if (tower.isDead || !tower.canAttack) continue;
+
+      tower.attackCooldown = Math.max(0, tower.attackCooldown - deltaSeconds);
+
+      const target = this.findClosestTargetInRange(tower, gameState);
+      if (!target) continue;
+
+      if (tower.attackCooldown <= 0) {
+        this.attack(tower, target, gameState);
+        tower.attackCooldown = 1 / tower.attackSpeed;
+        if (onAttack) onAttack(tower, target);
+      }
+    }
+
     gameState.removeDeadUnits();
     gameState.checkVictory();
+  },
+
+  // permet aux tours / bases de trouver leurs targets
+  findClosestTargetInRange(attacker, gameState) {
+    const enemies = gameState.getEnemiesOf(attacker.team);
+    let closest = null;
+    let closestDist = Infinity;
+
+    for (const enemy of enemies) {
+      if (enemy.isDead) continue;
+      const dist = attacker.distanceTo(enemy);
+      if (dist <= attacker.attackRange && dist < closestDist) {
+        closestDist = dist;
+        closest = enemy;
+      }
+    }
+
+    return closest;
   },
 
   isTargetInvalid(target) {
