@@ -4,7 +4,7 @@ import { Tower } from "./core/Tower.js";
 import { GameLoop } from "./core/GameLoop.js";
 import { Renderer } from "./render/Renderer.js";
 import { DragDropController } from "./input/DragDropController.js";
-import { UnitDefinitions, TowerDefinition } from "./config/unitDefinitions.js";
+import { UnitDefinitions } from "./config/unitDefinitions.js";
 
 import { AIController } from "./core/AIController.js";
 import { DifficultyLevels } from "./config/difficultyLevels.js";
@@ -68,7 +68,9 @@ const deckScreen = new DeckScreen({
     detailAtkSpeed: document.getElementById("unit-detail-atkspeed"),
     detailRange: document.getElementById("unit-detail-range"),
     detailMoveSpeed: document.getElementById("unit-detail-movespeed"),
-    detailAction: document.getElementById("unit-detail-action")
+    detailAction: document.getElementById("unit-detail-action"),
+    detailActionLeft: document.getElementById("unit-detail-action-left"),
+    detailActionRight: document.getElementById("unit-detail-action-right")
   },
   onBattleStart: () => {
     showScreen("arena-screen");
@@ -115,27 +117,31 @@ function setupArena(gameState, renderer, playerProgress) {
   const arenaRect = arenaElement.getBoundingClientRect();
   const centerX = arenaRect.width / 2;
 
-  // Base
-  const baseDef = UnitDefinitions[playerProgress.selectedBaseId] || UnitDefinitions["base_usine"];
-  const enemyBase = new Tower(baseDef, "enemy", centerX, arenaRect.height * 0.14);
-  const playerBase = new Tower(baseDef, "player", centerX, arenaRect.height * 0.92);
+  // Bases
+  const enemyBaseDef = UnitDefinitions[playerProgress.enemyBaseId] || UnitDefinitions.base_usine;
+  const playerBaseDef = UnitDefinitions[playerProgress.playerBaseId] || UnitDefinitions.base_usine;
+
+  const enemyBase = new Tower(enemyBaseDef, "enemy", centerX, arenaRect.height * 0.14);
+  const playerBase = new Tower(playerBaseDef, "player", centerX, arenaRect.height * 0.92);
 
   gameState.addTower(enemyBase);
   gameState.addTower(playerBase);
 
-  // Tours gauche/droite
-  const leftDef = UnitDefinitions[playerProgress.selectedLeftTowerId] || UnitDefinitions["tower_standard"];
-  const rightDef = UnitDefinitions[playerProgress.selectedRightTowerId] || UnitDefinitions["tower_standard"];
+  // Tours
+  const enemyLeftDef = UnitDefinitions[playerProgress.enemyLeftTowerId] || UnitDefinitions.tower_standard;
+  const enemyRightDef = UnitDefinitions[playerProgress.enemyRightTowerId] || UnitDefinitions.tower_standard;
+  const playerLeftDef = UnitDefinitions[playerProgress.playerLeftTowerId] || UnitDefinitions.tower_standard;
+  const playerRightDef = UnitDefinitions[playerProgress.playerRightTowerId] || UnitDefinitions.tower_standard;
 
   const offsetX = arenaRect.width * 0.22; // distance latérale depuis le centre
   const enemyY = arenaRect.height * 0.30;
   const playerY = arenaRect.height * 0.76;
 
-  const enemyLeftTower = new Tower(leftDef, "enemy", centerX - offsetX, enemyY);
-  const enemyRightTower = new Tower(rightDef, "enemy", centerX + offsetX, enemyY);
+  const enemyLeftTower = new Tower(enemyLeftDef, "enemy", centerX - offsetX, enemyY);
+  const enemyRightTower = new Tower(enemyRightDef, "enemy", centerX + offsetX, enemyY);
 
-  const playerLeftTower = new Tower(leftDef, "player", centerX - offsetX, playerY);
-  const playerRightTower = new Tower(rightDef, "player", centerX + offsetX, playerY);
+  const playerLeftTower = new Tower(playerLeftDef, "player", centerX - offsetX, playerY);
+  const playerRightTower = new Tower(playerRightDef, "player", centerX + offsetX, playerY);
 
   gameState.addTower(enemyLeftTower);
   gameState.addTower(enemyRightTower);

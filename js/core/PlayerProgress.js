@@ -1,6 +1,6 @@
 const STORAGE_KEY = "mlcg_player_progress";
 
-const DEFAULT_UNLOCKED = ["chauffage", "motobineuse"];
+const DEFAULT_UNLOCKED = ["chauffage", "motobineuse", "base_usine", "tower_standard"];
 const DEFAULT_DECK = ["chauffage", "motobineuse"];
 
 const DEFAULT_BASE_ID = "base_usine";
@@ -12,9 +12,13 @@ export class PlayerProgress {
     this.unlockedUnits = [...DEFAULT_UNLOCKED];
     this.deck = [...DEFAULT_DECK];
 
-    this.selectedBaseId = DEFAULT_BASE_ID;
-    this.selectedLeftTowerId = DEFAULT_LEFT_TOWER_ID;
-    this.selectedRightTowerId = DEFAULT_RIGHT_TOWER_ID;
+    this.playerBaseId = "base_usine";
+    this.enemyBaseId = "base_usine";
+
+    this.playerLeftTowerId = "tower_standard";
+    this.playerRightTowerId = "tower_standard";
+    this.enemyLeftTowerId = "tower_standard";
+    this.enemyRightTowerId = "tower_standard";
 
     this.yanga = 11000;
     this.ownedChests = [];
@@ -30,9 +34,9 @@ export class PlayerProgress {
       if (Array.isArray(data.deck)) this.deck = data.deck;
       if (typeof data.yanga === "number") this.yanga = data.yanga;
       if (Array.isArray(data.ownedChests)) this.ownedChests = data.ownedChests;
-      if (data.selectedBaseId) this.selectedBaseId = data.selectedBaseId;
-      if (data.selectedLeftTowerId) this.selectedLeftTowerId = data.selectedLeftTowerId;
-      if (data.selectedRightTowerId) this.selectedRightTowerId = data.selectedRightTowerId;
+      if (data.playerBaseId) this.playerBaseId = data.playerBaseId;
+      if (data.playerLeftTowerId) this.playerLeftTowerId = data.playerLeftTowerId;
+      if (data.playerRightTowerId) this.playerRightTowerId = data.playerRightTowerId;
     } catch (error) {
       console.error("Erreur de chargement de la progression:", error);
     }
@@ -44,9 +48,9 @@ export class PlayerProgress {
       JSON.stringify({
         unlockedUnits: this.unlockedUnits,
         deck: this.deck,
-        selectedBaseId: this.selectedBaseId,
-        selectedLeftTowerId: this.selectedLeftTowerId,
-        selectedRightTowerId: this.selectedRightTowerId,
+        playerBaseId: this.playerBaseId,
+        playerLeftTowerId: this.playerLeftTowerId,
+        playerRightTowerId: this.playerRightTowerId,
         yanga: this.yanga,
         ownedChests: this.ownedChests
       })
@@ -87,20 +91,13 @@ export class PlayerProgress {
     return this.deck.length >= 1;
   }
 
-  setBase(unitId) {
-    this.selectedBaseId = unitId;
-    this.save();
-  }
+  setPlayerBase(id) { this.playerBaseId = id; this.save(); }
+  setEnemyBase(id) { this.enemyBaseId = id; this.save(); }
 
-  setLeftTower(unitId) {
-    this.selectedLeftTowerId = unitId;
-    this.save();
-  }
-
-  setRightTower(unitId) {
-    this.selectedRightTowerId = unitId;
-    this.save();
-  }
+  setPlayerLeftTower(id) { this.playerLeftTowerId = id; this.save(); }
+  setPlayerRightTower(id) { this.playerRightTowerId = id; this.save(); }
+  setEnemyLeftTower(id) { this.enemyLeftTowerId = id; this.save(); }
+  setEnemyRightTower(id) { this.enemyRightTowerId = id; this.save(); }
 
   addYanga(amount) {
     this.yanga += amount;

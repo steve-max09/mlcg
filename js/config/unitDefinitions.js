@@ -1,14 +1,3 @@
-// bases (obsolète, à supprimer)
-export const TowerDefinition = {
-  id: "mainBase",
-  name: "Base principale",
-  sprite: "assets/bases/usine.png",
-  hp: 2000,
-  hitboxRadius: 60,
-  canAttack: false,
-  canMove: false
-};
-
 // stats de chaque unité / tour / base
 export const UnitDefinitions = {
   base_usine: {
@@ -37,10 +26,10 @@ export const UnitDefinitions = {
   base_barbie: {
     category: "base",
     id: "base_barbie",
-    name: "Usine",
+    name: "Maison de Barbie",
     description: "La maison de Barbie. Un avant-poste respectable en temps de guerre.",
     sprite: "assets/bases/barbie.png",
-    rarity: 0,
+    rarity: 1,
     hp: 3000,
     damage: 70,
     attackSpeed: 0.6,
@@ -60,7 +49,7 @@ export const UnitDefinitions = {
   tower_standard: {
     category: "tower",
     id: "tower_standard",
-    name: "Tour du début du jeu (la honte un peu)",
+    name: "Tour du début du jeu",
     description: "Une tour polyvalente qui protège les flancs.",
     sprite: "assets/bases/tour-standard.png",
     rarity: 0,

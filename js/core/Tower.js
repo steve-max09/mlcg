@@ -14,9 +14,25 @@ export class Tower {
     this.hp = definition.hp;
     this.hitboxRadius = definition.hitboxRadius;
 
-    this.canAttack = false;
+    this.damage = definition.damage || 0;
+    this.attackSpeed = definition.attackSpeed || 1;
+    this.attackRange = definition.attackRange || 0;
+    this.targetType = definition.targetType || "any";
+
+    this.canAttack = definition.canAttack !== false;
     this.canMove = false;
+
+    this.attackCooldown = 0;
+    this.target = null;
+
     this.isDestroyed = false;
+    this.isDead = false;
+    this.sounds = definition.sounds || {};
+
+    this.attackAnimation = definition.attackAnimation || "default";
+    this.aoeRadius = definition.aoeRadius || 0;
+    this.aoeCenter = definition.aoeCenter || "target";
+    this.sounds = definition.sounds || {};
   }
 
   takeDamage(amount) {
@@ -24,6 +40,7 @@ export class Tower {
     if (this.hp <= 0) {
       this.hp = 0;
       this.isDestroyed = true;
+      this.isDead = true;
     }
   }
 

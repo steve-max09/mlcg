@@ -66,6 +66,10 @@ export class Renderer {
     return this.elements.get(instanceId);
   }
 
+  getTowerElement(instanceId) {
+    return this.towerElements.get(instanceId);
+  }
+
   render(gameState) {
     for (const tower of gameState.towers) {
       this.syncTower(tower);

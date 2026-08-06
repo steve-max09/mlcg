@@ -1,7 +1,7 @@
 import { UnitDefinitions } from "../config/unitDefinitions.js";
 
 const DEPLOYABLE_UNITS = [
-  "chariot", "mat", "compacteur", "broyeur", "minipelle", "tombereau", "climatiseur", "brumisateur"
+  "chariot", "mat", "compacteur", "broyeur", "minipelle", "tombereau", "climatiseur", "brumisateur", "base_barbie", "tower_coalshot"
 ];
 
 export const ChestSystem = {

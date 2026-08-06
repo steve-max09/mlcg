@@ -114,7 +114,7 @@ export class DeckScreen {
 
       card.innerHTML = `
         <img src="${def.sprite}" alt="${def.name}" />
-        <span class="collection-card-cost">${isUnlocked ? def.cost : ""}</span>
+        <span class="collection-card-cost">${isUnlocked ? def.cost || "" : ""}</span>
         ${!isUnlocked ? '<div class="lock-overlay">🔒</div>' : ""}
       `;
 
@@ -135,9 +135,9 @@ export class DeckScreen {
   }
 
   renderBaseAndTowers() {
-    const baseDef = UnitDefinitions[this.playerProgress.selectedBaseId];
-    const leftDef = UnitDefinitions[this.playerProgress.selectedLeftTowerId];
-    const rightDef = UnitDefinitions[this.playerProgress.selectedRightTowerId];
+    const baseDef = UnitDefinitions[this.playerProgress.playerBaseId];
+    const leftDef = UnitDefinitions[this.playerProgress.playerLeftTowerId];
+    const rightDef = UnitDefinitions[this.playerProgress.playerRightTowerId];
 
     this.el.baseSlot.innerHTML = baseDef
       ? `<img src="${baseDef.sprite}" alt="${baseDef.name}" /><span class="base-slot-label">Base</span>`
@@ -156,10 +156,10 @@ export class DeckScreen {
       this.el.baseSlot.onclick = () => this.openModal(baseDef.id, false, "base");
     }
     if (leftDef) {
-      this.el.leftTowerSlot.onclick = () => this.openModal(leftDef.id, false, "tower-left");
+      this.el.leftTowerSlot.onclick = () => this.openModal(leftDef.id, false, "tower");
     }
     if (rightDef) {
-      this.el.rightTowerSlot.onclick = () => this.openModal(rightDef.id, false, "tower-right");
+      this.el.rightTowerSlot.onclick = () => this.openModal(rightDef.id, false, "tower");
     }
   }
 
@@ -180,6 +180,11 @@ export class DeckScreen {
     this.el.detailMoveSpeed.textContent = def.movementSpeed;
 
     if (mode === "unit") {
+      this.el.detailCost.parentElement.style.display = "block";
+      this.el.detailMoveSpeed.parentElement.style.display = "flex";
+      this.el.detailAction.style.display = "block";
+      this.el.detailActionLeft.style.display = "none";
+      this.el.detailActionRight.style.display = "none";
       this.el.detailAction.textContent = isInDeck ? "Retirer du deck" : "Ajouter au deck";
       this.el.detailAction.onclick = () => {
         if (isInDeck) {
@@ -191,30 +196,37 @@ export class DeckScreen {
         this.render();
       };
     } else if (mode === "base") {
+      this.el.detailCost.parentElement.style.display = "none";
+      this.el.detailMoveSpeed.parentElement.style.display = "none";
+      this.el.detailAction.style.display = "block";
+      this.el.detailActionLeft.style.display = "none";
+      this.el.detailActionRight.style.display = "none";
       this.el.detailAction.textContent = "Utiliser comme base";
       this.el.detailAction.onclick = () => {
-        this.playerProgress.setBase(unitId);
+        this.playerProgress.setPlayerBase(unitId);
         this.closeModal();
         this.render();
       };
     } else if (mode === "tower") {
-      this.el.detailAction.textContent = "Utiliser comme tour gauche";
-      this.el.detailAction.onclick = () => {
-        this.playerProgress.setLeftTower(unitId);
+      this.el.detailCost.parentElement.style.display = "none";
+      this.el.detailMoveSpeed.parentElement.style.display = "none";
+      this.el.detailAction.textContent = "";
+      this.el.detailAction.style.display = "none";
+
+      this.el.detailActionLeft.style.display = "block";
+      this.el.detailActionRight.style.display = "block";
+
+      this.el.detailActionLeft.textContent = "Utiliser comme tour gauche";
+      this.el.detailActionRight.textContent = "Utiliser comme tour droite";
+
+      this.el.detailActionLeft.onclick = () => {
+        this.playerProgress.setPlayerLeftTower(unitId);
         this.closeModal();
         this.render();
       };
-    } else if (mode === "tower-left") {
-      this.el.detailAction.textContent = "Utiliser comme tour gauche";
-      this.el.detailAction.onclick = () => {
-        this.playerProgress.setLeftTower(unitId);
-        this.closeModal();
-        this.render();
-      };
-    } else if (mode === "tower-right") {
-      this.el.detailAction.textContent = "Utiliser comme tour droite";
-      this.el.detailAction.onclick = () => {
-        this.playerProgress.setRightTower(unitId);
+
+      this.el.detailActionRight.onclick = () => {
+        this.playerProgress.setPlayerRightTower(unitId);
         this.closeModal();
         this.render();
       };

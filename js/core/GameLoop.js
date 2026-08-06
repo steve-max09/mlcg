@@ -50,8 +50,13 @@ export class GameLoop {
 
     MovementSystem.update(this.gameState, deltaSeconds);
     CombatSystem.update(this.gameState, deltaSeconds, (attacker, target) => {
-      const el = this.renderer.getUnitElement(attacker.instanceId);
-      AnimationSystem.triggerAttackAnimation(attacker, target, el);
+      const el =
+        this.renderer.getUnitElement(attacker.instanceId) ||
+        this.renderer.getTowerElement(attacker.instanceId);
+
+      if (el) {
+        AnimationSystem.triggerAttackAnimation(attacker, target, el);
+      }
 
       if (this.audioManager && attacker.sounds.attack) {
         this.audioManager.play(attacker.sounds.attack);

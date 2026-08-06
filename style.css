@@ -409,7 +409,7 @@ button {
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
-/* si on est pas sur mobile (petit écran) on augmente la taille des usines */
+/* si on est pas sur mobile (petit écran) on augmente la taille des bases */
 @media (min-width: 700px) {
   .game-tower {
     width: 90px;
@@ -1075,6 +1075,21 @@ button {
   margin-top: 10px;
 }
 
+/* boutons "Utiliser comme tour gauche / droite" */
+.detail-actions-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.detail-actions-row .detail-action {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 8px;
+  font-size: 0.8rem;
+  line-height: 1.1;
+  white-space: normal;
+}
 /*=============== end deck screen stuff =================*/
 
 /* styles de rareté des cartes */

@@ -1,18 +1,28 @@
 export const MovementSystem = {
   update(gameState, deltaSeconds) {
     for (const unit of gameState.units) {
-      if (unit.isDead || !unit.canMove) continue;
+      if (unit.isDead) continue;
 
       unit.updateFreeze(deltaSeconds);
       if (unit.isFrozen) continue;
 
-      const inRange = unit.target && unit.distanceTo(unit.target) <= unit.attackRange;
+      if (unit.canMove) {
+        const inRange = unit.target && unit.distanceTo(unit.target) <= unit.attackRange;
 
-      if (!inRange) {
-        const target = this.findClosestTarget(unit, gameState);
-        if (target) {
-          unit.target = target;
-          this.moveToward(unit, target, deltaSeconds);
+        if (!inRange) {
+          const target = this.findClosestTarget(unit, gameState);
+          if (target) {
+            unit.target = target;
+            this.moveToward(unit, target, deltaSeconds);
+          }
+        }
+
+      } else {
+        // l'unité ne peut pas bouger mais on lui cherche quand même une cible
+        const targetInRange = unit.target && unit.distanceTo(unit.target) <= unit.attackRange && !unit.target.isDead;
+
+        if (!targetInRange) {
+          unit.target = this.findClosestTarget(unit, gameState);
         }
       }
     }
