@@ -28,7 +28,13 @@ export class Renderer {
   }
 
   syncTower(tower) {
+    if (tower.isDestroyed || tower.isDead) {
+      this.removeTower(tower.instanceId);
+      return;
+    }
+
     let el = this.towerElements.get(tower.instanceId);
+
     if (!el) {
       el = document.createElement("div");
       el.className = `game-tower team-${tower.team}`;
@@ -55,10 +61,34 @@ export class Renderer {
     }
   }
 
+  removeTower(instanceId) {
+    const el = this.towerElements.get(instanceId);
+
+    if (!el) return;
+
+    el.remove();
+    this.towerElements.delete(instanceId);
+  }
+
   cleanupDeadUnits(gameState) {
     const aliveIds = new Set(gameState.units.map((u) => u.instanceId));
     for (const [id] of this.elements) {
       if (!aliveIds.has(id)) this.removeUnit(id);
+    }
+  }
+
+  cleanupDestroyedTowers(gameState) {
+    const activeTowerIds = new Set(
+      gameState.towers
+        .filter((tower) => !tower.isDestroyed && !tower.isDead)
+        .map((tower) => tower.instanceId)
+    );
+
+    for (const [instanceId, element] of this.towerElements) {
+      if (!activeTowerIds.has(instanceId)) {
+        element.remove();
+        this.towerElements.delete(instanceId);
+      }
     }
   }
 
@@ -78,5 +108,6 @@ export class Renderer {
       if (!unit.isDead) this.syncUnit(unit);
     }
     this.cleanupDeadUnits(gameState);
+    this.cleanupDestroyedTowers(gameState);
   }
 }

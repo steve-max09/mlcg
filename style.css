@@ -428,11 +428,6 @@ button {
   filter: drop-shadow(0 8px 10px rgba(0,0,0,0.4)) hue-rotate(180deg);
 }
 
-.game-tower.destroyed img {
-  opacity: 0.3;
-  filter: grayscale(1);
-}
-
 .game-tower .hp-bar {
   position: absolute;
   top: -14px;

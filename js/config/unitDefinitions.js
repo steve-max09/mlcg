@@ -94,6 +94,31 @@ export const UnitDefinitions = {
     }
   },
 
+  tower_mega: {
+    category: "tower",
+    id: "tower_mega",
+    name: "Gratte-ciel",
+    description: "La tour idéale pour le business.",
+    sprite: "assets/bases/tour-coalshot.png",
+    rarity: 1,
+    hp: 1200,
+    damage: 40,
+    attackSpeed: 1.0,
+    attackRange: 160,
+    hitboxRadius: 40,
+    targetType: "ground",
+    canMove: false,
+    canAttack: true,
+    attackAnimation: "coalShot",
+    aoeRadius: 80,
+    aoeCenter: "target",
+    sounds: {
+      spawn: null,
+      attack: "assets/sounds/units/tombereau-attack.mp3",
+      death: "assets/sounds/ui/tower-destroyed.mp3"
+    }
+  },
+
   chauffage: {
     category: "unit",
     id: "chauffage",
