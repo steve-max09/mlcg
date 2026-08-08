@@ -22,6 +22,9 @@ import { ChestShop } from "./core/ChestShop.js";
 import { ChestOpener } from "./core/ChestOpener.js";
 import { ChestDefinitions } from "./config/chestDefinitions.js";
 
+import { CampaignLevels } from "./config/campaignLevels.js";
+import { CampaignScreen } from "./core/CampaignScreen.js";
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").then((registration) => {
@@ -121,7 +124,7 @@ function setupArena(gameState, renderer, playerProgress) {
   const enemyBaseDef = UnitDefinitions[playerProgress.enemyBaseId] || UnitDefinitions.base_usine;
   const playerBaseDef = UnitDefinitions[playerProgress.playerBaseId] || UnitDefinitions.base_usine;
 
-  const enemyBase = new Tower(enemyBaseDef, "enemy", centerX, arenaRect.height * 0.14);
+  const enemyBase = new Tower(enemyBaseDef, "enemy", centerX, arenaRect.height * 0.10);
   const playerBase = new Tower(playerBaseDef, "player", centerX, arenaRect.height * 0.92);
 
   gameState.addTower(enemyBase);
@@ -174,7 +177,20 @@ function handleGameOver(winner) {
       ? "La base ennemie est détruite."
       : "Votre base a été détruite.";
 
-  if (winner === "player") {
+  if (winner === "player" && activeCampaignLevel) {
+    const levelIndex = CampaignLevels.findIndex(
+      (level) => level.id === activeCampaignLevel.id
+    );
+
+    const nextLevel = CampaignLevels[levelIndex + 1];
+
+    if (!playerProgress.isCampaignLevelCompleted(activeCampaignLevel.id)) {
+      playerProgress.claimCampaignReward(
+        activeCampaignLevel,
+        nextLevel?.id ?? null
+      );
+    }
+  } else if (winner === "player") {
     playerProgress.addYanga(50);
   }
 
@@ -365,3 +381,62 @@ function renderOwnedChests() {
   });
 }
 // === end CHESTS ===
+
+// === CAMPAIGN ===
+const campaignScreen = new CampaignScreen({
+  playerProgress,
+  elements: {
+    grid: document.getElementById("campaign-level-grid"),
+    backBtn: document.getElementById("campaign-back-btn")
+  },
+  onLevelSelected: (level) => {
+    showScreen("arena-screen");
+    startCampaignBattle(level);
+  },
+  onBack: () => {
+    showScreen("main-menu");
+  }
+});
+
+document
+  .getElementById("open-campaign-btn")
+  .addEventListener("click", () => {
+    showScreen("campaign-screen");
+    campaignScreen.render();
+  });
+
+
+let activeCampaignLevel = null;
+
+function startCampaignBattle(level) {
+  activeCampaignLevel = level;
+
+  showScreen("arena-screen");
+
+  renderHand(playerProgress.deck);
+
+  gameState.reset();
+
+  setupCampaignArena(level);
+  configureCampaignMode(level);
+
+  gameLoop.stop();
+  gameLoop.start();
+}
+
+function setupCampaignArena(level) {
+  arenaElement.dataset.map = level.map;
+  arenaElement.dataset.objective = level.objective;
+
+  setupArena(gameState, renderer, playerProgress);
+}
+
+function configureCampaignMode(level) {
+  if (level.objective === "surviveWaves") {
+    campaignWaveController.start(level);
+    return;
+  }
+
+  aiController.configure(level.ai);
+}
+// === end CAMPAIGN ===

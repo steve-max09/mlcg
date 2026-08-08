@@ -1,4 +1,5 @@
 import { UnitDefinitions } from "../config/unitDefinitions.js";
+import { MAX_DECK_SIZE } from "./PlayerProgress.js";
 
 const DEPLOYABLE_UNITS = [
   "chauffage",
@@ -66,7 +67,7 @@ export class DeckScreen {
   renderDeckSlots() {
     this.el.deckSlots.innerHTML = "";
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < MAX_DECK_SIZE; i++) {
       const unitId = this.playerProgress.deck[i];
       const slot = document.createElement("div");
       slot.className = "deck-slot";
@@ -87,7 +88,7 @@ export class DeckScreen {
       this.el.deckSlots.appendChild(slot);
     }
 
-    this.el.collectionCount.textContent = `${this.playerProgress.deck.length}/8`;
+    this.el.collectionCount.textContent = `${this.playerProgress.deck.length}/${MAX_DECK_SIZE}`;
   }
 
   renderCollection() {

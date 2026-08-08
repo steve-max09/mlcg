@@ -7,6 +7,8 @@ const DEFAULT_BASE_ID = "base_usine";
 const DEFAULT_LEFT_TOWER_ID = "tower_standard";
 const DEFAULT_RIGHT_TOWER_ID = "tower_standard";
 
+export const MAX_DECK_SIZE = 5;
+
 export class PlayerProgress {
   constructor() {
     this.unlockedUnits = [...DEFAULT_UNLOCKED];
@@ -22,6 +24,10 @@ export class PlayerProgress {
 
     this.yanga = 11000;
     this.ownedChests = [];
+
+    this.unlockedCampaignLevels = [1];
+    this.completedCampaignLevels = [];
+
     this.load();
   }
 
@@ -37,6 +43,13 @@ export class PlayerProgress {
       if (data.playerBaseId) this.playerBaseId = data.playerBaseId;
       if (data.playerLeftTowerId) this.playerLeftTowerId = data.playerLeftTowerId;
       if (data.playerRightTowerId) this.playerRightTowerId = data.playerRightTowerId;
+
+      if (Array.isArray(data.unlockedCampaignLevels)) {
+        this.unlockedCampaignLevels = data.unlockedCampaignLevels;
+      }
+      if (Array.isArray(data.completedCampaignLevels)) {
+        this.completedCampaignLevels = data.completedCampaignLevels;
+      }
     } catch (error) {
       console.error("Erreur de chargement de la progression:", error);
     }
@@ -52,7 +65,9 @@ export class PlayerProgress {
         playerLeftTowerId: this.playerLeftTowerId,
         playerRightTowerId: this.playerRightTowerId,
         yanga: this.yanga,
-        ownedChests: this.ownedChests
+        ownedChests: this.ownedChests,
+        unlockedCampaignLevels: this.unlockedCampaignLevels,
+        completedCampaignLevels: this.completedCampaignLevels
       })
     );
   }
@@ -73,7 +88,7 @@ export class PlayerProgress {
   }
 
   addToDeck(unitId) {
-    if (this.deck.length >= 8) return false;
+    if (this.deck.length >= MAX_DECK_SIZE) return false;
     if (this.deck.includes(unitId)) return false;
     if (!this.isUnlocked(unitId)) return false;
 
@@ -81,14 +96,14 @@ export class PlayerProgress {
     this.save();
     return true;
   }
+  
+  isDeckComplete() {
+    return this.deck.length >= 1;
+  }
 
   removeFromDeck(unitId) {
     this.deck = this.deck.filter((id) => id !== unitId);
     this.save();
-  }
-
-  isDeckComplete() {
-    return this.deck.length >= 1;
   }
 
   setPlayerBase(id) { this.playerBaseId = id; this.save(); }
@@ -121,5 +136,56 @@ export class PlayerProgress {
   removeChest(instanceId) {
     this.ownedChests = this.ownedChests.filter((c) => c.instanceId !== instanceId);
     this.save();
+  }
+
+  // campaign stuff
+  isCampaignLevelUnlocked(levelId) {
+    return this.unlockedCampaignLevels.includes(levelId);
+  }
+
+  isCampaignLevelCompleted(levelId) {
+    return this.completedCampaignLevels.includes(levelId);
+  }
+
+  completeCampaignLevel(levelId, nextLevelId = null) {
+    if (!this.completedCampaignLevels.includes(levelId)) {
+      this.completedCampaignLevels.push(levelId);
+    }
+
+    if (nextLevelId !== null && !this.unlockedCampaignLevels.includes(nextLevelId)) {
+      this.unlockedCampaignLevels.push(nextLevelId);
+    }
+
+    this.save();
+  }
+
+  claimCampaignReward(level) {
+    if (this.isCampaignLevelCompleted(level.id)) {
+      return false;
+    }
+
+    const reward = level.reward || {};
+
+    if (reward.yanga) {
+      this.addYanga(reward.yanga);
+    }
+
+    if (reward.unlockUnit) {
+      this.unlockUnit(reward.unlockUnit);
+    }
+
+    if (reward.chest) {
+      for (let i = 0; i < (reward.chest.quantity || 1); i++) {
+        this.ownedChests.push({
+          chestId: reward.chest.chestId,
+          instanceId: `campaign-${level.id}-${Date.now()}-${i}`
+        });
+      }
+    }
+
+    this.completeCampaignLevel(level.id, level.id + 1);
+    this.save();
+
+    return true;
   }
 }

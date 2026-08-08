@@ -27,6 +27,7 @@
 
       <main class="menu-content">
         <button class="menu-btn primary" id="playBtn">Jouer</button>
+        <button class="menu-btn" id="open-campaign-btn">Campagne</button>
         <button class="menu-btn" id="open-deck-btn">Deck</button>
         <button class="menu-btn">Options</button>
       </main>
@@ -34,6 +35,15 @@
       <footer class="menu-footer">
         <span>Prototype hors ligne</span>
       </footer>
+    </section>
+
+    <section id="campaign-screen" class="screen">
+      <header class="campaign-header">
+        <button class="icon-btn" id="campaign-back-btn">←</button>
+        <h2>Campagne</h2>
+      </header>
+
+      <div class="campaign-level-grid" id="campaign-level-grid"></div>
     </section>
 
     <section id="deck-screen" class="screen">
@@ -63,7 +73,7 @@
 
       <div class="collection-header">
         <h3>Collection</h3>
-        <span id="collection-count">0/8</span>
+        <span id="collection-count">0/5</span>
       </div>
 
       <div class="deck-filters">

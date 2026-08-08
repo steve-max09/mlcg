@@ -148,6 +148,7 @@ button {
   background: linear-gradient(180deg, #1d4ed8 0%, #0f172a 100%);
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
+  min-height: 0;
 }
 
 .top-ui,
@@ -328,8 +329,25 @@ button {
 
 .hand {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+  padding: 0 6px;
+  flex-shrink: 0;
+}
+
+.hand .card {
+  min-width: 0;
+  width: 100%;
+  min-height: 58px;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.hand .card img {
+  width: 70%;
+  height: 42px;
+  object-fit: contain;
 }
 
 .card {
@@ -404,8 +422,8 @@ button {
 /* bases animations d'attaque et animation de victoire */
 .game-tower {
   position: absolute;
-  width: 70px;
-  height: 70px;
+  width: 4rem;
+  height: 4rem;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -498,7 +516,7 @@ button {
 }
 
 .card-cost {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: bolder;
   color: var(--muted);
 }
@@ -1308,3 +1326,99 @@ button {
   display: none !important;
 }
 /* end boutique & coffres */
+
+/* campaign stuff */
+#arena[data-map="flat"] {
+  --map-background: #3d9949;
+}
+
+#arena[data-map="middleWall"] {
+  --map-background: #438e4c;
+  background-image:
+    linear-gradient(
+      to bottom,
+      transparent 48%,
+      rgba(120, 80, 40, 0.8) 48%,
+      rgba(120, 80, 40, 0.8) 52%,
+      transparent 52%
+    );
+}
+
+#arena[data-map="river"] {
+  --map-background: #3d9949;
+  background-image:
+    linear-gradient(
+      to bottom,
+      transparent 44%,
+      rgba(45, 145, 205, 0.95) 44%,
+      rgba(45, 145, 205, 0.95) 56%,
+      transparent 56%
+    );
+}
+
+.campaign-level-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.campaign-level-card {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  color: var(--text);
+  text-align: left;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+
+.campaign-level-card.locked {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.campaign-level-card.completed {
+  border-color: #4ade80;
+}
+
+.campaign-level-number {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  font-weight: 800;
+}
+
+.campaign-level-main h3,
+.campaign-level-main p {
+  margin: 0;
+}
+
+.campaign-level-main h3 {
+  font-size: 1rem;
+}
+
+.campaign-level-main p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.campaign-level-icons {
+  display: flex;
+  gap: 6px;
+  font-size: 1.3rem;
+}
+
+.campaign-level-status {
+  color: #4ade80;
+  font-size: 1.2rem;
+}
+/* end campaign stuff */
