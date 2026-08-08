@@ -12,6 +12,7 @@ export class AIController {
       decisionInterval: config.decisionInterval ?? 1.5,
       startingEnergy: config.startingEnergy ?? 5,
       energyRegenRate: config.energyRegenRate ?? 1,
+      energyRegenInterval: config.energyRegenInterval ?? 1800,
       unitPool: config.unitPool || config.units || [],
       unitWeights: config.unitWeights || null
     };
@@ -36,14 +37,14 @@ export class AIController {
   }
 
   regenEnergy(deltaSeconds) {
-    this.energyRegenAccumulator += deltaSeconds;
-    const step = 1 / Math.max(0.01, this.config.energyRegenRate);
+    this.energyRegenAccumulator += deltaSeconds * 1000;
 
-    while (this.energyRegenAccumulator >= step) {
-      this.energyRegenAccumulator -= step;
+    if (this.energyRegenAccumulator >= this.config.energyRegenInterval) {
+      this.energyRegenAccumulator = 0;
+
       this.gameState.enemyEnergy = Math.min(
         this.gameState.maxEnergy,
-        this.gameState.enemyEnergy + 1
+        this.gameState.enemyEnergy + this.config.energyRegenRate
       );
     }
   }
@@ -73,11 +74,24 @@ export class AIController {
   chooseUnit(affordable, playerUnits) {
     const threatLevel = playerUnits.reduce((sum, u) => sum + u.hp, 0);
 
-    if (threatLevel > 300) {
-      return [...affordable].sort((a, b) => b.damage - a.damage)[0];
+    const sorted = [...affordable].sort((a, b) => {
+      const valueA = (a.hp + a.damage * 4) / Math.max(1, a.cost);
+      const valueB = (b.hp + b.damage * 4) / Math.max(1, b.cost);
+      return valueB - valueA;
+    });
+
+    if (sorted.length === 1) return sorted[0];
+
+    const aggression = this.config.aggression ?? 0.5;
+    const roll = Math.random();
+
+    if (threatLevel > 300 && roll < aggression) {
+      return sorted[0];
     }
 
-    return [...affordable].sort((a, b) => b.hp / b.cost - a.hp / a.cost)[0];
+    // sélection semi-aléatoire parmi les 2-3 meilleures
+    const top = sorted.slice(0, Math.min(3, sorted.length));
+    return top[Math.floor(Math.random() * top.length)];
   }
 
   chooseSpawnPosition(arenaSize, playerUnits) {

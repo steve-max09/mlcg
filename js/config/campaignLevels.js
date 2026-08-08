@@ -10,8 +10,10 @@ export const CampaignLevels = [
     ai: {
       difficulty: 1,
       units: ["chauffage", "motobineuse"],
-      startingEnergy: 5,
-      spawnInterval: 4
+      startingEnergy: 0,
+      decisionInterval: 4.5,
+      energyRegenRate: 1,
+      energyRegenInterval: 1700
     },
 
     reward: {
@@ -37,12 +39,13 @@ export const CampaignLevels = [
         units: ["chauffage", "motobineuse"]
       },
       {
-        delay: 12,
+        delay: 10,
         units: ["compacteur"]
       },
       {
-        delay: 25,
-        units: ["broyeur", "compacteur"]
+        delay: 20,
+        units: ["broyeur", "compacteur"],
+        boss: "mat"
       }
     ],
 
@@ -65,8 +68,10 @@ export const CampaignLevels = [
     ai: {
       difficulty: 2,
       units: ["chauffage", "compacteur", "broyeur"],
-      startingEnergy: 8,
-      spawnInterval: 3
+      startingEnergy: 5,
+      decisionInterval: 2.5,
+      energyRegenRate: 1,
+      energyRegenInterval: 1700
     },
 
     reward: {

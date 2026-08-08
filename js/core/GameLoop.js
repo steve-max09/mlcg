@@ -3,13 +3,15 @@ import { CombatSystem } from "./CombatSystem.js";
 import { AnimationSystem } from "./AnimationSystem.js";
 
 export class GameLoop {
-  constructor({ gameState, renderer, onEnergyChange, onGameOver, aiController, audioManager }) {
+  constructor({ gameState, renderer, onEnergyChange, onGameOver, aiController, audioManager, campaignWaveController }) {
     this.gameState = gameState;
     this.renderer = renderer;
     this.onEnergyChange = onEnergyChange;
     this.onGameOver = onGameOver;
     this.aiController = aiController;
     this.audioManager = audioManager;
+
+    this.campaignWaveController = campaignWaveController;
 
     this.lastTimestamp = null;
     this.energyAccumulator = 0;
@@ -49,6 +51,7 @@ export class GameLoop {
     const arenaSize = this.getArenaSize();
 
     MovementSystem.update(this.gameState, deltaSeconds);
+
     CombatSystem.update(this.gameState, deltaSeconds, (attacker, target) => {
       const el =
         this.renderer.getUnitElement(attacker.instanceId) ||
@@ -58,18 +61,22 @@ export class GameLoop {
         AnimationSystem.triggerAttackAnimation(attacker, target, el);
       }
 
-      if (this.audioManager && attacker.sounds.attack) {
+      if (this.audioManager && attacker.sounds?.attack) {
         this.audioManager.play(attacker.sounds.attack);
       }
     });
 
-    this.checkDeaths();
-    this.checkTowerDestruction();
-    this.updateEnergy(deltaSeconds);
+    if (this.campaignWaveController) {
+      this.campaignWaveController.update(deltaSeconds, arenaSize);
+    }
 
     if (this.aiController) {
       this.aiController.update(deltaSeconds, arenaSize);
     }
+
+    this.checkDeaths();
+    this.checkTowerDestruction();
+    this.updateEnergy(deltaSeconds);
   }
 
   checkDeaths() {

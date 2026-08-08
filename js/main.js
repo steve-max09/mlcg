@@ -24,6 +24,7 @@ import { ChestDefinitions } from "./config/chestDefinitions.js";
 
 import { CampaignLevels } from "./config/campaignLevels.js";
 import { CampaignScreen } from "./core/CampaignScreen.js";
+import { CampaignWaveController } from "./core/CampaignWaveController.js";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -217,13 +218,36 @@ const aiController = new AIController({
   }
 });
 
+// contrôleur pour les vagues
+const campaignWaveController = new CampaignWaveController({
+  gameState,
+  unitDefinitions: UnitDefinitions,
+  onSpawn: (definition, x, y) => {
+    const unit = new Unit(definition, "enemy", x, y);
+    gameState.addUnit(unit);
+    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
+    AbilitySystem.onSpawn(unit, gameState, (u, radius) => {
+      AnimationSystem.playSpawnFreeze(renderer.arenaElement, u, radius);
+    });
+  },
+  onWaveStart: () => {},
+  onWaveEnd: () => {},
+  onBossSpawn: (definition, x, y) => {
+    const unit = new Unit(definition, "enemy", x, y);
+    unit.isBoss = true;
+    gameState.addUnit(unit);
+    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
+  }
+});
+
 const gameLoop = new GameLoop({
   gameState,
   renderer,
   onEnergyChange: updateEnergyUI,
   onGameOver: handleGameOver,
   aiController,
-  audioManager
+  audioManager,
+  campaignWaveController
 });
 
 const dragDropController = new DragDropController({
@@ -433,10 +457,18 @@ function setupCampaignArena(level) {
 
 function configureCampaignMode(level) {
   if (level.objective === "surviveWaves") {
+    aiController.configure({
+      decisionInterval: 9999,
+      startingEnergy: 0,
+      energyRegenRate: 0,
+      energyRegenInterval: 999999,
+      unitPool: []
+    });
+
     campaignWaveController.start(level);
     return;
   }
 
-  aiController.configure(level.ai);
+  aiController.configure(level.ai || {});
 }
 // === end CAMPAIGN ===
