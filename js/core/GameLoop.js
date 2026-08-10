@@ -118,10 +118,6 @@ export class GameLoop {
     if (this.energyAccumulator >= this.gameState.energyRegenInterval) {
       this.energyAccumulator = 0;
       this.gameState.regenEnergy();
-      this.gameState.enemyEnergy = Math.min(
-        this.gameState.maxEnergy,
-        this.gameState.enemyEnergy + this.gameState.energyRegenRate
-      );
       if (this.onEnergyChange) this.onEnergyChange(this.gameState.energy);
     }
   }

@@ -13,13 +13,12 @@ export class AIController {
       startingEnergy: config.startingEnergy ?? 5,
       energyRegenRate: config.energyRegenRate ?? 1,
       energyRegenInterval: config.energyRegenInterval ?? 1800,
-      unitPool: config.unitPool || config.units || [],
-      unitWeights: config.unitWeights || null
+      unitPool: config.unitPool || [],
+      aggression: config.aggression ?? 0.5,
+      behavior: config.behavior || "balanced"
     };
 
-    this.difficultyConfig = config;
     this.decisionCooldown = 0;
-
     this.gameState.enemyEnergy = this.config.startingEnergy;
     this.energyRegenAccumulator = 0;
   }
@@ -66,6 +65,8 @@ export class AIController {
     const bestChoice = this.chooseUnit(affordable, playerUnits);
     if (!bestChoice) return;
 
+    if (this.gameState.enemyEnergy < bestChoice.cost) return;
+
     const spawnPos = this.chooseSpawnPosition(arenaSize, playerUnits);
     this.gameState.enemyEnergy -= bestChoice.cost;
     this.onSpawn(bestChoice, spawnPos.x, spawnPos.y);
@@ -74,23 +75,32 @@ export class AIController {
   chooseUnit(affordable, playerUnits) {
     const threatLevel = playerUnits.reduce((sum, u) => sum + u.hp, 0);
 
-    const sorted = [...affordable].sort((a, b) => {
-      const valueA = (a.hp + a.damage * 4) / Math.max(1, a.cost);
-      const valueB = (b.hp + b.damage * 4) / Math.max(1, b.cost);
-      return valueB - valueA;
+    const scored = [...affordable].map((def) => {
+      let score = 0;
+
+      if (this.config.behavior === "rush") {
+        score = (def.damage * 3 + def.attackSpeed * 2) / Math.max(1, def.cost);
+      } else if (this.config.behavior === "tank") {
+        score = def.hp / Math.max(1, def.cost);
+      } else if (this.config.behavior === "pressure") {
+        score = (def.damage * 5) / Math.max(1, def.cost);
+      } else {
+        score = (def.hp + def.damage * 4) / Math.max(1, def.cost);
+      }
+
+      if (threatLevel > 300) score *= 1.2;
+      return { def, score };
     });
 
-    if (sorted.length === 1) return sorted[0];
+    scored.sort((a, b) => b.score - a.score);
 
+    const top = scored.slice(0, Math.min(3, scored.length)).map((x) => x.def);
     const aggression = this.config.aggression ?? 0.5;
-    const roll = Math.random();
 
-    if (threatLevel > 300 && roll < aggression) {
-      return sorted[0];
+    if (Math.random() < aggression || top.length === 1) {
+      return top[0];
     }
 
-    // sélection semi-aléatoire parmi les 2-3 meilleures
-    const top = sorted.slice(0, Math.min(3, sorted.length));
     return top[Math.floor(Math.random() * top.length)];
   }
 

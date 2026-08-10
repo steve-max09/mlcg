@@ -7,7 +7,6 @@ import { DragDropController } from "./input/DragDropController.js";
 import { UnitDefinitions } from "./config/unitDefinitions.js";
 
 import { AIController } from "./core/AIController.js";
-import { DifficultyLevels } from "./config/difficultyLevels.js";
 
 import { AudioManager } from "./core/AudioManager.js";
 import { UiSounds } from "./config/uiSounds.js";
@@ -108,8 +107,6 @@ const energyFill = document.getElementById("energyFill");
 const handContainer = document.getElementById("handContainer");
 // timer pour le mode survie (surviveWaves)
 const campaignTimerEl = document.getElementById("campaign-timer");
-
-const currentDifficulty = DifficultyLevels[1];
 
 const audioManager = new AudioManager();
 audioManager.uiSounds = UiSounds;
@@ -224,7 +221,7 @@ const renderer = new Renderer(arenaElement);
 const aiController = new AIController({
   gameState,
   unitDefinitions: UnitDefinitions,
-  difficultyConfig: currentDifficulty,
+  difficultyConfig: {},
   onSpawn: (definition, x, y) => {
     const unit = new Unit(definition, "enemy", x, y);
     gameState.addUnit(unit);

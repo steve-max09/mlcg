@@ -8,8 +8,7 @@ export const CampaignLevels = [
     unlockedByDefault: true,
 
     ai: {
-      difficulty: 1,
-      units: ["chauffage", "motobineuse"],
+      unitPool: ["chauffage", "motobineuse"],
       startingEnergy: 0,
       decisionInterval: 4.5,
       energyRegenRate: 1,
@@ -66,12 +65,11 @@ export const CampaignLevels = [
     unlockedByDefault: false,
 
     ai: {
-      difficulty: 2,
-      units: ["chauffage", "compacteur"],
+      unitPool: ["chauffage", "compacteur"],
       startingEnergy: 0,
-      decisionInterval: 6.5,
+      decisionInterval: 2.5,
       energyRegenRate: 1,
-      energyRegenInterval: 2500
+      energyRegenInterval: 1700
     },
 
     reward: {
