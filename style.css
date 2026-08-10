@@ -1421,4 +1421,16 @@ button {
   color: #4ade80;
   font-size: 1.2rem;
 }
+
+.campaign-timer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.8);
+  color: white;
+  font-weight: 700;
+  z-index: 20;
+}
 /* end campaign stuff */

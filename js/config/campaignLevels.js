@@ -30,7 +30,7 @@ export const CampaignLevels = [
     name: "Renforts industriels",
     description: "Survivez aux vagues ennemies.",
     objective: "surviveWaves",
-    map: "middleWall",
+    map: "river",
     unlockedByDefault: false,
 
     waves: [
@@ -67,11 +67,11 @@ export const CampaignLevels = [
 
     ai: {
       difficulty: 2,
-      units: ["chauffage", "compacteur", "broyeur"],
-      startingEnergy: 5,
-      decisionInterval: 2.5,
+      units: ["chauffage", "compacteur"],
+      startingEnergy: 0,
+      decisionInterval: 6.5,
       energyRegenRate: 1,
-      energyRegenInterval: 1700
+      energyRegenInterval: 2500
     },
 
     reward: {

@@ -43,6 +43,11 @@ if ("serviceWorker" in navigator) {
     });
   });
 }
+// === end imports and app setup stuff ===
+
+let activeCampaignLevel = null;
+let campaignTimer = 0;
+let campaignMode = null; // "destroyBase" | "surviveWaves"
 
 const playerProgress = new PlayerProgress();
 
@@ -101,6 +106,8 @@ const victorySubtitle = document.getElementById("victorySubtitle");
 const energyValue = document.getElementById("energyValue");
 const energyFill = document.getElementById("energyFill");
 const handContainer = document.getElementById("handContainer");
+// timer pour le mode survie (surviveWaves)
+const campaignTimerEl = document.getElementById("campaign-timer");
 
 const currentDifficulty = DifficultyLevels[1];
 
@@ -117,38 +124,43 @@ function showScreen(id) {
   document.getElementById(id).classList.add("active");
 }
 
-function setupArena(gameState, renderer, playerProgress) {
+function setupArena(gameState, renderer, playerProgress, options = {}) {
   const arenaRect = arenaElement.getBoundingClientRect();
   const centerX = arenaRect.width / 2;
-
-  // Bases
-  const enemyBaseDef = UnitDefinitions[playerProgress.enemyBaseId] || UnitDefinitions.base_usine;
-  const playerBaseDef = UnitDefinitions[playerProgress.playerBaseId] || UnitDefinitions.base_usine;
-
-  const enemyBase = new Tower(enemyBaseDef, "enemy", centerX, arenaRect.height * 0.10);
-  const playerBase = new Tower(playerBaseDef, "player", centerX, arenaRect.height * 0.92);
-
-  gameState.addTower(enemyBase);
-  gameState.addTower(playerBase);
-
-  // Tours
-  const enemyLeftDef = UnitDefinitions[playerProgress.enemyLeftTowerId] || UnitDefinitions.tower_standard;
-  const enemyRightDef = UnitDefinitions[playerProgress.enemyRightTowerId] || UnitDefinitions.tower_standard;
-  const playerLeftDef = UnitDefinitions[playerProgress.playerLeftTowerId] || UnitDefinitions.tower_standard;
-  const playerRightDef = UnitDefinitions[playerProgress.playerRightTowerId] || UnitDefinitions.tower_standard;
 
   const offsetX = arenaRect.width * 0.22; // distance latérale depuis le centre
   const enemyY = arenaRect.height * 0.30;
   const playerY = arenaRect.height * 0.76;
 
-  const enemyLeftTower = new Tower(enemyLeftDef, "enemy", centerX - offsetX, enemyY);
-  const enemyRightTower = new Tower(enemyRightDef, "enemy", centerX + offsetX, enemyY);
+  if (!options.noEnemyStructures) {
+    // Base ennemie
+    const enemyBaseDef = UnitDefinitions[playerProgress.enemyBaseId] || UnitDefinitions.base_usine;
+    const enemyBase = new Tower(enemyBaseDef, "enemy", centerX, arenaRect.height * 0.10);
+    gameState.addTower(enemyBase);
+
+    // Tours ennemies
+    const enemyLeftDef = UnitDefinitions[playerProgress.enemyLeftTowerId] || UnitDefinitions.tower_standard;
+    const enemyRightDef = UnitDefinitions[playerProgress.enemyRightTowerId] || UnitDefinitions.tower_standard;
+
+    const enemyLeftTower = new Tower(enemyLeftDef, "enemy", centerX - offsetX, enemyY);
+    const enemyRightTower = new Tower(enemyRightDef, "enemy", centerX + offsetX, enemyY);
+
+    gameState.addTower(enemyLeftTower);
+    gameState.addTower(enemyRightTower);
+  }
+
+  // Base joueur
+  const playerBaseDef = UnitDefinitions[playerProgress.playerBaseId] || UnitDefinitions.base_usine;
+  const playerBase = new Tower(playerBaseDef, "player", centerX, arenaRect.height * 0.92);
+  gameState.addTower(playerBase);
+
+  // Tours joueur
+  const playerLeftDef = UnitDefinitions[playerProgress.playerLeftTowerId] || UnitDefinitions.tower_standard;
+  const playerRightDef = UnitDefinitions[playerProgress.playerRightTowerId] || UnitDefinitions.tower_standard;
 
   const playerLeftTower = new Tower(playerLeftDef, "player", centerX - offsetX, playerY);
   const playerRightTower = new Tower(playerRightDef, "player", centerX + offsetX, playerY);
 
-  gameState.addTower(enemyLeftTower);
-  gameState.addTower(enemyRightTower);
   gameState.addTower(playerLeftTower);
   gameState.addTower(playerRightTower);
 }
@@ -173,10 +185,17 @@ function updateEnergyUI() {
 
 function handleGameOver(winner) {
   victoryTitle.textContent = winner === "player" ? "Victoire !" : "Défaite";
-  victorySubtitle.textContent =
+  if (campaignMode === "surviveWaves") {
+    victorySubtitle.textContent =
+    winner === "player"
+      ? "Vous avez survécu."
+      : "Vous n'avez pas survécu.";
+  } else {
+    victorySubtitle.textContent =
     winner === "player"
       ? "La base ennemie est détruite."
       : "Votre base a été détruite.";
+  }
 
   if (winner === "player" && activeCampaignLevel) {
     const levelIndex = CampaignLevels.findIndex(
@@ -240,6 +259,32 @@ const campaignWaveController = new CampaignWaveController({
   }
 });
 
+// === timer pour le mode surviveWaves ===
+function updateCampaignTimer(deltaSeconds) {
+  if (campaignMode !== "surviveWaves") {
+    campaignTimerEl.textContent = "";
+    campaignTimerEl.style.display = "none";
+    return;
+  }
+
+  campaignTimer = Math.max(0, campaignTimer - deltaSeconds);
+  campaignTimerEl.style.display = "block";
+  campaignTimerEl.textContent = formatTimer(campaignTimer);
+
+  if (campaignTimer <= 0 && !gameState.isGameOver) {
+    gameState.isGameOver = true;
+    gameState.winner = "player";
+  }
+}
+
+function formatTimer(seconds) {
+  const total = Math.ceil(seconds);
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+// === end timer pour le mode surviveWaves ===
+
 const gameLoop = new GameLoop({
   gameState,
   renderer,
@@ -247,7 +292,8 @@ const gameLoop = new GameLoop({
   onGameOver: handleGameOver,
   aiController,
   audioManager,
-  campaignWaveController
+  campaignWaveController,
+  updateCampaignTimer
 });
 
 const dragDropController = new DragDropController({
@@ -429,9 +475,6 @@ document
     campaignScreen.render();
   });
 
-
-let activeCampaignLevel = null;
-
 function startCampaignBattle(level) {
   activeCampaignLevel = level;
 
@@ -452,7 +495,16 @@ function setupCampaignArena(level) {
   arenaElement.dataset.map = level.map;
   arenaElement.dataset.objective = level.objective;
 
-  setupArena(gameState, renderer, playerProgress);
+  campaignMode = level.objective;
+  activeCampaignLevel = level;
+
+  if (level.objective === "surviveWaves") {
+    campaignTimer = level.surviveDuration || 0;
+  }
+
+  setupArena(gameState, renderer, playerProgress, {
+    noEnemyStructures: level.objective === "surviveWaves" || level.objective === "bossBattle"
+  });
 }
 
 function configureCampaignMode(level) {

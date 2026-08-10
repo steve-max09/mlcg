@@ -3,7 +3,7 @@ import { CombatSystem } from "./CombatSystem.js";
 import { AnimationSystem } from "./AnimationSystem.js";
 
 export class GameLoop {
-  constructor({ gameState, renderer, onEnergyChange, onGameOver, aiController, audioManager, campaignWaveController }) {
+  constructor({ gameState, renderer, onEnergyChange, onGameOver, aiController, audioManager, campaignWaveController, updateCampaignTimer }) {
     this.gameState = gameState;
     this.renderer = renderer;
     this.onEnergyChange = onEnergyChange;
@@ -12,6 +12,7 @@ export class GameLoop {
     this.audioManager = audioManager;
 
     this.campaignWaveController = campaignWaveController;
+    this.updateCampaignTimer = updateCampaignTimer;
 
     this.lastTimestamp = null;
     this.energyAccumulator = 0;
@@ -49,6 +50,11 @@ export class GameLoop {
 
   update(deltaSeconds) {
     const arenaSize = this.getArenaSize();
+
+    // si on est en mode surviveWaves on met à jour le timer
+    if (this.updateCampaignTimer) {
+      this.updateCampaignTimer(deltaSeconds);
+    }
 
     MovementSystem.update(this.gameState, deltaSeconds);
 
