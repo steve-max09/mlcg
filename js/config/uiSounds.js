@@ -4,6 +4,5 @@ export const UiSounds = {
   victory: "assets/sounds/ui/victory.mp3",
   defeat: "assets/sounds/ui/defeat.mp3",
   openChest: "assets/sounds/ui/open.mp3",
-  unlockNew: "assets/sounds/ui/unlockNew.mp3",
-  wow: "assets/sounds/ui/wow.mp3"
+  unlockNew: "assets/sounds/ui/unlockNew.mp3"
 };
