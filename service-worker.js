@@ -16,7 +16,7 @@ const ASSETS_TO_CACHE = [
   "./assets/loxams/Chariot téléscopique diesel compact.png",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
-  "./assets/sounds/ui/button-click.ogg",
+  "./assets/sounds/ui/button-click.mp3",
   "./assets/sounds/ui/tower-destroyed.mp3",
   "./assets/sounds/ui/victory.mp3",
   "./assets/sounds/ui/defeat.mp3",

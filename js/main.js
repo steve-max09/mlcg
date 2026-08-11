@@ -501,7 +501,10 @@ function renderOwnedChests() {
     el.className = "owned-chest";
     el.innerHTML = `<img src="${def.sprite}" alt="${def.name}" />`;
     el.addEventListener("click", () => {
-      audioManager.play(UiSounds.buttonClick);
+      audioManager.play(UiSounds.openChest);
+      setTimeout(() => {
+        audioManager.play(UiSounds.unlockNew);
+      }, 1200)
       chestOpener.openChest(chest.instanceId, chest.chestId);
     });
 
