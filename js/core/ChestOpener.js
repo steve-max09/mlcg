@@ -1,4 +1,5 @@
 import { ChestDefinitions } from "../config/chestDefinitions.js";
+import { UiSounds } from "../config/uiSounds.js";
 import { ChestSystem } from "./ChestSystem.js";
 
 const RARITY_LABELS = { 0: "Commune", 1: "Rare", 2: "Ultra-rare" };
@@ -12,15 +13,8 @@ export class ChestOpener {
     this.onResolved = onResolved;
 
     this.el.closeBtn.addEventListener("click", () => {
-      this.playSound();
       this.close();
     });
-  }
-
-  playSound() {
-    if (this.audioManager && this.uiSounds) {
-      this.audioManager.play(this.uiSounds.buttonClick);
-    }
   }
 
   openChest(instanceId, chestId) {

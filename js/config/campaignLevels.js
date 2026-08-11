@@ -1,11 +1,28 @@
 export const CampaignLevels = [
   {
     id: 1,
+    name: "Salutations",
+    description: "Bienvenue, chef.",
+    objective: "dialog",
+    map: "flat",
+    unlockedByDefault: true,
+
+    dialogs: [
+      {
+        character: "Le Loup",
+        sprite: "assets/ui/loup.png",
+        text: "Salut, chef ! Content de vous revoir. Nos ennemis ont établi une base juste en face de chez nous. Montrons-leur de quel bois on se chauffe !"
+      }
+    ]
+  },
+
+  {
+    id: 2,
     name: "Premiers travaux",
     description: "Détruisez la base ennemie.",
     objective: "destroyBase",
     map: "flat",
-    unlockedByDefault: true,
+    unlockedByDefault: false,
 
     enemyStructures: {
       baseId: "base_usine",
@@ -14,9 +31,9 @@ export const CampaignLevels = [
     },
 
     ai: {
-      unitPool: ["chauffage", "motobineuse"],
+      unitPool: ["chauffage", "motobineuse", "compacteur"],
       startingEnergy: 0,
-      decisionInterval: 4.5,
+      decisionInterval: 3.5,
       energyRegenRate: 1,
       energyRegenInterval: 1700
     },
@@ -31,12 +48,12 @@ export const CampaignLevels = [
   },
 
   {
-    id: 2,
+    id: 3,
     name: "Renforts industriels",
     description: "Survivez aux vagues ennemies.",
     objective: "surviveWaves",
     map: "river",
-    unlockedByDefault: true,
+    unlockedByDefault: false,
 
     waves: [
       {
@@ -66,12 +83,12 @@ export const CampaignLevels = [
   },
 
   {
-    id: 3,
+    id: 4,
     name: "Passage de la rivière",
     description: "Détruisez la base ennemie sur une nouvelle carte.",
     objective: "destroyBase",
     map: "river",
-    unlockedByDefault: true,
+    unlockedByDefault: false,
 
     enemyStructures: {
       baseId: "base_barbie",
@@ -94,12 +111,12 @@ export const CampaignLevels = [
   },
 
   {
-    id: 4,
+    id: 5,
     name: "Méfiance...",
-    description: "Nos alliés discutentent.",
+    description: "Nos alliés discutent.",
     objective: "dialog",
     map: "flat",
-    unlockedByDefault: true,
+    unlockedByDefault: false,
 
     dialogs: [
       {
@@ -126,9 +143,9 @@ export const CampaignLevels = [
   },
 
   {
-    id: 5,
-    name: "Le boss",
-    description: "Éliminez le chef ennemi.",
+    id: 6,
+    name: "Le chariot maléfique",
+    description: "Éliminez le chariot ennemi qui menace notre base.",
     objective: "bossFight",
     map: "flat",
     unlockedByDefault: false,

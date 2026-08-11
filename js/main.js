@@ -45,6 +45,16 @@ if ("serviceWorker" in navigator) {
 }
 // === end imports and app setup stuff ===
 
+// === audioManager ===
+const audioManager = new AudioManager();
+audioManager.uiSounds = UiSounds;
+
+Object.values(UiSounds).forEach((src) => audioManager.preload(src));
+Object.values(UnitDefinitions).forEach((def) => {
+  if (def.sounds) Object.values(def.sounds).forEach((src) => audioManager.preload(src));
+});
+// === end audopManager ===
+
 let activeCampaignLevel = null;
 let campaignTimer = 0;
 let campaignMode = null; // "destroyBase" | "surviveWaves"
@@ -82,6 +92,7 @@ const deckScreen = new DeckScreen({
     detailActionRight: document.getElementById("unit-detail-action-right")
   },
   onBattleStart: () => {
+    audioManager.play(UiSounds.startFreeBattle)
     showScreen("arena-screen");
     startBattleWithDeck(playerProgress.deck);
   },
@@ -108,14 +119,6 @@ const energyFill = document.getElementById("energyFill");
 const handContainer = document.getElementById("handContainer");
 // timer pour le mode survie (surviveWaves)
 const campaignTimerEl = document.getElementById("campaign-timer");
-
-const audioManager = new AudioManager();
-audioManager.uiSounds = UiSounds;
-
-Object.values(UiSounds).forEach((src) => audioManager.preload(src));
-Object.values(UnitDefinitions).forEach((def) => {
-  if (def.sounds) Object.values(def.sounds).forEach((src) => audioManager.preload(src));
-});
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
@@ -187,6 +190,7 @@ function updateEnergyUI() {
 
 function handleGameOver(winner) {
   if (campaignMode === "surviveWaves") {
+    audioManager.play(winner === "player" ? UiSounds.victory : UiSounds.defeat);
     victoryTitle.textContent = winner === "player" ? "Victoire !" : "Défaite";
     victorySubtitle.textContent =
     winner === "player"
@@ -196,12 +200,14 @@ function handleGameOver(winner) {
     victoryTitle.textContent = "";
     victorySubtitle.textContent = "À méditer...";
   } else if (campaignMode === "bossFight") {
+    audioManager.play(winner === "player" ? UiSounds.bigVictory : UiSounds.defeat);
     victoryTitle.textContent = winner === "player" ? "Victoire !" : "Défaite";
     victorySubtitle.textContent =
     winner === "player"
       ? "Boss vaincu !"
       : "Votre base a été détruite.";
   } else {
+    audioManager.play(winner === "player" ? UiSounds.victory : UiSounds.defeat);
     victoryTitle.textContent = winner === "player" ? "Victoire !" : "Défaite";
     victorySubtitle.textContent =
     winner === "player"
@@ -220,6 +226,7 @@ function handleGameOver(winner) {
       const rewardResult = playerProgress.claimCampaignReward(activeCampaignLevel);
 
       if (rewardResult?.unlockedUnitId) {
+        audioManager.play(UiSounds.unlockNew);
         showCampaignUnlockModal(rewardResult.unlockedUnitId);
       }
     }
@@ -227,7 +234,6 @@ function handleGameOver(winner) {
     playerProgress.addYanga(50);
   }
 
-  audioManager.play(winner === "player" ? UiSounds.victory : UiSounds.defeat);
   showScreen("victory-screen");
 }
 
@@ -346,23 +352,10 @@ const dragDropController = new DragDropController({
 });
 
 playBtn.addEventListener("click", () => {
+  audioManager.play(UiSounds.startFreeBattle)
   showScreen("arena-screen");
   startBattleWithDeck(playerProgress.deck);
 });
-
-backToMenuBtn.addEventListener("click", () => {
-  window.location.reload();
-});
-
-// sons des boutons =======
-function bindButtonSound(button) {
-  button.addEventListener("click", () => {
-    audioManager.play(UiSounds.buttonClick);
-  });
-}
-
-[playBtn, backToMenuBtn].forEach(bindButtonSound);
-// ========================
 
 // figer la hauteur =======
 function lockViewportHeight() {
@@ -532,6 +525,7 @@ const campaignScreen = new CampaignScreen({
 document
   .getElementById("open-campaign-btn")
   .addEventListener("click", () => {
+    audioManager.play(UiSounds.buttonClick);
     showScreen("campaign-screen");
     campaignScreen.render();
   });
@@ -635,21 +629,25 @@ const arenaContinueBtn = document.getElementById("arena-continue-btn");
 const arenaMenuBtn = document.getElementById("arena-menu-btn");
 
 arenaBackBtn.addEventListener("click", () => {
-  audioManager.play(UiSounds.buttonClick);
   arenaBackModal.classList.add("active");
 });
 
 arenaContinueBtn.addEventListener("click", () => {
-  audioManager.play(UiSounds.buttonClick);
   arenaBackModal.classList.remove("active");
 });
 
 arenaMenuBtn.addEventListener("click", () => {
-  audioManager.play(UiSounds.buttonClick);
-
   arenaBackModal.classList.remove("active");
   gameLoop.stop();
   showScreen("campaign-screen");
   campaignScreen.render();
 });
 // end top UI stuff
+
+// back to menu after campaign dialog
+backToMenuBtn.addEventListener("click", () => {
+  arenaBackModal.classList.remove("active");
+  gameLoop.stop();
+  showScreen("campaign-screen");
+  campaignScreen.render();
+});

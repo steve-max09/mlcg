@@ -16,15 +16,8 @@ export class ChestShop {
 
   bindEvents() {
     this.el.backBtn.addEventListener("click", () => {
-      this.playSound();
       if (this.onBack) this.onBack();
     });
-  }
-
-  playSound() {
-    if (this.audioManager && this.uiSounds) {
-      this.audioManager.play(this.uiSounds.buttonClick);
-    }
   }
 
   render() {
@@ -50,7 +43,7 @@ export class ChestShop {
 
       const buyBtn = card.querySelector("button");
       buyBtn.addEventListener("click", () => {
-        this.playSound();
+        this.audioManager.play(this.uiSounds.yanga);
         if (this.playerProgress.buyChest(chest.id, chest.price)) {
           this.render();
           if (this.onChestBought) this.onChestBought();
