@@ -17,7 +17,6 @@ export class CampaignWaveController {
     this.waveTimers = [];
     this.active = false;
     this.completed = false;
-    this.pendingBoss = null;
   }
 
   start(level) {
@@ -27,8 +26,7 @@ export class CampaignWaveController {
 
     this.waveTimers = (level.waves || []).map((w) => ({
       delay: w.delay || 0,
-      spawned: false,
-      bossSpawned: false
+      spawned: false
     }));
   }
 
@@ -100,5 +98,23 @@ export class CampaignWaveController {
 
   allWavesResolved() {
     return this.waveTimers.every((w) => w.spawned);
+  }
+
+  hasPendingEnemies() {
+    return this.gameState.units.some(
+      (unit) =>
+        unit.team === "enemy" &&
+        !unit.isDead &&
+        !unit.isDestroyed
+    );
+  }
+
+  isFinished() {
+    return (
+      this.active &&
+      !this.completed &&
+      this.allWavesResolved() &&
+      !this.hasPendingEnemies()
+    );
   }
 }

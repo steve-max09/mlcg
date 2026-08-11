@@ -161,16 +161,18 @@ export class PlayerProgress {
 
   claimCampaignReward(level) {
     if (this.isCampaignLevelCompleted(level.id)) {
-      return false;
+      return null;
     }
 
     const reward = level.reward || {};
+    let unlockedUnitId = null;
 
     if (reward.yanga) {
       this.addYanga(reward.yanga);
     }
 
-    if (reward.unlockUnit) {
+    if (reward.unlockUnit && !this.isUnlocked(reward.unlockUnit)) {
+      unlockedUnitId = reward.unlockUnit;
       this.unlockUnit(reward.unlockUnit);
     }
 
@@ -186,6 +188,9 @@ export class PlayerProgress {
     this.completeCampaignLevel(level.id, level.id + 1);
     this.save();
 
-    return true;
+    return {
+      levelId: level.id,
+      unlockedUnitId
+    };
   }
 }

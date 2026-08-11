@@ -2,13 +2,15 @@ import { CampaignLevels } from "../config/campaignLevels.js";
 
 const OBJECTIVE_ICONS = {
   destroyBase: "🏭",
-  surviveWaves: "🌊"
+  surviveWaves: "⏳",
+  bossFight: "👹",
+  dialog: "💬"
 };
 
 const MAP_ICONS = {
-  flat: "▦",
-  middleWall: "▥",
-  river: "〰"
+  flat: "🏞️",
+  middleWall: "⛰️",
+  river: "🌊"
 };
 
 export class CampaignScreen {

@@ -7,6 +7,12 @@ export const CampaignLevels = [
     map: "flat",
     unlockedByDefault: true,
 
+    enemyStructures: {
+      baseId: "base_usine",
+      leftTowerId: "tower_standard",
+      rightTowerId: "tower_standard"
+    },
+
     ai: {
       unitPool: ["chauffage", "motobineuse"],
       startingEnergy: 0,
@@ -16,7 +22,7 @@ export const CampaignLevels = [
     },
 
     reward: {
-      yanga: 10,
+      yanga: 50,
       chest: {
         chestId: "common",
         quantity: 1
@@ -30,28 +36,31 @@ export const CampaignLevels = [
     description: "Survivez aux vagues ennemies.",
     objective: "surviveWaves",
     map: "river",
-    unlockedByDefault: false,
+    unlockedByDefault: true,
 
     waves: [
       {
         delay: 0,
-        units: ["chauffage", "motobineuse"]
+        units: ["motobineuse", "motobineuse", "motobineuse"]
       },
       {
         delay: 10,
-        units: ["compacteur"]
+        units: ["motobineuse", "motobineuse", "chauffage", "motobineuse",]
       },
       {
         delay: 20,
-        units: ["broyeur", "compacteur"],
-        boss: "mat"
+        units: ["chauffage", "chauffage", "chauffage", "chauffage", "chauffage"],
+      },
+      {
+        delay: 25,
+        boss: "compacteur"
       }
     ],
 
-    surviveDuration: 40,
+    surviveDuration: 60,
 
     reward: {
-      yanga: 30,
+      yanga: 50,
       unlockUnit: "compacteur"
     }
   },
@@ -62,7 +71,13 @@ export const CampaignLevels = [
     description: "Détruisez la base ennemie sur une nouvelle carte.",
     objective: "destroyBase",
     map: "river",
-    unlockedByDefault: false,
+    unlockedByDefault: true,
+
+    enemyStructures: {
+      baseId: "base_barbie",
+      leftTowerId: "tower_mega",
+      rightTowerId: "tower_coalshot"
+    },
 
     ai: {
       unitPool: ["chauffage", "compacteur"],
@@ -74,7 +89,61 @@ export const CampaignLevels = [
 
     reward: {
       yanga: 50,
-      unlockUnit: "climatiseur"
+      unlockUnit: "base_barbie"
+    }
+  },
+
+  {
+    id: 4,
+    name: "Méfiance...",
+    description: "Nos alliés discutentent.",
+    objective: "dialog",
+    map: "flat",
+    unlockedByDefault: true,
+
+    dialogs: [
+      {
+        character: "Le Loup",
+        sprite: "assets/ui/loup.png",
+        text: "Bien joué chef !"
+      },
+      {
+        character: "Cheval de la sagesse",
+        sprite: "assets/ui/horse.png",
+        text: "Méfions-nous, nous voilà attaqués à nouveau ! Utilisez ces tours pour renforcer nos défenses !"
+      },
+      {
+        character: "Le Loup",
+        sprite: "assets/ui/loup.png",
+        text: "Pas bête haha"
+      }
+    ],
+
+    reward: {
+      yanga: 10,
+      unlockUnit: "tower_coalshot"
+    }
+  },
+
+  {
+    id: 5,
+    name: "Le boss",
+    description: "Éliminez le chef ennemi.",
+    objective: "bossFight",
+    map: "flat",
+    unlockedByDefault: false,
+
+    waves: [
+      { delay: 0, units: ["compacteur", "compacteur"] },
+      { delay: 5, units: ["compacteur"] },
+      { delay: 10, boss: "chariot" }
+    ],
+
+    reward: {
+      yanga: 100,
+      chest: { chestId: "rare", quantity: 1 }
     }
   }
+
+
 ];

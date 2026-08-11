@@ -3,7 +3,7 @@ import { CombatSystem } from "./CombatSystem.js";
 import { AnimationSystem } from "./AnimationSystem.js";
 
 export class GameLoop {
-  constructor({ gameState, renderer, onEnergyChange, onGameOver, aiController, audioManager, campaignWaveController, updateCampaignTimer }) {
+  constructor({ gameState, renderer, onEnergyChange, onGameOver, aiController, audioManager, campaignWaveController, updateCampaignTimer, onCampaignComplete }) {
     this.gameState = gameState;
     this.renderer = renderer;
     this.onEnergyChange = onEnergyChange;
@@ -13,6 +13,7 @@ export class GameLoop {
 
     this.campaignWaveController = campaignWaveController;
     this.updateCampaignTimer = updateCampaignTimer;
+    this.onCampaignComplete = onCampaignComplete;
 
     this.lastTimestamp = null;
     this.energyAccumulator = 0;
@@ -74,6 +75,10 @@ export class GameLoop {
 
     if (this.campaignWaveController) {
       this.campaignWaveController.update(deltaSeconds, arenaSize);
+    }
+
+    if (this.onCampaignComplete && this.onCampaignComplete()) {
+      return;
     }
 
     if (this.aiController) {

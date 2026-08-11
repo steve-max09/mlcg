@@ -17,6 +17,7 @@
 </head>
 <body>
   <div id="app">
+    <!-- Ecran d'accueil -->
     <section id="main-menu" class="screen active">
       <div class="menu-bg"></div>
 
@@ -37,6 +38,7 @@
       </footer>
     </section>
 
+    <!-- Ecran "Campagne" -->
     <section id="campaign-screen" class="screen">
       <header class="campaign-header">
         <button class="icon-btn" id="campaign-back-btn">←</button>
@@ -46,6 +48,7 @@
       <div class="campaign-level-grid" id="campaign-level-grid"></div>
     </section>
 
+    <!-- Ecran "Deck" -->
     <section id="deck-screen" class="screen">
       <div class="deck-header">
         <button class="icon-btn" id="deck-back-btn">←</button>
@@ -85,6 +88,7 @@
       <div class="collection-grid" id="collection-grid"></div>
     </section>
 
+    <!-- modal Détails d'unité -->
     <div class="modal-overlay" id="unit-detail-modal">
       <div class="unit-detail-card">
         <button class="modal-close" id="unit-detail-close">×</button>
@@ -109,9 +113,12 @@
       </div>
     </div>
 
+    <!-- Ecran Principal de combat -->
     <section id="arena-screen" class="screen">
       <div class="campaign-timer" id="campaign-timer"></div>
+
       <main id="arena">
+        <button class="arena-back-btn" id="arena-back-btn" type="button" aria-label="Retour">←</button>
         <div class="lane enemy-side"></div>
         <div class="mid-line"></div>
         <div class="lane player-side"></div>
@@ -131,6 +138,7 @@
       </footer>
     </section>
 
+    <!-- Ecran Victoire -->
     <section id="victory-screen" class="screen">
       <div class="victory-content">
         <h1 id="victoryTitle">Victoire !</h1>
@@ -139,6 +147,7 @@
       </div>
     </section>
 
+    <!-- Ecran Coffres -->
     <section id="chest-shop-screen" class="screen">
       <div class="deck-header">
         <button class="icon-btn" id="chest-shop-back-btn">←</button>
@@ -152,6 +161,7 @@
       <div class="chest-shop-grid" id="chest-shop-grid"></div>
     </section>
 
+    <!-- modal récompense coffre -->
     <div class="modal-overlay" id="chest-open-modal">
       <div class="chest-open-card">
         <img id="chest-open-sprite" src="" alt="" class="chest-open-sprite" />
@@ -162,6 +172,45 @@
         </div>
         <button class="menu-btn primary hidden" id="chest-reveal-close">Continuer</button>
       </div>
+    </div>
+
+    <!-- modal récompense après niveau campagne -->
+    <div class="modal-overlay" id="campaign-reward-modal">
+      <div class="campaign-reward-card">
+        <div class="campaign-reward-icon">★</div>
+        <h2>Nouvelle unité débloquée !</h2>
+        <img id="campaign-reward-sprite" src="" alt="">
+        <h3 id="campaign-reward-name"></h3>
+        <p id="campaign-reward-description"></p>
+
+        <button class="menu-btn primary" id="campaign-reward-close">Continuer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal Bouton "pause" -->
+  <div class="modal-overlay" id="arena-back-modal">
+    <div class="campaign-reward-card">
+      <h2>Quitter la partie ?</h2>
+      <p>La partie continue pendant que cette fenêtre est affichée.</p>
+      <button class="menu-btn primary" id="arena-continue-btn">Continuer la partie</button>
+      <button class="menu-btn" id="arena-menu-btn">Retour au menu</button>
+    </div>
+  </div>
+
+  <!-- modal dialogues -->
+  <div class="modal-overlay dialog-overlay" id="dialog-overlay">
+    <div class="dialog-card">
+      <img id="dialog-sprite" class="dialog-sprite" src="" alt="">
+
+      <div class="dialog-bubble">
+        <h2 id="dialog-character"></h2>
+        <p id="dialog-text"></p>
+      </div>
+
+      <button class="menu-btn primary" id="dialog-continue" type="button">Continuer</button>
+
+      <small class="dialog-hint">Touchez l'écran pour continuer</small>
     </div>
   </div>
 
