@@ -79,6 +79,36 @@ function getRewardMarkup(level, completed) {
   `;
 }
 
+function getObjectiveMarkup(level) {
+  if (level.objective === "dialog") {
+    const firstDialog = level.dialogs?.[0];
+
+    if (firstDialog?.sprite) {
+       const spriteColor = level.spriteColor || "#ffffff";
+
+      return `
+        <span class="campaign-dialog-character" style="--dialog-sprite-color: ${spriteColor};">
+          <span class="campaign-dialog-character-fade"></span>
+
+          <img
+            src="${firstDialog.sprite}"
+            alt="${firstDialog.character || "Personnage"}"
+            class="campaign-dialog-character-sprite"
+          >
+        </span>
+      `;
+    }
+
+    return `<span>💬</span>`;
+  }
+
+  return `
+    <span>
+      ${OBJECTIVE_ICONS[level.objective] || "❓"}
+    </span>
+  `;
+}
+
 export class CampaignScreen {
   constructor({
     playerProgress,
@@ -127,14 +157,17 @@ export class CampaignScreen {
           ${getRewardMarkup(level, completed)}
         </div>
 
-        <div class="campaign-level-icons">
-          <span title="${level.objective}">
-            ${OBJECTIVE_ICONS[level.objective] || "?"}
-          </span>
-          <span title="${level.map}">
-            ${MAP_ICONS[level.map] || "?"}
-          </span>
-        </div>
+        <span class="campaign-level-icons">
+          ${getObjectiveMarkup(level)}
+
+          ${
+            level.objective !== "dialog"
+              ? `<span title="${level.map}">
+                  <span>${MAP_ICONS[level.map] || "▦"}</span>
+                </span>`
+              : ""
+          }
+        </span>
 
         ${
           completed

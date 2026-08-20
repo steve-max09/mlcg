@@ -115,6 +115,7 @@ export const CampaignLevels = [
     name: "Méfiance...",
     description: "Nos alliés discutent.",
     objective: "dialog",
+    spriteColor: "#ef4444",
     map: "flat",
     unlockedByDefault: false,
 
