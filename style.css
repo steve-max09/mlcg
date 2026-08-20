@@ -40,6 +40,13 @@ html, body {
   user-select: none;
 }
 
+html,
+body,
+#app {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 .card,
 #arena {
   touch-action: none !important;
@@ -794,7 +801,27 @@ button {
 #deck-screen {
   padding: calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
   gap: 14px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   overflow-y: auto;
+}
+
+.deck-header,
+.deck-actions-row,
+.deck-filters,
+.collection-header,
+.collection-grid,
+.tower-base-row,
+.owned-chests-row {
+  max-width: 100%;
+}
+
+.deck-header,
+.deck-actions-row,
+.deck-filters {
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .deck-header {
@@ -903,9 +930,19 @@ button {
 
 .collection-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   padding-bottom: 20px;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.collection-card,
+.deck-slot,
+.base-slot,
+.tower-slot {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .collection-card {
@@ -1152,6 +1189,7 @@ button {
   gap: 12px;
   min-height: 100px;
   height: 100px;
+  width: 100%;
   overflow-x: auto;
   overflow-y: visible;
   padding: 8px 2px 12px;

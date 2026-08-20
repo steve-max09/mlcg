@@ -53,8 +53,10 @@ Object.values(UiSounds).forEach((src) => audioManager.preload(src));
 Object.values(UnitDefinitions).forEach((def) => {
   if (def.sounds) Object.values(def.sounds).forEach((src) => audioManager.preload(src));
 });
-// === end audopManager ===
+// === end audioManager ===
 
+// VARIABLES
+let isCampaignRun = false;
 let activeCampaignLevel = null;
 let campaignTimer = 0;
 let campaignMode = null; // "destroyBase" | "surviveWaves"
@@ -93,7 +95,6 @@ const deckScreen = new DeckScreen({
   },
   onBattleStart: () => {
     audioManager.play(UiSounds.startFreeBattle)
-    showScreen("arena-screen");
     startBattleWithDeck(playerProgress.deck);
   },
   onBack: () => showScreen("main-menu")
@@ -245,14 +246,8 @@ const aiController = new AIController({
   unitDefinitions: UnitDefinitions,
   difficultyConfig: {},
   onSpawn: (definition, x, y) => {
-    const unit = new Unit(definition, "enemy", x, y);
-    gameState.addUnit(unit);
+    spawnUnit(definition, "enemy", x, y);
     updateEnergyUI();
-    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
-
-    AbilitySystem.onSpawn(unit, gameState, (u, radius) => {
-      AnimationSystem.playSpawnFreeze(renderer.arenaElement, u, radius);
-    });
   }
 });
 
@@ -260,21 +255,13 @@ const aiController = new AIController({
 const campaignWaveController = new CampaignWaveController({
   gameState,
   unitDefinitions: UnitDefinitions,
-  onSpawn: (definition, x, y) => {
-    const unit = new Unit(definition, "enemy", x, y);
-    gameState.addUnit(unit);
-    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
-    AbilitySystem.onSpawn(unit, gameState, (u, radius) => {
-      AnimationSystem.playSpawnFreeze(renderer.arenaElement, u, radius);
-    });
+  onSpawn: (definition, x, y, options) => {
+    spawnUnit(definition, "enemy", x, y, options);
   },
   onWaveStart: () => {},
   onWaveEnd: () => {},
   onBossSpawn: (definition, x, y) => {
-    const unit = new Unit(definition, "enemy", x, y);
-    unit.isBoss = true;
-    gameState.addUnit(unit);
-    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
+    spawnUnit(definition, "enemy", x, y, {isBoss: true});
   }
 });
 
@@ -316,6 +303,9 @@ const dialogController = new DialogController({
 
 function completeDialogLevel() {
   if (!activeCampaignLevel || gameState.isGameOver) { return; }
+
+  dialogController.close();
+
   gameState.isGameOver = true;
   gameState.winner = "player";
 
@@ -340,20 +330,13 @@ const dragDropController = new DragDropController({
   gameState,
   unitDefinitions: UnitDefinitions,
   onSpawn: (definition, x, y) => {
-    const unit = new Unit(definition, "player", x, y);
-    gameState.addUnit(unit);
+    spawnUnit(definition, "player", x, y);
     updateEnergyUI();
-    if (definition.sounds?.spawn) audioManager.play(definition.sounds.spawn);
-
-    AbilitySystem.onSpawn(unit, gameState, (u, radius) => {
-      AnimationSystem.playSpawnFreeze(renderer.arenaElement, u, radius);
-    });
   }
 });
 
 playBtn.addEventListener("click", () => {
   audioManager.play(UiSounds.startFreeBattle)
-  showScreen("arena-screen");
   startBattleWithDeck(playerProgress.deck);
 });
 
@@ -400,14 +383,66 @@ function renderHand(deck) {
   });
 }
 
-function startBattleWithDeck(deck) {
-  renderHand(deck);
+// non-campaign battle
+function clearArenaVisuals() {
+  arenaElement
+    .querySelectorAll(
+      ".game-unit, .game-tower"
+    )
+    .forEach((element) => {
+      element.remove();
+    });
+}
+
+function resetBattleState() {
+  gameLoop.stop();
+
+  dialogController.close();
+  clearArenaVisuals();
 
   gameState.reset();
-  setupArena(gameState, renderer, playerProgress, {});
+  campaignWaveController.reset();
 
-  gameLoop.stop();
-  gameLoop.start();
+  aiController.configure({
+    decisionInterval: 999999,
+    startingEnergy: 0,
+    energyRegenRate: 0,
+    energyRegenInterval: 999999,
+    unitPool: []
+  });
+
+  isCampaignRun = false;
+  activeCampaignLevel = null;
+  campaignMode = null;
+  campaignTimer = 0;
+
+  campaignTimerEl.textContent = "";
+  campaignTimerEl.style.display = "none";
+
+  arenaElement.dataset.map = "";
+  arenaElement.dataset.objective = "";
+}
+
+function startBattleWithDeck(deck) {
+  resetBattleState();
+
+  isCampaignRun = false;
+  activeCampaignLevel = null;
+  campaignMode = null;
+
+  showScreen("arena-screen");
+
+  requestAnimationFrame(() => {
+    renderHand(deck);
+
+    setupArena(gameState, renderer, playerProgress, {
+      enemyStructures: getRandomEnemyStructures()
+    });
+
+    configureNormalBattleAI();
+
+    gameLoop.start();
+  });
 }
 // =====
 
@@ -514,7 +549,6 @@ const campaignScreen = new CampaignScreen({
     backBtn: document.getElementById("campaign-back-btn")
   },
   onLevelSelected: (level) => {
-    showScreen("arena-screen");
     startCampaignBattle(level);
   },
   onBack: () => {
@@ -531,28 +565,29 @@ document
   });
 
 function startCampaignBattle(level) {
+  resetBattleState();
+
+  isCampaignRun = true;
   activeCampaignLevel = level;
+  campaignMode = level.objective;
 
   showScreen("arena-screen");
 
-  gameState.reset();
-
-  if (level.objective === "dialog") {
-    campaignMode = "dialog";
+  requestAnimationFrame(() => {
     arenaElement.dataset.map = level.map || "flat";
-    arenaElement.dataset.objective = "dialog";
+    arenaElement.dataset.objective = level.objective;
 
-    dialogController.start(level.dialogs || []);
-    return;
-  }
+    if (level.objective === "dialog") {
+      dialogController.start(level.dialogs || []);
+      return;
+    }
 
-  renderHand(playerProgress.deck);
+    renderHand(playerProgress.deck);
+    setupCampaignArena(level);
+    configureCampaignMode(level);
 
-  setupCampaignArena(level);
-  configureCampaignMode(level);
-
-  gameLoop.stop();
-  gameLoop.start();
+    gameLoop.start();
+  });
 }
 
 function setupCampaignArena(level) {
@@ -562,13 +597,13 @@ function setupCampaignArena(level) {
   campaignMode = level.objective;
   activeCampaignLevel = level;
 
-  if (level.objective === "surviveWaves") {
+  if (campaignMode === "surviveWaves") {
     campaignTimer = level.surviveDuration || 0;
   }
 
   setupArena(gameState, renderer, playerProgress, {
-    noEnemyStructures: level.objective === "surviveWaves" || level.objective === "bossFight" || level.objective === "dialog",
-    enemyStructures: level.objective === "destroyBase" ? level.enemyStructures : null
+    noEnemyStructures: campaignMode === "surviveWaves" || campaignMode === "bossFight" || campaignMode === "dialog",
+    enemyStructures: campaignMode === "destroyBase" ? level.enemyStructures : null
   });
 }
 
@@ -651,3 +686,150 @@ backToMenuBtn.addEventListener("click", () => {
   showScreen("campaign-screen");
   campaignScreen.render();
 });
+
+// spawn unit
+function spawnUnit(definition, team, x, y, options = {}) {
+  const unit = new Unit(definition, team, x, y);
+
+  if (options.isBoss) {
+    unit.isBoss = true;
+  }
+
+  gameState.addUnit(unit);
+
+  if (definition.sounds?.spawn) {
+    audioManager.play(definition.sounds.spawn);
+  }
+
+  AbilitySystem.onSpawn(unit, gameState, (u, radius) => {
+    AnimationSystem.playSpawnFreeze(renderer.arenaElement, u, radius);
+    if (options.onSpawnEffect) {
+      options.onSpawnEffect(u, radius);
+    }
+  });
+
+  return unit;
+}
+
+// ===== helpers pour génération d'un ennemi randomisé (combat hors-campagne)
+function getUnlockedStructures(category) {
+  return Object.entries(UnitDefinitions)
+    .filter(([id, definition]) => {
+      return (
+        definition.category === category &&
+        playerProgress.isUnlocked(id)
+      );
+    })
+    .map(([id]) => id);
+}
+
+function pickRandom(items, fallback) {
+  if (!items.length) return fallback;
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function getRandomEnemyStructures() {
+  const unlockedBases = getUnlockedStructures("base");
+  const unlockedTowers = getUnlockedStructures("tower");
+
+  return {
+    baseId: pickRandom(
+      unlockedBases,
+      "base_usine"
+    ),
+    leftTowerId: pickRandom(
+      unlockedTowers,
+      "tower_standard"
+    ),
+    rightTowerId: pickRandom(
+      unlockedTowers,
+      "tower_standard"
+    )
+  };
+}
+
+function getHighestUnlockedCampaignLevel() {
+  const unlockedIds = playerProgress.unlockedCampaignLevels || [];
+
+  if (!unlockedIds.length) {
+    return 1;
+  }
+
+  return Math.max(...unlockedIds);
+}
+
+function getNormalBattleDifficulty() {
+  const highestLevel = getHighestUnlockedCampaignLevel();
+
+  if (highestLevel >= 5) {
+    return {
+      decisionInterval: 1.4,
+      startingEnergy: 3,
+      energyRegenRate: 1,
+      energyRegenInterval: 1500,
+      unitPool: [
+        "chauffage",
+        "motobineuse",
+        "compacteur",
+        "broyeur",
+        "minipelle",
+        "tombereau",
+        "climatiseur",
+        "brumisateur"
+      ],
+      aggression: 0.8,
+      behavior: "pressure"
+    };
+  }
+
+  if (highestLevel >= 3) {
+    return {
+      decisionInterval: 2.2,
+      startingEnergy: 2,
+      energyRegenRate: 1,
+      energyRegenInterval: 1900,
+      unitPool: [
+        "chauffage",
+        "motobineuse",
+        "compacteur",
+        "broyeur"
+      ],
+      aggression: 0.6,
+      behavior: "balanced"
+    };
+  }
+
+  if (highestLevel >= 2) {
+    return {
+      decisionInterval: 3,
+      startingEnergy: 1,
+      energyRegenRate: 1,
+      energyRegenInterval: 2200,
+      unitPool: [
+        "chauffage",
+        "motobineuse",
+        "compacteur"
+      ],
+      aggression: 0.45,
+      behavior: "balanced"
+    };
+  }
+
+  return {
+    decisionInterval: 4,
+    startingEnergy: 0,
+    energyRegenRate: 1,
+    energyRegenInterval: 2500,
+    unitPool: [
+      "chauffage",
+      "motobineuse"
+    ],
+    aggression: 0.3,
+    behavior: "balanced"
+  };
+}
+
+function configureNormalBattleAI() {
+  aiController.configure(getNormalBattleDifficulty());
+}
+// =====
