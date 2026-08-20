@@ -41,7 +41,7 @@ export const CampaignLevels = [
     reward: {
       yanga: 50,
       chest: {
-        chestId: "common",
+        chestId: "commonChest",
         quantity: 1
       }
     }
@@ -158,7 +158,7 @@ export const CampaignLevels = [
 
     reward: {
       yanga: 100,
-      chest: { chestId: "rare", quantity: 1 }
+      chest: { chestId: "rareChest", quantity: 1 }
     }
   }
 

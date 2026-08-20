@@ -22,6 +22,8 @@ export class GameLoop {
   }
 
   start() {
+    if (this.isRunning) return;
+    
     this.isRunning = true;
     this.lastTimestamp = performance.now();
     requestAnimationFrame(this.tick.bind(this));
@@ -29,6 +31,9 @@ export class GameLoop {
 
   stop() {
     this.isRunning = false;
+    this.lastTimestamp = null;
+    this.energyAccumulator = 0;
+    this.previousTowerStates.clear();
   }
 
   tick(timestamp) {

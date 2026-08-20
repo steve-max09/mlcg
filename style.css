@@ -1005,6 +1005,10 @@ button {
   display: flex;
 }
 
+#campaign-reward-modal {
+  z-index: 200;
+}
+
 .unit-detail-card {
   background: var(--panel-2);
   border-radius: 20px;
@@ -1418,6 +1422,113 @@ button {
   border-color: #4ade80;
 }
 
+.campaign-level-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+
+.campaign-level-main strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.campaign-level-description {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+.campaign-rewards {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 24px;
+  margin-top: 5px;
+}
+
+.campaign-rewards-list {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 26px;
+}
+
+.campaign-reward-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 26px;
+  color: #fbbf24;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.campaign-reward-item img {
+  display: block;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.campaign-reward-unit {
+  display: inline-flex;
+  width: auto;
+  height: auto;
+  min-height: 26px;
+  padding: 0;
+  justify-content: center;
+  background: transparent;
+  border-radius: 0;
+}
+
+.campaign-reward-yanga {
+  width: 2rem;
+  height: 2rem;
+  filter:
+    drop-shadow(0 0 2px rgba(0, 255, 255, 0.95))
+    drop-shadow(0 0 5px rgba(0, 255, 255, 0.7));
+}
+
+.campaign-reward-chest {
+  width: 3rem;
+  height: 3rem;
+  filter:
+    drop-shadow(0 0 2px rgba(255, 255, 255, 1))
+    drop-shadow(0 0 5px rgba(255, 255, 255, 0.85));
+}
+
+.campaign-reward-unit-icon {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 2px rgb(255, 153, 0))
+    drop-shadow(0 0 5px rgba(255, 213, 0, 0.85));
+}
+
+.campaign-reward-obtained {
+  opacity: 0.42;
+  filter: grayscale(1);
+}
+
+.campaign-rewards-obtained {
+  opacity: 0.5;
+}
+
+.campaign-reward-obtained img {
+  filter:
+    grayscale(1)
+    brightness(0.65)
+    drop-shadow(0 0 2px rgba(255, 255, 255, 0.35));
+}
+
 .campaign-level-number {
   display: grid;
   place-items: center;
@@ -1445,13 +1556,20 @@ button {
 
 .campaign-level-icons {
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
-  font-size: 1.3rem;
+  align-self: center;
+  min-width: 48px;
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .campaign-level-status {
+  align-self: center;
   color: #4ade80;
   font-size: 1.2rem;
+  line-height: 1;
 }
 
 .campaign-timer {

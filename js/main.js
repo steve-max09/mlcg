@@ -216,6 +216,8 @@ function handleGameOver(winner) {
       : "Votre base a été détruite.";
   }
 
+  let unlockedUnitId = null;
+
   if (winner === "player" && activeCampaignLevel) {
     const levelIndex = CampaignLevels.findIndex(
       (level) => level.id === activeCampaignLevel.id
@@ -225,17 +227,20 @@ function handleGameOver(winner) {
 
     if (!playerProgress.isCampaignLevelCompleted(activeCampaignLevel.id)) {
       const rewardResult = playerProgress.claimCampaignReward(activeCampaignLevel);
-
-      if (rewardResult?.unlockedUnitId) {
-        audioManager.play(UiSounds.unlockNew);
-        showCampaignUnlockModal(rewardResult.unlockedUnitId);
-      }
+      unlockedUnitId = rewardResult?.unlockedUnitId || null;
     }
   } else if (winner === "player") {
     playerProgress.addYanga(50);
   }
 
   showScreen("victory-screen");
+
+  if (unlockedUnitId) {
+    setTimeout(() => {
+      audioManager.play(UiSounds.unlockNew);
+      showCampaignUnlockModal(unlockedUnitId);
+    }, 50);
+  }
 }
 
 const gameState = new GameState();
@@ -381,6 +386,8 @@ function renderHand(deck) {
     dragDropController.bindCard(card, unitId);
     handEl.appendChild(card);
   });
+
+  updateEnergyUI();
 }
 
 // non-campaign battle
@@ -421,6 +428,8 @@ function resetBattleState() {
 
   arenaElement.dataset.map = "";
   arenaElement.dataset.objective = "";
+
+  updateEnergyUI();
 }
 
 function startBattleWithDeck(deck) {
@@ -440,6 +449,8 @@ function startBattleWithDeck(deck) {
     });
 
     configureNormalBattleAI();
+
+    updateEnergyUI();
 
     gameLoop.start();
   });
@@ -586,6 +597,7 @@ function startCampaignBattle(level) {
     setupCampaignArena(level);
     configureCampaignMode(level);
 
+    updateEnergyUI();
     gameLoop.start();
   });
 }

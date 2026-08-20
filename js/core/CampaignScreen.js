@@ -1,4 +1,5 @@
 import { CampaignLevels } from "../config/campaignLevels.js";
+import { UnitDefinitions } from "../config/unitDefinitions.js";
 
 const OBJECTIVE_ICONS = {
   destroyBase: "🏭",
@@ -12,6 +13,71 @@ const MAP_ICONS = {
   middleWall: "⛰️",
   river: "🌊"
 };
+
+// helpers
+function getRewardMarkup(level, completed) {
+  const reward = level.reward || {};
+  const rewards = [];
+
+  if (reward.yanga) {
+    rewards.push(`
+      <span class="campaign-reward-item">
+        <img
+          src="assets/ui/yanga.png"
+          alt="Yanga"
+          class="campaign-reward-yanga"
+        >
+        <span>${reward.yanga}</span>
+      </span>
+    `);
+  }
+
+  if (reward.chest) {
+    const quantity = reward.chest.quantity || 1;
+
+    rewards.push(`
+      <span class="campaign-reward-item">
+        <img
+          src="assets/ui/${reward.chest.chestId}.png"
+          alt="Coffre"
+          class="campaign-reward-chest"
+        >
+        <span>${quantity > 1 ? `×${quantity}` : ""}</span>
+      </span>
+    `);
+  }
+
+  if (reward.unlockUnit) {
+    const definition = UnitDefinitions[reward.unlockUnit];
+
+    if (definition) {
+      rewards.push(`
+        <span
+          class="campaign-reward-item campaign-reward-unit"
+          title="Débloque : ${definition.name}"
+        >
+          <img
+            src="${definition.sprite}"
+            alt="${definition.name}"
+            class="campaign-reward-unit-icon"
+          >
+        </span>
+      `);
+    }
+  }
+
+  if (!rewards.length) {
+    return "";
+  }
+
+  return `
+    <div class="campaign-rewards${completed ? " campaign-rewards-obtained" : ""}">
+      <div class="campaign-rewards-list">
+        ${rewards.join("")}
+      </div>
+    </div>
+  `;
+}
 
 export class CampaignScreen {
   constructor({
@@ -57,6 +123,8 @@ export class CampaignScreen {
         <div class="campaign-level-main">
           <h3>${level.name}</h3>
           <p>${level.description}</p>
+
+          ${getRewardMarkup(level, completed)}
         </div>
 
         <div class="campaign-level-icons">

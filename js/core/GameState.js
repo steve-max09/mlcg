@@ -63,6 +63,8 @@ export class GameState {
     this.towers = [];
     this.energy = 5;
     this.enemyEnergy = 5;
+    this.energyRegenRate = 1;
+    this.energyRegenInterval = 1800;
     this.isGameOver = false;
     this.winner = null;
   }
