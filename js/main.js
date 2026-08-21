@@ -130,7 +130,7 @@ function setupArena(gameState, renderer, playerProgress, options = {}) {
   const arenaRect = arenaElement.getBoundingClientRect();
   const centerX = arenaRect.width / 2;
 
-  const offsetX = arenaRect.width * 0.22; // distance latérale depuis le centre
+  const offsetX = arenaRect.width * 0.28; // distance latérale depuis le centre
   const enemyY = arenaRect.height * 0.30;
   const playerY = arenaRect.height * 0.76;
 

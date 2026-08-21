@@ -344,7 +344,7 @@ export const UnitDefinitions = {
     attackAnimation: "metalSlash",
     sounds: {
       spawn: "assets/sounds/units/brumisateur-spawn.mp3",
-      attack: "assets/sounds/units/brumisateur-attack.mp3",
+      attack: "assets/sounds/units/minipelle-attack.mp3",
       death: "assets/sounds/units/brumisateur-death.mp3"
     },
   },

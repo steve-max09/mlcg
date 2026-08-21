@@ -87,7 +87,7 @@ export const CampaignLevels = [
     name: "Passage de la rivière",
     description: "Détruisez la base ennemie sur une nouvelle carte.",
     objective: "destroyBase",
-    map: "river",
+    map: "middleWall",
     unlockedByDefault: false,
 
     enemyStructures: {
@@ -148,7 +148,7 @@ export const CampaignLevels = [
     name: "Le chariot maléfique",
     description: "Éliminez le chariot ennemi qui menace notre base.",
     objective: "bossFight",
-    map: "flat",
+    map: "middleWall",
     unlockedByDefault: false,
 
     waves: [
