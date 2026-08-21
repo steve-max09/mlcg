@@ -88,7 +88,6 @@ function getObjectiveMarkup(level) {
 
       return `
         <span class="campaign-dialog-character" style="--dialog-sprite-color: ${spriteColor};">
-          <span class="campaign-dialog-character-fade"></span>
 
           <img
             src="${firstDialog.sprite}"

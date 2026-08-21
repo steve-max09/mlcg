@@ -1555,41 +1555,13 @@ button {
   object-fit: contain;
 
   filter:
-    drop-shadow(0 0 2px var(--dialog-sprite-color))
-    drop-shadow(0 0 6px var(--dialog-sprite-color))
-    drop-shadow(0 0 12px color-mix(
+    drop-shadow(0 0 1px var(--dialog-sprite-color))
+    drop-shadow(0 0 3px var(--dialog-sprite-color))
+    drop-shadow(0 0 6px color-mix(
       in srgb,
       var(--dialog-sprite-color) 65%,
       transparent
     ));
-}
-
-.campaign-dialog-character-fade {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  pointer-events: none;
-
-  background:
-    linear-gradient(
-      to bottom,
-      transparent 72%,
-      var(--card) 100%
-    ),
-    linear-gradient(
-      to right,
-      var(--card) 0%,
-      transparent 16%,
-      transparent 84%,
-      var(--card) 100%
-    );
-
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 70%,
-    transparent 100%
-  );
 }
 
 .campaign-level-number {
