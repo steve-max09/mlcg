@@ -1,3 +1,5 @@
+import { GeometryUtils } from "./GeometryUtils.js";
+
 export class AIController {
   constructor({ gameState, unitDefinitions, difficultyConfig, onSpawn }) {
     this.gameState = gameState;
@@ -67,7 +69,13 @@ export class AIController {
 
     if (this.gameState.enemyEnergy < bestChoice.cost) return;
 
-    const spawnPos = this.chooseSpawnPosition(arenaSize, playerUnits);
+    const requestedSpawnPos = this.chooseSpawnPosition(arenaSize, playerUnits);
+    const obstacles = this.gameState.mapGeometry?.movement || [];
+
+    const spawnPos = GeometryUtils.findNearestValidPosition(requestedSpawnPos.x, requestedSpawnPos.y, bestChoice.hitboxRadius || 20, obstacles, arenaSize);
+
+    if (!spawnPos) return;
+
     this.gameState.enemyEnergy -= bestChoice.cost;
     this.onSpawn(bestChoice, spawnPos.x, spawnPos.y);
   }

@@ -2,6 +2,7 @@ let towerIdCounter = 0;
 
 export class Tower {
   constructor(definition, team, x, y) {
+    this.isBase = false;
     this.instanceId = `tower-${++towerIdCounter}`;
     this.name = definition.name;
     this.sprite = definition.sprite;

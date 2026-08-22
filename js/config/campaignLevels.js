@@ -52,7 +52,7 @@ export const CampaignLevels = [
     name: "Renforts industriels",
     description: "Survivez aux vagues ennemies.",
     objective: "surviveWaves",
-    map: "river",
+    map: "middleWall",
     unlockedByDefault: false,
 
     waves: [
@@ -116,7 +116,7 @@ export const CampaignLevels = [
     description: "Nos alliés discutent.",
     objective: "dialog",
     spriteColor: "#ef4444",
-    map: "flat",
+    map: "middleWall",
     unlockedByDefault: false,
 
     dialogs: [

@@ -46,13 +46,31 @@ export class GameState {
   checkVictory() {
     if (this.isGameOver) return;
 
-    const playerTower = this.towers.find((t) => t.team === "player");
-    const enemyTower = this.towers.find((t) => t.team === "enemy");
+    const playerStructures = this.towers.filter((tower) => tower.team === "player");
+    const enemyStructures = this.towers.filter((tower) => tower.team === "enemy");
 
-    if (playerTower && playerTower.isDestroyed) {
+    if (this.mapId === "middleWall") {
+      const playerStructureDestroyed = playerStructures.some((tower) => tower.isDestroyed || tower.isDead);
+      const enemyStructureDestroyed = enemyStructures.some((tower) => tower.isDestroyed || tower.isDead);
+
+      if (playerStructureDestroyed) {
+        this.isGameOver = true;
+        this.winner = "enemy";
+      } else if (enemyStructureDestroyed) {
+        this.isGameOver = true;
+        this.winner = "player";
+      }
+
+      return;
+    }
+
+    const playerBase = playerStructures.find((tower) => tower.isBase) || playerStructures[0];
+    const enemyBase = enemyStructures.find((tower) => tower.isBase) || enemyStructures[0];
+
+    if (playerBase?.isDestroyed || playerBase?.isDead) {
       this.isGameOver = true;
       this.winner = "enemy";
-    } else if (enemyTower && enemyTower.isDestroyed) {
+    } else if (enemyBase?.isDestroyed || enemyBase?.isDead) {
       this.isGameOver = true;
       this.winner = "player";
     }
@@ -67,5 +85,6 @@ export class GameState {
     this.energyRegenInterval = 1800;
     this.isGameOver = false;
     this.winner = null;
+    this.mapId = "flat";
   }
 }

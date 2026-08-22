@@ -1,3 +1,5 @@
+import { GeometryUtils } from "./GeometryUtils.js";
+
 export const CombatSystem = {
   update(gameState, deltaSeconds, onAttack) {
     if (gameState.isGameOver) return;
@@ -14,7 +16,9 @@ export const CombatSystem = {
       }
 
       const distance = unit.distanceTo(unit.target);
-      if (distance <= unit.attackRange && unit.attackCooldown <= 0) {
+      const obstacles = gameState.mapGeometry?.attack || [];
+
+      if (distance <= unit.attackRange && unit.attackCooldown <= 0 && GeometryUtils.hasLineOfSight(unit, unit.target, obstacles)) {
         this.attack(unit, unit.target, gameState);
         unit.attackCooldown = 1 / unit.attackSpeed;
         if (onAttack) onAttack(unit, unit.target);
@@ -53,7 +57,8 @@ export const CombatSystem = {
     for (const enemy of enemies) {
       if (enemy.isDead) continue;
       const dist = attacker.distanceTo(enemy);
-      if (dist <= attacker.attackRange && dist < closestDist) {
+      const obstacles = gameState.mapGeometry?.attack || [];
+      if (dist <= attacker.attackRange && dist < closestDist && GeometryUtils.hasLineOfSight(attacker, enemy, obstacles)) {
         closestDist = dist;
         closest = enemy;
       }
@@ -102,5 +107,5 @@ export const CombatSystem = {
         entity.takeDamage(attacker.damage);
       }
     }
-  }
+  },
 };

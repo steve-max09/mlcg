@@ -57,7 +57,6 @@ export class GameLoop {
   update(deltaSeconds) {
     const arenaSize = this.getArenaSize();
 
-    // si on est en mode surviveWaves on met à jour le timer
     if (this.updateCampaignTimer) {
       this.updateCampaignTimer(deltaSeconds);
     }
@@ -65,9 +64,7 @@ export class GameLoop {
     MovementSystem.update(this.gameState, deltaSeconds);
 
     CombatSystem.update(this.gameState, deltaSeconds, (attacker, target) => {
-      const el =
-        this.renderer.getUnitElement(attacker.instanceId) ||
-        this.renderer.getTowerElement(attacker.instanceId);
+      const el = this.renderer.getUnitElement(attacker.instanceId) || this.renderer.getTowerElement(attacker.instanceId);
 
       if (el) {
         AnimationSystem.triggerAttackAnimation(attacker, target, el);
@@ -82,16 +79,17 @@ export class GameLoop {
       this.campaignWaveController.update(deltaSeconds, arenaSize);
     }
 
-    if (this.onCampaignComplete && this.onCampaignComplete()) {
-      return;
-    }
-
     if (this.aiController) {
       this.aiController.update(deltaSeconds, arenaSize);
     }
 
     this.checkDeaths();
     this.checkTowerDestruction();
+
+    if (this.onCampaignComplete && this.onCampaignComplete()) {
+      return;
+    }
+
     this.updateEnergy(deltaSeconds);
   }
 

@@ -1,3 +1,5 @@
+import { GeometryUtils } from "../core/GeometryUtils.js";
+
 export class DragDropController {
   constructor({ arenaElement, gameState, unitDefinitions, onSpawn }) {
     this.arenaElement = arenaElement;
@@ -86,6 +88,19 @@ export class DragDropController {
 
     x = Math.min(Math.max(x, minX), maxX);
     y = Math.min(Math.max(y, minY), maxY);
+
+    const obstacles = this.gameState.mapGeometry?.movement || [];
+    const collisionRadius = definition.hitboxRadius || 20;
+
+    const validPosition = GeometryUtils.findNearestValidPosition(x, y, collisionRadius, obstacles, {
+      width: rect.width,
+      height: rect.height
+    });
+
+    if (!validPosition) return;
+
+    x = validPosition.x;
+    y = validPosition.y;
 
     this.gameState.spendEnergy(definition.cost);
     this.onSpawn(definition, x, y);

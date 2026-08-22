@@ -175,7 +175,7 @@ export const UnitDefinitions = {
     rarity: 1,
     sprite: "assets/loxams/Compacteur monocylindre Grand Travaux.png",
     cost: 5,
-    hp: 1000,
+    hp: 4000,
     damage: 50,
     attackSpeed: 0.7,
     movementSpeed: 20,

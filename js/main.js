@@ -26,6 +26,8 @@ import { CampaignScreen } from "./core/CampaignScreen.js";
 import { CampaignWaveController } from "./core/CampaignWaveController.js";
 import { DialogController } from "./core/DialogController.js";
 
+import { getMapGeometry, getMapWaypoints } from "./config/mapDefinitions.js";
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").then((registration) => {
@@ -128,6 +130,12 @@ function showScreen(id) {
 
 function setupArena(gameState, renderer, playerProgress, options = {}) {
   const arenaRect = arenaElement.getBoundingClientRect();
+  gameState.mapGeometry = getMapGeometry(arenaElement.dataset.map || "flat", arenaRect.width, arenaRect.height);
+
+  renderMapDecorations(arenaElement.dataset.map || "flat");
+
+  gameState.mapId = arenaElement.dataset.map || "flat";
+  gameState.mapWaypoints = getMapWaypoints(arenaElement.dataset.map || "flat", arenaRect.width, arenaRect.height);
   const centerX = arenaRect.width / 2;
 
   const offsetX = arenaRect.width * 0.28; // distance latérale depuis le centre
@@ -147,6 +155,7 @@ function setupArena(gameState, renderer, playerProgress, options = {}) {
     const enemyRightDef = UnitDefinitions[enemyRightTowerId] || UnitDefinitions.tower_standard;
 
     const enemyBase = new Tower(enemyBaseDef, "enemy", centerX, arenaRect.height * 0.10);
+    enemyBase.isBase = true;
     const enemyLeftTower = new Tower(enemyLeftDef, "enemy", centerX - offsetX, enemyY);
     const enemyRightTower = new Tower(enemyRightDef, "enemy", centerX + offsetX, enemyY);
 
@@ -158,6 +167,7 @@ function setupArena(gameState, renderer, playerProgress, options = {}) {
   // Base joueur
   const playerBaseDef = UnitDefinitions[playerProgress.playerBaseId] || UnitDefinitions.base_usine;
   const playerBase = new Tower(playerBaseDef, "player", centerX, arenaRect.height * 0.92);
+  playerBase.isBase = true;
   gameState.addTower(playerBase);
 
   // Tours joueur
@@ -394,7 +404,7 @@ function renderHand(deck) {
 function clearArenaVisuals() {
   arenaElement
     .querySelectorAll(
-      ".game-unit, .game-tower"
+      ".game-unit, .game-tower, .map-decoration, .map-river-bridge, .map-middle-wall, .map-wall, .map-bridge"
     )
     .forEach((element) => {
       element.remove();
@@ -438,6 +448,8 @@ function startBattleWithDeck(deck) {
   isCampaignRun = false;
   activeCampaignLevel = null;
   campaignMode = null;
+
+  renderMapDecorations("flat");
 
   showScreen("arena-screen");
 
@@ -612,6 +624,8 @@ function setupCampaignArena(level) {
   if (campaignMode === "surviveWaves") {
     campaignTimer = level.surviveDuration || 0;
   }
+
+  renderMapDecorations(level.map);
 
   setupArena(gameState, renderer, playerProgress, {
     noEnemyStructures: campaignMode === "surviveWaves" || campaignMode === "bossFight" || campaignMode === "dialog",
@@ -845,3 +859,28 @@ function configureNormalBattleAI() {
   aiController.configure(getNormalBattleDifficulty());
 }
 // =====
+
+// ===== MAP VARIATIONS =====
+function renderMapDecorations(mapId) {
+  clearArenaVisuals();
+
+  if (mapId === "river") {
+    createMapDecoration("map-river-bridge map-river-bridge-left");
+    createMapDecoration("map-river-bridge map-river-bridge-right");
+  }
+
+  if (mapId === "middleWall") {
+    createMapDecoration("map-middle-wall map-middle-wall-left");
+    createMapDecoration("map-middle-wall map-middle-wall-right");
+  }
+}
+
+function createMapDecoration(className) {
+  const element = document.createElement("div");
+
+  element.className = `map-decoration ${className}`;
+  element.setAttribute("aria-hidden", "true");
+
+  arenaElement.appendChild(element);
+}
+// ===== end MAP VARIATIONS =====
