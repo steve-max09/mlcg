@@ -52,7 +52,7 @@ export const CampaignLevels = [
     name: "Renforts industriels",
     description: "Survivez aux vagues ennemies.",
     objective: "surviveWaves",
-    map: "river",
+    map: "flat",
     unlockedByDefault: false,
 
     waves: [
@@ -87,7 +87,7 @@ export const CampaignLevels = [
     name: "Passage de la rivière",
     description: "Détruisez la base ennemie sur une nouvelle carte.",
     objective: "destroyBase",
-    map: "middleWall",
+    map: "flat",
     unlockedByDefault: false,
 
     enemyStructures: {
@@ -148,7 +148,7 @@ export const CampaignLevels = [
     name: "Le chariot maléfique",
     description: "Éliminez le chariot ennemi qui menace notre base.",
     objective: "bossFight",
-    map: "middleWall",
+    map: "flat",
     unlockedByDefault: false,
 
     waves: [
