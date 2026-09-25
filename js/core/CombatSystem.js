@@ -15,9 +15,13 @@ export const CombatSystem = {
 
       const distance = unit.distanceTo(unit.target);
       if (distance <= unit.attackRange && unit.attackCooldown <= 0) {
-        this.attack(unit, unit.target, gameState);
+        const attackResult = this.createAttack(unit, unit.target, gameState);
+
         unit.attackCooldown = 1 / unit.attackSpeed;
-        if (onAttack) onAttack(unit, unit.target);
+
+        if (onAttack) {
+          onAttack(unit, unit.target, attackResult);
+        }
 
         if (this.isTargetInvalid(unit.target)) {
           unit.target = null;
@@ -34,9 +38,13 @@ export const CombatSystem = {
       if (!target) continue;
 
       if (tower.attackCooldown <= 0) {
-        this.attack(tower, target, gameState);
+        const attackResult = this.createAttack(tower, target, gameState);
+
         tower.attackCooldown = 1 / tower.attackSpeed;
-        if (onAttack) onAttack(tower, target);
+
+        if (onAttack) {
+          onAttack(tower, target, attackResult);
+        }
       }
     }
 
@@ -69,13 +77,45 @@ export const CombatSystem = {
     return false;
   },
 
-  attack(attacker, target, gameState) {
+  createAttack(attacker, target, gameState) {
+    const delayed = attacker.attackAnimation === "toxicProjectile";
+
+    if (delayed) {
+      return {
+        delayed: true,
+        apply: () => {
+          if (this.isTargetInvalid(target)) return;
+
+          this.applyDamage(
+            attacker,
+            target,
+            gameState
+          );
+        }
+      };
+    }
+
+    this.applyDamage(attacker, target, gameState);
+
+    return {
+      delayed: false,
+      apply: null
+    };
+  },
+
+  applyDamage(attacker, target, gameState) {
+    if (this.isTargetInvalid(target)) return;
+
     if (typeof target.takeDamage === "function") {
       target.takeDamage(attacker.damage);
     }
 
     if (attacker.aoeRadius > 0) {
-      this.applyAoeDamage(attacker, target, gameState);
+      this.applyAoeDamage(
+        attacker,
+        target,
+        gameState
+      );
     }
   },
 

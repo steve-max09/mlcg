@@ -64,17 +64,34 @@ export class GameLoop {
 
     MovementSystem.update(this.gameState, deltaSeconds);
 
-    CombatSystem.update(this.gameState, deltaSeconds, (attacker, target) => {
+    CombatSystem.update(this.gameState, deltaSeconds, (attacker, target, attackResult) => {
       const el =
         this.renderer.getUnitElement(attacker.instanceId) ||
         this.renderer.getTowerElement(attacker.instanceId);
 
-      if (el) {
-        AnimationSystem.triggerAttackAnimation(attacker, target, el);
-      }
-
       if (this.audioManager && attacker.sounds?.attack) {
         this.audioManager.play(attacker.sounds.attack);
+      }
+
+      if (!el) {
+        if (attackResult?.delayed) {
+          attackResult.apply();
+        }
+
+        return;
+      }
+
+      const animationPromise =
+        AnimationSystem.triggerAttackAnimation(
+          attacker,
+          target,
+          el
+        );
+
+      if (attackResult?.delayed && attackResult.apply) {
+        animationPromise.then(() => {
+          attackResult.apply();
+        });
       }
     });
 

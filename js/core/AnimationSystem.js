@@ -1,37 +1,42 @@
 export const AnimationSystem = {
   triggerAttackAnimation(attacker, target, rendererEl) {
-    if (!rendererEl) return;
+    if (!rendererEl) {
+      return Promise.resolve();
+    }
 
     switch (attacker.attackAnimation) {
       case "spinSlash":
         this.playSpin(rendererEl);
-        break;
+        return Promise.resolve();
       case "fireSpurt":
         this.playFireSpurt(rendererEl, attacker, target);
-        break;
+        return Promise.resolve();
       case "grassSpurt":
         this.playGrassSpurt(rendererEl, attacker, target);
-        break;
+        return Promise.resolve();
       case "groundSmash":
         this.playGroundSmash(rendererEl);
-        break;
+        return Promise.resolve();
       case "metalSlash":
         this.playMetalSlash(rendererEl, attacker, target);
-        break;
+        return Promise.resolve();
       case "coalShot":
         this.playCoalShot(rendererEl, attacker, target);
-        break;
+        return Promise.resolve();
       case "iceWind":
         this.playIceWind(rendererEl, attacker, target);
-        break;
+        return Promise.resolve();
       case "lightSpurt":
         this.playLightSpurt(rendererEl, attacker, target);
-        break;
+        return Promise.resolve();
       case "toxicAttack":
         this.playToxicAttack(rendererEl, attacker, target);
-        break;
+        return Promise.resolve();
+      case "toxicProjectile":
+        return this.playToxicProjectile(rendererEl, attacker, target);
       default:
         this.playPulse(rendererEl);
+        return Promise.resolve();
     }
   },
 
@@ -271,20 +276,27 @@ export const AnimationSystem = {
 
     if (distance === 0) return;
 
+    const nx = dx / distance;
+    const ny = dy / distance;
     const angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
-    // Position au milieu entre l'attaquant et la cible.
-    // La spritesheet monte visuellement depuis le bas vers le centre.
-    const effectX = attacker.x + dx * 0.5;
-    const effectY = attacker.y + dy * 0.5;
+    const attackerRadius = attacker.hitboxRadius || 20;
+    const targetRadius = target.hitboxRadius || 20;
+
+    const startX = attacker.x + nx * attackerRadius;
+    const startY = attacker.y + ny * attackerRadius;
+
+    const endX = target.x - nx * targetRadius;
+    const endY = target.y - ny * targetRadius;
+
+    const effectX = (startX + endX) / 2;
+    const effectY = (startY + endY) / 2;
 
     const effect = document.createElement("div");
 
     effect.className = "sprite-effect toxic-attack-effect";
     effect.style.left = `${effectX}px`;
     effect.style.top = `${effectY}px`;
-
-    // La rotation est appliquée à l'élément entier.
     effect.style.setProperty("--toxic-angle", `${angle}deg`);
 
     effectsLayer.appendChild(effect);
@@ -297,5 +309,68 @@ export const AnimationSystem = {
       duration: 450,
       columns: 9
     });
-  }
+  },
+
+  playToxicProjectile(el, attacker, target) {
+    const arena = el.closest("#arena");
+    const effectsLayer = arena?.querySelector("#effects-layer");
+
+    if (!arena || !effectsLayer || !attacker || !target) {
+      return Promise.resolve();
+    }
+
+    const dx = target.x - attacker.x;
+    const dy = target.y - attacker.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance === 0) {
+      return Promise.resolve();
+    }
+
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    const projectile = document.createElement("div");
+
+    projectile.className = "toxic-projectile";
+    projectile.style.left = `${attacker.x}px`;
+    projectile.style.top = `${attacker.y}px`;
+    projectile.style.setProperty("--travel-x", `${dx}px`);
+    projectile.style.setProperty("--travel-y", `${dy}px`);
+    projectile.style.setProperty("--projectile-angle", `${angle}deg`);
+
+    effectsLayer.appendChild(projectile);
+
+    const travelDuration = Math.max(180, Math.min(650, distance * 2.2));
+
+    projectile.style.animationDuration = `${travelDuration}ms`;
+
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        projectile.remove();
+
+        this.playToxicImpact(effectsLayer, target.x, target.y);
+
+        resolve();
+      }, travelDuration);
+    });
+  },
+
+  playToxicImpact(effectsLayer, x, y) {
+    const impact = document.createElement("div");
+
+    impact.className = "sprite-effect toxic-impact-effect";
+    impact.style.left = `${x}px`;
+    impact.style.top = `${y}px`;
+
+    effectsLayer.appendChild(impact);
+
+    this.animateSpriteSheet({
+      element: impact,
+      frameWidth: 128,
+      frameHeight: 128,
+      frameCount: 9,
+      duration: 450,
+      columns: 9
+    });
+  },
 };

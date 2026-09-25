@@ -134,7 +134,9 @@ export const UnitDefinitions = {
     targetType: "buildings",
     canMove: true,
     canAttack: true,
-    attackAnimation: "toxicAttack",
+    attackAnimation: "toxicProjectile",
+    aoeRadius: 50,
+    aoeCenter: "target",
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
       attack: "assets/sounds/units/chauffage-attack.mp3",
@@ -316,7 +318,7 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: true,
     canAttack: true,
-    attackAnimation: "iceWind",
+    attackAnimation: "toxicAttack",
     sounds: {
       spawn: "assets/sounds/units/brumisateur-spawn.mp3",
       attack: "assets/sounds/units/brumisateur-attack.mp3",
