@@ -1774,3 +1774,69 @@ button {
   font-size: 0.75rem;
 }
 /* end dialogs */
+
+/* Couche dédiée aux effets visuels de combat */
+#effects-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Animation toxic_attack.png : 9 frames de 128 x 128 px sur une ligne */
+.sprite-effect {
+  position: absolute;
+  width: 128px;
+  height: 128px;
+  transform: translate(-50%, -50%);
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 21;
+  will-change: background-position, opacity, transform;
+}
+
+/* Effet d'impact toxique */
+.toxic-attack-effect {
+  background-image: url("assets/effects/toxic-cloud-attack.png");
+  background-size: 1152px 128px;
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--toxic-angle));
+  transform-origin: center center;
+  animation: toxicAttackPop 450ms ease-out forwards;
+}
+
+@keyframes toxicAttackPop {
+  0% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--toxic-angle))
+      scale(0.65);
+  }
+
+  12% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--toxic-angle))
+      scale(0.9);
+  }
+
+  75% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--toxic-angle))
+      scale(1.05);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--toxic-angle))
+      scale(1.15);
+  }
+}

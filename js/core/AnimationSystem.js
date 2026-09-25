@@ -27,9 +27,42 @@ export const AnimationSystem = {
       case "lightSpurt":
         this.playLightSpurt(rendererEl, attacker, target);
         break;
+      case "toxicAttack":
+        this.playToxicAttack(rendererEl, attacker, target);
+        break;
       default:
         this.playPulse(rendererEl);
     }
+  },
+
+  animateSpriteSheet({element, frameWidth, frameHeight, frameCount, duration, columns = frameCount}) {
+    const startTime = performance.now();
+
+    const updateFrame = (timestamp) => {
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      const frame = Math.min(
+        frameCount - 1,
+        Math.floor(progress * frameCount)
+      );
+
+      const column = frame % columns;
+      const row = Math.floor(frame / columns);
+
+      element.style.backgroundPosition = `
+        -${column * frameWidth}px
+        -${row * frameHeight}px
+      `;
+
+      if (progress < 1) {
+        requestAnimationFrame(updateFrame);
+      } else {
+        element.remove();
+      }
+    };
+
+    requestAnimationFrame(updateFrame);
   },
 
   playSpin(el) {
@@ -225,4 +258,44 @@ export const AnimationSystem = {
   playLightSpurt(el, attacker, target) {
     this.spawnProjectileBeam(el, attacker, target, "light-spurt");
   },
+
+  playToxicAttack(el, attacker, target) {
+    const arena = el.closest("#arena");
+    const effectsLayer = arena?.querySelector("#effects-layer");
+
+    if (!arena || !effectsLayer || !attacker || !target) return;
+
+    const dx = target.x - attacker.x;
+    const dy = target.y - attacker.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance === 0) return;
+
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    // Position au milieu entre l'attaquant et la cible.
+    // La spritesheet monte visuellement depuis le bas vers le centre.
+    const effectX = attacker.x + dx * 0.5;
+    const effectY = attacker.y + dy * 0.5;
+
+    const effect = document.createElement("div");
+
+    effect.className = "sprite-effect toxic-attack-effect";
+    effect.style.left = `${effectX}px`;
+    effect.style.top = `${effectY}px`;
+
+    // La rotation est appliquée à l'élément entier.
+    effect.style.setProperty("--toxic-angle", `${angle}deg`);
+
+    effectsLayer.appendChild(effect);
+
+    this.animateSpriteSheet({
+      element: effect,
+      frameWidth: 128,
+      frameHeight: 128,
+      frameCount: 9,
+      duration: 450,
+      columns: 9
+    });
+  }
 };
