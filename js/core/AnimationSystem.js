@@ -16,6 +16,7 @@ export const AnimationSystem = {
         return Promise.resolve();
       case "groundSmash":
         this.playGroundSmash(rendererEl);
+        this.playImpactFeedback(attacker);
         return Promise.resolve();
       case "metalSlash":
         this.playMetalSlash(rendererEl, attacker, target);
@@ -37,6 +38,43 @@ export const AnimationSystem = {
       default:
         this.playPulse(rendererEl);
         return Promise.resolve();
+    }
+  },
+
+  getImpactPosition(target, offset = {}) {
+    const maxX = offset.x || 0;
+    const maxY = offset.y || 0;
+
+    if (offset.random === false) {
+      return {
+        x: target.x,
+        y: target.y
+      };
+    }
+
+    return {
+      x: target.x + (Math.random() * 2 - 1) * maxX,
+      y: target.y + (Math.random() * 2 - 1) * maxY
+    };
+  },
+
+  playImpactFeedback(attacker) {
+    const feedback = attacker.attackFeedback;
+
+    if (!feedback?.vibrateOnImpact) { return; }
+
+    this.triggerVibration({enabled: true, pattern: feedback.vibrationPattern || [30]});
+  },
+
+  triggerVibration({enabled = false, pattern = [30]} = {}) {
+    if (!enabled) return;
+
+    if (!("vibrate" in navigator)) return;
+
+    try {
+      navigator.vibrate(pattern);
+    } catch {
+      // refus vibration.
     }
   },
 
@@ -379,13 +417,40 @@ export const AnimationSystem = {
 
     const projectile = document.createElement("div");
 
-    projectile.className = `projectile projectile-${config.type}`;
+    const spriteSheet = config.spriteSheet;
+
+    if (spriteSheet) {
+      projectile.className = "projectile projectile-sprite projectile-" + config.type;
+
+      projectile.style.width = `${spriteSheet.frameWidth}px`;
+      projectile.style.height = `${spriteSheet.frameHeight}px`;
+
+      projectile.style.backgroundImage = `url("${spriteSheet.image}")`;
+
+      projectile.style.backgroundSize = `${spriteSheet.frameWidth * spriteSheet.columns}px ` +
+        `${spriteSheet.frameHeight * Math.ceil(spriteSheet.frameCount / spriteSheet.columns)}px`;
+    } else {
+      projectile.className = `projectile projectile-${config.type}`;
+    }
 
     projectile.style.left = `${attacker.x}px`;
     projectile.style.top = `${attacker.y}px`;
+
     projectile.style.setProperty("--travel-x", `${dx}px`);
     projectile.style.setProperty("--travel-y", `${dy}px`);
     projectile.style.setProperty("--projectile-angle", `${angle}deg`);
+
+    if (spriteSheet) {
+      this.animateSpriteSheetLoop({
+        element: projectile,
+        frameWidth: spriteSheet.frameWidth,
+        frameHeight: spriteSheet.frameHeight,
+        frameCount: spriteSheet.frameCount,
+        columns: spriteSheet.columns,
+        duration: spriteSheet.duration || 500,
+        loop: spriteSheet.loop !== false
+      });
+    }
 
     effectsLayer.appendChild(projectile);
 
@@ -407,26 +472,35 @@ export const AnimationSystem = {
       window.setTimeout(() => {
         projectile.remove();
 
+        const impactPosition = this.getImpactPosition(target, config.impactOffset);
+        this.playImpactEffect({effectsLayer, target, x: impactPosition.x, y: impactPosition.y, impactEffect: config.impactEffect});
+
+        const vibration = config.vibration || attacker.attackFeedback;
+        this.triggerVibration({
+          enabled: vibration?.enabled === true,
+          pattern: vibration?.pattern || vibration?.vibrationPattern || [30]
+        });
+
         if (attacker.sounds?.projectileImpact) {
           audioManager?.play(attacker.sounds.projectileImpact);
         }
-
-        this.playImpactEffect({effectsLayer, target, impactEffect: config.impactEffect});
 
         resolve({hit: true});
       }, travelDuration);
     });
   },
 
-  playImpactEffect({effectsLayer, target, impactEffect}) {
+  playImpactEffect({effectsLayer, target, x, y, impactEffect}) {
+    const impactX = x ?? target.x;
+    const impactY = y ?? target.y;
+
     if (impactEffect === "toxicCloud") {
-      this.playToxicImpact(effectsLayer, target.x, target.y);
+      this.playToxicImpact(effectsLayer, impactX, impactY);
       return;
     }
 
     if (impactEffect === "scrapCloud") {
-      this.playScrapImpact(effectsLayer, target.x, target.y);
-      return;
+      this.playScrapImpact(effectsLayer, impactX, impactY);
     }
   },
 

@@ -1891,7 +1891,20 @@ button {
   }
 }
 
-.projectile-toxicProjectile {
+.projectile-sprite {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-color: transparent;
+  border-radius: 0;
+  object-fit: contain;
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--projectile-angle));
+  image-rendering: auto;
+}
+
+.projectile-pinkProjectile {
   background:
     radial-gradient(
       circle at 35% 35%,

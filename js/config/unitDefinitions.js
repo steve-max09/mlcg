@@ -138,15 +138,24 @@ export const UnitDefinitions = {
     projectile: {
       type: "toxicProjectile",
       spriteSheet: {
-        image: "assets/effects/toxic-attack.png",
-        frameWidth: 64, frameHeight: 64, frameCount: 9, columns: 9, duration: 800, loop: true
+        image: "assets/effects/pink-strobe-projectile.png",
+        frameWidth: 128, frameHeight: 129, frameCount: 4, columns: 4, duration: 600, loop: true
       },
       travelDuration: {
         min: 220,
         max: 800,
-        pixelsPerMillisecond: 2.2
+        pixelsPerMillisecond: 9.2
       },
-      impactEffect: "toxicCloud"
+      impactEffect: "toxicCloud",
+      impactOffset: {
+        x: 6,
+        y: 6,
+        random: true
+      },
+      vibration: {
+        enabled: true,
+        pattern: [35]
+      }
     },
     aoeRadius: 50,
     aoeCenter: "target",
@@ -200,6 +209,10 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "groundSmash",
+    attackFeedback: {
+      vibrateOnImpact: true,
+      vibrationPattern: [70, 35, 90]
+    },
     aoeRadius: 70,
     aoeCenter: "self",
     sounds: {
@@ -284,7 +297,11 @@ export const UnitDefinitions = {
         max: 800,
         pixelsPerMillisecond: 4.2
       },
-      impactEffect: "scrapCloud"
+      impactEffect: "scrapCloud",
+      vibration: {
+        enabled: true,
+        pattern: [35]
+      }
     },
     aoeRadius: 80,
     aoeCenter: "target",
