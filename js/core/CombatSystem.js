@@ -78,29 +78,22 @@ export const CombatSystem = {
   },
 
   createAttack(attacker, target, gameState) {
-    const delayed = attacker.attackAnimation === "toxicProjectile";
+    const isProjectileAttack = Boolean(attacker.projectile);
 
-    if (delayed) {
+    if (isProjectileAttack) {
       return {
         delayed: true,
         apply: () => {
           if (this.isTargetInvalid(target)) return;
 
-          this.applyDamage(
-            attacker,
-            target,
-            gameState
-          );
+          this.applyDamage(attacker, target, gameState);
         }
       };
     }
 
     this.applyDamage(attacker, target, gameState);
 
-    return {
-      delayed: false,
-      apply: null
-    };
+    return { delayed: false, apply: null };
   },
 
   applyDamage(attacker, target, gameState) {

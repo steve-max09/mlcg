@@ -31,6 +31,7 @@ export class Unit {
 
     this.audioManager = audioManager;
     this.sounds = definition.sounds || {};
+    this.projectile = definition.projectile || null;
 
     this.attackCooldown = 0;
     this.target = null;

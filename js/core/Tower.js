@@ -28,11 +28,11 @@ export class Tower {
     this.isDestroyed = false;
     this.isDead = false;
     this.sounds = definition.sounds || {};
+    this.projectile = definition.projectile || null;
 
     this.attackAnimation = definition.attackAnimation || "default";
     this.aoeRadius = definition.aoeRadius || 0;
     this.aoeCenter = definition.aoeCenter || "target";
-    this.sounds = definition.sounds || {};
   }
 
   takeDamage(amount) {

@@ -81,17 +81,20 @@ export class GameLoop {
         return;
       }
 
-      const animationPromise =
-        AnimationSystem.triggerAttackAnimation(
-          attacker,
-          target,
-          el
-        );
+      const animationPromise = AnimationSystem.triggerAttackAnimation(attacker, target, el, this.audioManager);
 
       if (attackResult?.delayed && attackResult.apply) {
         animationPromise.then(() => {
           attackResult.apply();
         });
+      } else {
+        if (el) {
+          AnimationSystem.triggerAttackAnimation(attacker, target, el, this.audioManager);
+        }
+
+        if (this.audioManager && attacker.sounds?.attack) {
+          this.audioManager.play(attacker.sounds.attack);
+        }
       }
     });
 

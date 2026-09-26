@@ -1,5 +1,5 @@
 export const AnimationSystem = {
-  triggerAttackAnimation(attacker, target, rendererEl) {
+  triggerAttackAnimation(attacker, target, rendererEl, audioManager) {
     if (!rendererEl) {
       return Promise.resolve();
     }
@@ -32,8 +32,8 @@ export const AnimationSystem = {
       case "toxicAttack":
         this.playToxicAttack(rendererEl, attacker, target);
         return Promise.resolve();
-      case "toxicProjectile":
-        return this.playToxicProjectile(rendererEl, attacker, target);
+      case "projectile":
+        return this.playProjectileAttack(rendererEl, attacker, target, audioManager);
       default:
         this.playPulse(rendererEl);
         return Promise.resolve();
@@ -311,27 +311,38 @@ export const AnimationSystem = {
     });
   },
 
-  playToxicProjectile(el, attacker, target) {
+  playProjectileAttack(el, attacker, target, audioManager) {
+    const projectileConfig = attacker.projectile;
+
+    if (!projectileConfig) {
+      return Promise.resolve({hit: true});
+    }
+
+    return this.createProjectile({el, attacker, target, config: projectileConfig, audioManager});
+  },
+
+  createProjectile({el, attacker, target, config, audioManager}) {
     const arena = el.closest("#arena");
     const effectsLayer = arena?.querySelector("#effects-layer");
 
     if (!arena || !effectsLayer || !attacker || !target) {
-      return Promise.resolve();
+      return Promise.resolve({hit: false});
     }
 
     const dx = target.x - attacker.x;
     const dy = target.y - attacker.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (distance === 0) {
-      return Promise.resolve();
+    if (distance <= 0) {
+      return Promise.resolve({hit: true});
     }
 
     const angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
     const projectile = document.createElement("div");
 
-    projectile.className = "toxic-projectile";
+    projectile.className = `projectile projectile-${config.type}`;
+
     projectile.style.left = `${attacker.x}px`;
     projectile.style.top = `${attacker.y}px`;
     projectile.style.setProperty("--travel-x", `${dx}px`);
@@ -340,7 +351,17 @@ export const AnimationSystem = {
 
     effectsLayer.appendChild(projectile);
 
-    const travelDuration = Math.max(180, Math.min(650, distance * 2.2));
+    if (attacker.sounds?.projectileLaunch) {
+      audioManager?.play(attacker.sounds.projectileLaunch);
+    }
+
+    const durationConfig = config.travelDuration || {};
+
+    const minDuration = durationConfig.min || 180;
+    const maxDuration = durationConfig.max || 800;
+    const pixelsPerMillisecond = durationConfig.pixelsPerMillisecond || 2.2;
+
+    const travelDuration = Math.max(minDuration, Math.min(maxDuration, distance * pixelsPerMillisecond));
 
     projectile.style.animationDuration = `${travelDuration}ms`;
 
@@ -348,11 +369,27 @@ export const AnimationSystem = {
       window.setTimeout(() => {
         projectile.remove();
 
-        this.playToxicImpact(effectsLayer, target.x, target.y);
+        if (attacker.sounds?.projectileImpact) {
+          audioManager?.play(attacker.sounds.projectileImpact);
+        }
 
-        resolve();
+        this.playImpactEffect({effectsLayer, target, impactEffect: config.impactEffect});
+
+        resolve({hit: true});
       }, travelDuration);
     });
+  },
+
+  playImpactEffect({effectsLayer, target, impactEffect}) {
+    if (impactEffect === "toxicCloud") {
+      this.playToxicImpact(effectsLayer, target.x, target.y);
+      return;
+    }
+
+    //if (impactEffect === "fireExplosion") {
+    //  this.playFireImpact(effectsLayer, target.x, target.y);
+    //  return;
+    //}
   },
 
   playToxicImpact(effectsLayer, x, y) {
@@ -372,5 +409,5 @@ export const AnimationSystem = {
       duration: 450,
       columns: 9
     });
-  },
+  }
 };

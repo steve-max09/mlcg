@@ -134,7 +134,16 @@ export const UnitDefinitions = {
     targetType: "buildings",
     canMove: true,
     canAttack: true,
-    attackAnimation: "toxicProjectile",
+    attackAnimation: "projectile",
+    projectile: {
+      type: "toxicProjectile",
+      travelDuration: {
+        min: 220,
+        max: 800,
+        pixelsPerMillisecond: 2.2
+      },
+      impactEffect: "toxicCloud"
+    },
     aoeRadius: 50,
     aoeCenter: "target",
     sounds: {
@@ -263,12 +272,22 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: true,
     canAttack: true,
-    attackAnimation: "coalShot",
+    attackAnimation: "projectile",
+    projectile: {
+      type: "toxicProjectile",
+      travelDuration: {
+        min: 220,
+        max: 800,
+        pixelsPerMillisecond: 2.2
+      },
+      impactEffect: "toxicCloud"
+    },
     aoeRadius: 80,
     aoeCenter: "target",
     sounds: {
       spawn: "assets/sounds/units/tombereau-spawn.mp3",
-      attack: "assets/sounds/units/tombereau-attack.mp3",
+      projectileLaunch: "assets/sounds/units/tombereau-attack.mp3",
+      projectileImpact: "assets/sounds/units/tombereau-attack.mp3",
       death: "assets/sounds/units/chauffage-death.mp3"
     }
   },
