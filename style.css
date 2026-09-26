@@ -1841,9 +1841,16 @@ button {
   }
 }
 
+/* effets d'impacts */
 .toxic-impact-effect {
   background-image: url("assets/effects/toxic-cloud-impact.png");
-  background-size: 524px 128px;
+  background-size: 512px 128px;
+  animation: toxicImpactPop 450ms ease-out forwards;
+}
+
+.scrap-impact-effect {
+  background-image: url("assets/effects/scrap-impact.png");
+  background-size: 872px 128px;
   animation: toxicImpactPop 450ms ease-out forwards;
 }
 
@@ -1899,15 +1906,15 @@ button {
     0 0 16px rgba(236, 72, 153, 0.8);
 }
 
-.projectile-fireball {
+.projectile-scrapProjectile {
   background: radial-gradient(
     circle at 35% 35%,
-    #fef3c7,
-    #f97316 45%,
-    #dc2626
+    #565654,
+    #54504e 45%,
+    #88570d
   );
 
   box-shadow:
-    0 0 8px #f97316,
+    0 0 8px #944004,
     0 0 18px #dc2626;
 }

@@ -109,7 +109,7 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: false,
     canAttack: true,
-    attackAnimation: "toxicAttack",
+    attackAnimation: "iceWind",
     sounds: {
       spawn: null,
       attack: "assets/sounds/units/brumisateur-attack.mp3",
@@ -129,7 +129,7 @@ export const UnitDefinitions = {
     damage: 25,
     attackSpeed: 1.2,
     movementSpeed: 50,
-    attackRange: 250,
+    attackRange: 150,
     hitboxRadius: 26,
     targetType: "buildings",
     canMove: true,
@@ -137,6 +137,10 @@ export const UnitDefinitions = {
     attackAnimation: "projectile",
     projectile: {
       type: "toxicProjectile",
+      spriteSheet: {
+        image: "assets/effects/toxic-attack.png",
+        frameWidth: 64, frameHeight: 64, frameCount: 9, columns: 9, duration: 800, loop: true
+      },
       travelDuration: {
         min: 220,
         max: 800,
@@ -265,7 +269,7 @@ export const UnitDefinitions = {
     cost: 6,
     hp: 800,
     damage: 170,
-    attackSpeed: 0.2,
+    attackSpeed: 0.3,
     movementSpeed: 20,
     attackRange: 110,
     hitboxRadius: 26,
@@ -274,13 +278,13 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "projectile",
     projectile: {
-      type: "toxicProjectile",
+      type: "scrapProjectile",
       travelDuration: {
         min: 220,
         max: 800,
-        pixelsPerMillisecond: 2.2
+        pixelsPerMillisecond: 4.2
       },
-      impactEffect: "toxicCloud"
+      impactEffect: "scrapCloud"
     },
     aoeRadius: 80,
     aoeCenter: "target",

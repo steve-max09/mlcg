@@ -70,6 +70,44 @@ export const AnimationSystem = {
     requestAnimationFrame(updateFrame);
   },
 
+  // animations pour les projectiles utilisant une spritesheet
+  animateSpriteSheetLoop({element, frameWidth, frameHeight, frameCount,columns = frameCount, duration, loop = true}) {
+    const startTime = performance.now();
+
+    const updateFrame = (timestamp) => {
+      if (!element.isConnected) return;
+
+      const elapsed = timestamp - startTime;
+
+      let progress;
+
+      if (loop) {
+        progress = (elapsed % duration) / duration;
+      } else {
+        progress = Math.min(elapsed / duration, 1);
+      }
+
+      const frame = Math.min(
+        frameCount - 1,
+        Math.floor(progress * frameCount)
+      );
+
+      const column = frame % columns;
+      const row = Math.floor(frame / columns);
+
+      element.style.backgroundPosition = `
+        -${column * frameWidth}px
+        -${row * frameHeight}px
+      `;
+
+      if (!loop && progress >= 1) return;
+
+      requestAnimationFrame(updateFrame);
+    };
+
+    requestAnimationFrame(updateFrame);
+  },
+
   playSpin(el) {
     el.classList.remove("anim-spin");
     void el.offsetWidth;
@@ -386,10 +424,10 @@ export const AnimationSystem = {
       return;
     }
 
-    //if (impactEffect === "fireExplosion") {
-    //  this.playFireImpact(effectsLayer, target.x, target.y);
-    //  return;
-    //}
+    if (impactEffect === "scrapCloud") {
+      this.playScrapImpact(effectsLayer, target.x, target.y);
+      return;
+    }
   },
 
   playToxicImpact(effectsLayer, x, y) {
@@ -401,13 +439,18 @@ export const AnimationSystem = {
 
     effectsLayer.appendChild(impact);
 
-    this.animateSpriteSheet({
-      element: impact,
-      frameWidth: 128,
-      frameHeight: 128,
-      frameCount: 9,
-      duration: 450,
-      columns: 9
-    });
+    this.animateSpriteSheet({element: impact, frameWidth: 128, frameHeight: 128, frameCount: 9, duration: 450, columns: 9});
+  },
+
+  playScrapImpact(effectsLayer, x, y) {
+    const impact = document.createElement("div");
+
+    impact.className = "sprite-effect scrap-impact-effect";
+    impact.style.left = `${x}px`;
+    impact.style.top = `${y}px`;
+
+    effectsLayer.appendChild(impact);
+
+    this.animateSpriteSheet({element: impact, frameWidth: 128, frameHeight: 128, frameCount: 9, duration: 450, columns: 9});
   }
 };
