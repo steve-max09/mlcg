@@ -298,6 +298,11 @@ export const UnitDefinitions = {
         pixelsPerMillisecond: 4.2
       },
       impactEffect: "scrapCloud",
+      impactOffset: {
+        x: 6,
+        y: 6,
+        random: true
+      },
       vibration: {
         enabled: true,
         pattern: [35]
