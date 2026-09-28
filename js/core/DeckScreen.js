@@ -11,7 +11,8 @@ const DEPLOYABLE_UNITS = [
   "climatiseur",
   "brumisateur",
   "chariot",
-  "mat"
+  "mat",
+  "fendeuse"
 ];
 
 export class DeckScreen {

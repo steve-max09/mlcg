@@ -1796,52 +1796,21 @@ button {
   will-change: background-position, opacity, transform;
 }
 
-/* Effet d'impact toxique */
-.toxic-attack-effect {
-  background-image: url("assets/effects/toxic-cloud-attack.png");
-  background-size: 1152px 128px;
+/* effets d'impacts */
+.impact-effect {
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-color: transparent;
+  border-radius: 0;
   transform:
     translate(-50%, -50%)
-    rotate(var(--toxic-angle));
+    rotate(var(--impact-rotation, 0deg))
+    scale(var(--impact-scale, 1));
   transform-origin: center center;
-  animation: toxicAttackPop 450ms ease-out forwards;
+  pointer-events: none;
+  z-index: 23;
 }
 
-@keyframes toxicAttackPop {
-  0% {
-    opacity: 0;
-    transform:
-      translate(-50%, -50%)
-      rotate(var(--toxic-angle))
-      scale(0.65);
-  }
-
-  12% {
-    opacity: 1;
-    transform:
-      translate(-50%, -50%)
-      rotate(var(--toxic-angle))
-      scale(0.9);
-  }
-
-  75% {
-    opacity: 1;
-    transform:
-      translate(-50%, -50%)
-      rotate(var(--toxic-angle))
-      scale(1.05);
-  }
-
-  100% {
-    opacity: 0;
-    transform:
-      translate(-50%, -50%)
-      rotate(var(--toxic-angle))
-      scale(1.15);
-  }
-}
-
-/* effets d'impacts */
 .toxic-impact-effect {
   background-image: url("assets/effects/toxic-cloud-impact.png");
   background-size: 512px 128px;

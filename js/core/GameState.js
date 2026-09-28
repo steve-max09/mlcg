@@ -4,9 +4,9 @@ export class GameState {
     this.towers = [];
     this.energy = 5;
     this.enemyEnergy = 5;
-    this.maxEnergy = 10;
+    this.maxEnergy = 30;
     this.energyRegenRate = 1;
-    this.energyRegenInterval = 1800;
+    this.energyRegenInterval = 1000;
     this.isGameOver = false;
     this.winner = null;
   }

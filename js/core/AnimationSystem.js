@@ -30,9 +30,6 @@ export const AnimationSystem = {
       case "lightSpurt":
         this.playLightSpurt(rendererEl, attacker, target);
         return Promise.resolve();
-      case "toxicAttack":
-        this.playToxicAttack(rendererEl, attacker, target);
-        return Promise.resolve();
       case "projectile":
         return this.playProjectileAttack(rendererEl, attacker, target, audioManager);
       default:
@@ -56,6 +53,17 @@ export const AnimationSystem = {
       x: target.x + (Math.random() * 2 - 1) * maxX,
       y: target.y + (Math.random() * 2 - 1) * maxY
     };
+  },
+
+  getImpactRotation(rotation = {}) {
+    if (rotation.random === false) {
+      return rotation.value || 0;
+    }
+
+    const min = rotation.min ?? 0;
+    const max = rotation.max ?? 360;
+
+    return min + Math.random() * (max - min);
   },
 
   playImpactFeedback(attacker) {
@@ -340,53 +348,6 @@ export const AnimationSystem = {
     this.spawnProjectileBeam(el, attacker, target, "light-spurt");
   },
 
-  playToxicAttack(el, attacker, target) {
-    const arena = el.closest("#arena");
-    const effectsLayer = arena?.querySelector("#effects-layer");
-
-    if (!arena || !effectsLayer || !attacker || !target) return;
-
-    const dx = target.x - attacker.x;
-    const dy = target.y - attacker.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance === 0) return;
-
-    const nx = dx / distance;
-    const ny = dy / distance;
-    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
-    const attackerRadius = attacker.hitboxRadius || 20;
-    const targetRadius = target.hitboxRadius || 20;
-
-    const startX = attacker.x + nx * attackerRadius;
-    const startY = attacker.y + ny * attackerRadius;
-
-    const endX = target.x - nx * targetRadius;
-    const endY = target.y - ny * targetRadius;
-
-    const effectX = (startX + endX) / 2;
-    const effectY = (startY + endY) / 2;
-
-    const effect = document.createElement("div");
-
-    effect.className = "sprite-effect toxic-attack-effect";
-    effect.style.left = `${effectX}px`;
-    effect.style.top = `${effectY}px`;
-    effect.style.setProperty("--toxic-angle", `${angle}deg`);
-
-    effectsLayer.appendChild(effect);
-
-    this.animateSpriteSheet({
-      element: effect,
-      frameWidth: 128,
-      frameHeight: 128,
-      frameCount: 9,
-      duration: 450,
-      columns: 9
-    });
-  },
-
   playProjectileAttack(el, attacker, target, audioManager) {
     const projectileConfig = attacker.projectile;
 
@@ -472,8 +433,8 @@ export const AnimationSystem = {
       window.setTimeout(() => {
         projectile.remove();
 
-        const impactPosition = this.getImpactPosition(target, config.impactOffset);
-        this.playImpactEffect({effectsLayer, target, x: impactPosition.x, y: impactPosition.y, impactEffect: config.impactEffect});
+        const impactPosition = this.getImpactPosition(target, config.impact?.offset);
+        this.playImpactEffect({effectsLayer, target, x: impactPosition.x, y: impactPosition.y, impact: config.impact});
 
         const vibration = config.vibration || attacker.attackFeedback;
         this.triggerVibration({
@@ -490,41 +451,42 @@ export const AnimationSystem = {
     });
   },
 
-  playImpactEffect({effectsLayer, target, x, y, impactEffect}) {
+  playImpactEffect({effectsLayer, target, x, y, impact}) {
     const impactX = x ?? target.x;
     const impactY = y ?? target.y;
-
-    if (impactEffect === "toxicCloud") {
-      this.playToxicImpact(effectsLayer, impactX, impactY);
-      return;
-    }
-
-    if (impactEffect === "scrapCloud") {
-      this.playScrapImpact(effectsLayer, impactX, impactY);
-    }
+    this.playImpact(effectsLayer, impactX, impactY, impact);
   },
 
-  playToxicImpact(effectsLayer, x, y) {
+  playImpact(effectsLayer, x, y, impactConfig) {
+    if (!impactConfig?.spriteSheet) return;
+
+    const spriteSheet = impactConfig.spriteSheet;
     const impact = document.createElement("div");
 
-    impact.className = "sprite-effect toxic-impact-effect";
+    impact.className = "sprite-effect impact-effect";
     impact.style.left = `${x}px`;
     impact.style.top = `${y}px`;
+    impact.style.width = `${spriteSheet.frameWidth}px`;
+    impact.style.height = `${spriteSheet.frameHeight}px`;
+    impact.style.backgroundImage = `url("${spriteSheet.image}")`;
+    impact.style.backgroundSize = `${spriteSheet.frameWidth * spriteSheet.columns}px ${spriteSheet.frameHeight * Math.ceil(spriteSheet.frameCount / spriteSheet.columns)}px`;
+
+    const scale = impactConfig.displayScale ?? 1;
+    impact.style.setProperty("--impact-scale", scale);
+
+    const rotation = this.getImpactRotation(impactConfig.rotation);
+    impact.style.setProperty("--impact-rotation", `${rotation}deg`);
 
     effectsLayer.appendChild(impact);
 
-    this.animateSpriteSheet({element: impact, frameWidth: 128, frameHeight: 128, frameCount: 9, duration: 450, columns: 9});
+    this.animateSpriteSheet({
+      element: impact,
+      frameWidth: spriteSheet.frameWidth,
+      frameHeight: spriteSheet.frameHeight,
+      frameCount: spriteSheet.frameCount,
+      duration: spriteSheet.duration || 450,
+      columns: spriteSheet.columns,
+      loop: spriteSheet.loop === true
+    });
   },
-
-  playScrapImpact(effectsLayer, x, y) {
-    const impact = document.createElement("div");
-
-    impact.className = "sprite-effect scrap-impact-effect";
-    impact.style.left = `${x}px`;
-    impact.style.top = `${y}px`;
-
-    effectsLayer.appendChild(impact);
-
-    this.animateSpriteSheet({element: impact, frameWidth: 128, frameHeight: 128, frameCount: 9, duration: 450, columns: 9});
-  }
 };

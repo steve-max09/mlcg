@@ -787,7 +787,8 @@ function getNormalBattleDifficulty() {
         "minipelle",
         "tombereau",
         "climatiseur",
-        "brumisateur"
+        "brumisateur",
+        "fendeuse"
       ],
       aggression: 0.8,
       behavior: "pressure"

@@ -10,7 +10,7 @@ export const UnitDefinitions = {
     hp: 2000,
     damage: 40,
     attackSpeed: 0.8,
-    attackRange: 190,
+    attackRange: 100,
     hitboxRadius: 60,
     targetType: "ground",
     canMove: false,
@@ -33,7 +33,7 @@ export const UnitDefinitions = {
     hp: 3000,
     damage: 70,
     attackSpeed: 0.6,
-    attackRange: 170,
+    attackRange: 100,
     hitboxRadius: 60,
     targetType: "ground",
     canMove: false,
@@ -56,7 +56,7 @@ export const UnitDefinitions = {
     hp: 1200,
     damage: 30,
     attackSpeed: 1.0,
-    attackRange: 160,
+    attackRange: 100,
     hitboxRadius: 40,
     targetType: "ground",
     canMove: false,
@@ -79,7 +79,7 @@ export const UnitDefinitions = {
     hp: 1600,
     damage: 40,
     attackSpeed: 1.0,
-    attackRange: 160,
+    attackRange: 100,
     hitboxRadius: 40,
     targetType: "ground",
     canMove: false,
@@ -104,7 +104,7 @@ export const UnitDefinitions = {
     hp: 1000,
     damage: 20,
     attackSpeed: 1.8,
-    attackRange: 160,
+    attackRange: 100,
     hitboxRadius: 40,
     targetType: "ground",
     canMove: false,
@@ -128,8 +128,8 @@ export const UnitDefinitions = {
     hp: 600,
     damage: 25,
     attackSpeed: 1.2,
-    movementSpeed: 50,
-    attackRange: 150,
+    movementSpeed: 30,
+    attackRange: 120,
     hitboxRadius: 26,
     targetType: "buildings",
     canMove: true,
@@ -146,11 +146,13 @@ export const UnitDefinitions = {
         max: 800,
         pixelsPerMillisecond: 9.2
       },
-      impactEffect: "toxicCloud",
-      impactOffset: {
-        x: 6,
-        y: 6,
-        random: true
+      impact: {
+        spriteSheet: {
+          image: "assets/effects/toxic-cloud-impact.png",
+          frameWidth: 128, frameHeight: 129, frameCount: 4, columns: 4, duration: 200, loop: false
+        },
+        displayScale: 1,
+        offset: { x: 6, y: 6, random: true }
       },
       vibration: {
         enabled: true,
@@ -177,7 +179,7 @@ export const UnitDefinitions = {
     hp: 280,
     damage: 20,
     attackSpeed: 1.5,
-    movementSpeed: 60,
+    movementSpeed: 50,
     attackRange: 30,
     hitboxRadius: 22,
     targetType: "ground",
@@ -200,7 +202,7 @@ export const UnitDefinitions = {
     sprite: "assets/loxams/Compacteur monocylindre Grand Travaux.png",
     cost: 5,
     hp: 2000,
-    damage: 50,
+    damage: 60,
     attackSpeed: 0.7,
     movementSpeed: 20,
     attackRange: 50,
@@ -233,8 +235,8 @@ export const UnitDefinitions = {
     hp: 200,
     damage: 110,
     attackSpeed: 0.5,
-    movementSpeed: 40,
-    attackRange: 180,
+    movementSpeed: 30,
+    attackRange: 130,
     hitboxRadius: 22,
     targetType: "ground",
     canMove: true,
@@ -258,7 +260,7 @@ export const UnitDefinitions = {
     hp: 300,
     damage: 100,
     attackSpeed: 1,
-    movementSpeed: 60,
+    movementSpeed: 50,
     attackRange: 50,
     hitboxRadius: 22,
     targetType: "ground",
@@ -281,7 +283,7 @@ export const UnitDefinitions = {
     sprite: "assets/loxams/Tombereau articulé.png",
     cost: 6,
     hp: 800,
-    damage: 170,
+    damage: 150,
     attackSpeed: 0.3,
     movementSpeed: 20,
     attackRange: 110,
@@ -297,11 +299,13 @@ export const UnitDefinitions = {
         max: 800,
         pixelsPerMillisecond: 4.2
       },
-      impactEffect: "scrapCloud",
-      impactOffset: {
-        x: 6,
-        y: 6,
-        random: true
+      impact: {
+        spriteSheet: {
+          image: "assets/effects/scrap-impact.png",
+          frameWidth: 128, frameHeight: 129, frameCount: 7, columns: 7, duration: 350, loop: false
+        },
+        displayScale: 1,
+        offset: { x: 6, y: 6, random: true }
       },
       vibration: {
         enabled: true,
@@ -322,15 +326,15 @@ export const UnitDefinitions = {
     category: "unit",
     id: "climatiseur",
     name: "Climatiseur mobile 6 kW",
-    description: "Description manquante",
+    description: "Idéal pour les fortes chaleurs.",
     rarity: 2,
     sprite: "assets/loxams/Climatiseur mobile 6 kW.png",
     cost: 3,
     hp: 130,
     damage: 70,
     attackSpeed: 0.8,
-    movementSpeed: 10,
-    attackRange: 160,
+    movementSpeed: 30,
+    attackRange: 100,
     hitboxRadius: 22,
     targetType: "ground",
     canMove: true,
@@ -357,13 +361,13 @@ export const UnitDefinitions = {
     hp: 140,
     damage: 20,
     attackSpeed: 1.5,
-    movementSpeed: 20,
-    attackRange: 180,
+    movementSpeed: 50,
+    attackRange: 80,
     hitboxRadius: 22,
     targetType: "ground",
     canMove: true,
     canAttack: true,
-    attackAnimation: "toxicAttack",
+    attackAnimation: "iceWind",
     sounds: {
       spawn: "assets/sounds/units/brumisateur-spawn.mp3",
       attack: "assets/sounds/units/brumisateur-attack.mp3",
@@ -382,7 +386,7 @@ export const UnitDefinitions = {
     hp: 1240,
     damage: 1000,
     attackSpeed: 0.9,
-    movementSpeed: 70,
+    movementSpeed: 60,
     attackRange: 60,
     hitboxRadius: 26,
     targetType: "ground",
@@ -408,7 +412,7 @@ export const UnitDefinitions = {
     damage: 60,
     attackSpeed: 0.8,
     movementSpeed: 0,
-    attackRange: 180,
+    attackRange: 80,
     hitboxRadius: 22,
     targetType: "ground",
     canAttack: true,
@@ -418,5 +422,57 @@ export const UnitDefinitions = {
       attack: "assets/sounds/units/brumisateur-attack.mp3",
       death: "assets/sounds/units/brumisateur-death.mp3"
     },
+  },
+
+  fendeuse: {
+    category: "unit",
+    id: "fendeuse",
+    name: "Fendeuse thermique",
+    description: "Cette fendeuse de bûches thermique autorise le fendage de bûches épaisses allant jusqu'à 1m de diamètre, à la verticale. Placée sur une remorque routière elle permet un acheminement sur tous les sites aisé.",
+    rarity: 0,
+    sprite: "assets/loxams/Fendeuse thermique.png",
+    cost: 2,
+    hp: 70,
+    damage: 20,
+    attackSpeed: 0.3,
+    movementSpeed: 20,
+    attackRange: 120,
+    hitboxRadius: 22,
+    targetType: "ground",
+    canMove: true,
+    canAttack: true,
+    attackAnimation: "projectile",
+    projectile: {
+      type: "spinningLogProjectile",
+      spriteSheet: {
+        image: "assets/effects/spinning-log-projectile.png",
+        frameWidth: 128, frameHeight: 129, frameCount: 9, columns: 9, duration: 300, loop: true
+      },
+      travelDuration: {
+        min: 220,
+        max: 800,
+        pixelsPerMillisecond: 20.2
+      },
+      impact: {
+        spriteSheet: {
+          image: "assets/effects/log-impact.png",
+          frameWidth: 128, frameHeight: 129, frameCount: 5, columns: 5, duration: 200, loop: false
+        },
+        displayScale: 1,
+        offset: { x: 6, y: 6, random: true }
+      },
+      vibration: {
+        enabled: true,
+        pattern: [35]
+      }
+    },
+    aoeRadius: 80,
+    aoeCenter: "target",
+    sounds: {
+      spawn: "assets/sounds/units/fendeuse-spawn.mp3",
+      projectileLaunch: "assets/sounds/units/fendeuse-attack.mp3",
+      projectileImpact: "assets/sounds/units/fendeuse-hit.mp3",
+      death: "assets/sounds/units/chauffage-death.mp3"
+    }
   }
 };
