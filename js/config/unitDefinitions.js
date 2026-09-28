@@ -15,10 +15,10 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: false,
     canAttack: true,
-    attackAnimation: "fireSpurt",
+    attackAnimation: "coalShot",
     sounds: {
       spawn: null,
-      attack: "assets/sounds/units/chauffage-attack.mp3",
+      attack: "assets/sounds/units/tombereau-attack.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
@@ -61,31 +61,7 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: false,
     canAttack: true,
-    attackAnimation: "projectile",
-    projectile: {
-      type: "toxicProjectile",
-      spriteSheet: {
-        image: "assets/effects/pink-strobe-projectile.png",
-        frameWidth: 128, frameHeight: 129, frameCount: 4, columns: 4, duration: 600, loop: true
-      },
-      travelDuration: {
-        min: 220,
-        max: 800,
-        pixelsPerMillisecond: 9.2
-      },
-      impact: {
-        spriteSheet: {
-          image: "assets/effects/toxic-cloud-impact.png",
-          frameWidth: 128, frameHeight: 129, frameCount: 4, columns: 4, duration: 200, loop: false
-        },
-        displayScale: 1,
-        offset: { x: 6, y: 6, random: true }
-      },
-      vibration: {
-        enabled: true,
-        pattern: [35]
-      }
-    },
+    attackAnimation: "coalShot",
     sounds: {
       spawn: null,
       attack: "assets/sounds/units/tombereau-attack.mp3",
