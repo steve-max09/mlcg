@@ -16,7 +16,8 @@ export const MovementSystem = {
       }
 
       if (unit.canMove) {
-        const inRange = unit.target && unit.distanceTo(unit.target) <= unit.attackRange;
+        const unitAttackRange = unit.continuousAttack?.maxRange || unit.attackRange;
+        const inRange = unit.target && unit.distanceTo(unit.target) <= unitAttackRange;
 
         if (!inRange) {
           const target = this.findClosestTarget(unit, gameState);
@@ -40,22 +41,46 @@ export const MovementSystem = {
   },
 
   findClosestTarget(unit, gameState) {
-    const enemyUnits = gameState.getEnemiesOf(unit.team);
-    const enemyTowers = gameState.getTowersOf(
-      unit.team === "player" ? "enemy" : "player"
+    const candidates = this.getTargetCandidates(
+      unit,
+      gameState
     );
-    const candidates = [...enemyUnits, ...enemyTowers];
 
     let closest = null;
     let closestDist = Infinity;
+
     for (const candidate of candidates) {
       const dist = unit.distanceTo(candidate);
+
       if (dist < closestDist) {
         closestDist = dist;
         closest = candidate;
       }
     }
+
     return closest;
+  },
+
+  getTargetCandidates(unit, gameState) {
+    const enemyUnits = gameState.getEnemiesOf(unit.team);
+    const enemyTowers = gameState.getTowersOf(
+      unit.team === "player" ? "enemy" : "player"
+    );
+
+    const targetType = unit.targetType || "any";
+
+    if (targetType === "buildings") {
+      return enemyTowers;
+    }
+
+    if (targetType === "ground") {
+      return enemyUnits;
+    }
+
+    return [
+      ...enemyUnits,
+      ...enemyTowers
+    ];
   },
 
   moveToward(unit, target, deltaSeconds) {

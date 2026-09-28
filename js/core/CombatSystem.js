@@ -1,3 +1,5 @@
+import { MovementSystem } from "./MovementSystem.js";
+
 export const CombatSystem = {
   update(gameState, deltaSeconds, onAttack) {
     if (gameState.isGameOver) return;
@@ -8,7 +10,13 @@ export const CombatSystem = {
 
       // attaques continues (inferno)
       if (unit.continuousAttack) {
+        if (!unit.target || this.isTargetInvalid(unit.target)
+          || unit.distanceTo(unit.target) > (unit.continuousAttack.maxRange || unit.attackRange)) {
+          unit.target = MovementSystem.findClosestTarget(unit, gameState);
+        }
+
         this.updateContinuousAttack(unit, gameState, deltaSeconds);
+
         continue;
       }
 
