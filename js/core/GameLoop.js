@@ -34,6 +34,7 @@ export class GameLoop {
     this.lastTimestamp = null;
     this.energyAccumulator = 0;
     this.previousTowerStates.clear();
+    AnimationSystem.stopAllContinuousLasers();
   }
 
   tick(timestamp) {
@@ -73,6 +74,19 @@ export class GameLoop {
         this.audioManager.play(attacker.sounds.attack);
       }
 
+      // attaques continues (inferno)
+      if (attacker.continuousAttack) {
+        if (el) {
+          AnimationSystem.triggerAttackAnimation(
+            attacker,
+            target,
+            el,
+            this.audioManager
+          );
+        }
+        return;
+      }
+
       if (!el) {
         if (attackResult?.delayed) {
           attackResult.apply();
@@ -87,16 +101,11 @@ export class GameLoop {
         animationPromise.then(() => {
           attackResult.apply();
         });
-      } else {
-        if (el) {
-          AnimationSystem.triggerAttackAnimation(attacker, target, el, this.audioManager);
-        }
-
-        if (this.audioManager && attacker.sounds?.attack) {
-          this.audioManager.play(attacker.sounds.attack);
-        }
       }
     });
+
+    // attaques continues (inferno)
+    this.syncContinuousAnimations();
 
     if (this.campaignWaveController) {
       this.campaignWaveController.update(deltaSeconds, arenaSize);
@@ -149,6 +158,35 @@ export class GameLoop {
       this.energyAccumulator = 0;
       this.gameState.regenEnergy();
       if (this.onEnergyChange) this.onEnergyChange(this.gameState.energy);
+    }
+  }
+
+  // attaques continues (inferno)
+  syncContinuousAnimations() {
+    for (const unit of this.gameState.units) {
+      if (unit.isDead || !unit.continuousAttack) continue;
+
+      const el = this.renderer.getUnitElement(
+        unit.instanceId
+      );
+
+      if (!el) continue;
+
+      if (
+        unit.target &&
+        !unit.target.isDead &&
+        !unit.target.isDestroyed &&
+        unit.distanceTo(unit.target) <=
+          (unit.continuousAttack.maxRange ||
+            unit.attackRange)
+      ) {
+        AnimationSystem.triggerAttackAnimation(
+          unit,
+          unit.target,
+          el,
+          this.audioManager
+        );
+      }
     }
   }
 }

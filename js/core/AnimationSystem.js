@@ -1,4 +1,6 @@
 export const AnimationSystem = {
+  continuousLasers: new Map(),
+
   triggerAttackAnimation(attacker, target, rendererEl, audioManager) {
     if (!rendererEl) {
       return Promise.resolve();
@@ -32,9 +34,144 @@ export const AnimationSystem = {
         return Promise.resolve();
       case "projectile":
         return this.playProjectileAttack(rendererEl, attacker, target, audioManager);
+      case "continuousLaser":
+        this.startContinuousLaser(rendererEl, attacker, target, audioManager);
+        return Promise.resolve();
       default:
         this.playPulse(rendererEl);
         return Promise.resolve();
+    }
+  },
+
+  // attaques continues (inferno)
+  startContinuousLaser(el, attacker, target, audioManager) {
+    const existing = this.continuousLasers.get(attacker.instanceId);
+
+    if (existing) {
+      existing.target = target;
+      return;
+    }
+
+    const arena = el.closest("#arena");
+    const effectsLayer = arena?.querySelector("#effects-layer");
+    const config = attacker.continuousAttack;
+
+    if (!arena || !effectsLayer || !config?.beam) return;
+
+    const beam = document.createElement("div");
+    const beamConfig = config.beam;
+
+    beam.className = "continuous-laser";
+    beam.style.backgroundImage = `url("${beamConfig.image}")`;
+    beam.style.width = `${beamConfig.frameWidth}px`;
+    beam.style.height = `${beamConfig.frameHeight}px`;
+    beam.style.backgroundSize = `${beamConfig.frameWidth * beamConfig.columns}px ${beamConfig.frameHeight * Math.ceil(beamConfig.frameCount / beamConfig.columns)}px`;
+
+    effectsLayer.appendChild(beam);
+
+    const state = { attacker, target, beam, effectsLayer, config, frameStart: performance.now(),
+      damageAccumulator: 0, lastTimestamp: performance.now()
+    };
+
+    this.continuousLasers.set(attacker.instanceId, state);
+
+    if (config.startSound?.src) {
+      audioManager?.play(config.startSound.src, { volume: config.startSound.volume });
+    }
+
+    this.animateContinuousLaser(state);
+  },
+
+  animateContinuousLaser(state) {
+    if (!state.beam.isConnected) {
+      return;
+    }
+    const { attacker, beam, config } = state;
+
+    if (
+      attacker.isDead ||
+      !attacker.canAttack ||
+      !attacker.target ||
+      attacker.target.isDead ||
+      attacker.target.isDestroyed
+    ) {
+      this.stopContinuousLaser(attacker.instanceId);
+      return;
+    }
+
+    const target = attacker.target;
+    const dx = target.x - attacker.x;
+    const dy = target.y - attacker.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > config.maxRange) {
+      this.stopContinuousLaser(attacker.instanceId);
+      return;
+    }
+
+    const angle = Math.atan2(dy, dx);
+    const angleDeg = angle * (180 / Math.PI);
+    const startOffset = config.beam.startOffset || 0;
+    const startX = attacker.x + Math.cos(angle) * startOffset;
+    const startY = attacker.y + Math.sin(angle) * startOffset;
+    const endX = target.x;
+    const endY = target.y;
+    const beamDx = endX - startX;
+    const beamDy = endY - startY;
+    const beamDistance = Math.sqrt(beamDx * beamDx + beamDy * beamDy);
+
+    beam.style.left = `${startX}px`;
+    beam.style.top = `${startY}px`;
+    beam.style.width = `${Math.max(0, beamDistance)}px`;
+    beam.style.height = `${config.beam.thickness || 8}px`;
+    beam.style.transform = `rotate(${angleDeg}deg)`;
+    beam.style.setProperty(
+      "--laser-angle",
+      `${angleDeg}deg`
+    );
+
+    this.updateSpriteSheetFrame(
+      beam,
+      config.beam,
+      state.frameStart
+    );
+
+    requestAnimationFrame(() => {
+      this.animateContinuousLaser(state);
+    });
+  },
+
+  updateSpriteSheetFrame(element, spriteSheet, startTime) {
+    const elapsed = performance.now() - startTime;
+    const duration = spriteSheet.duration || 300;
+    const progress = spriteSheet.loop
+      ? (elapsed % duration) / duration
+      : Math.min(elapsed / duration, 1);
+
+    const frame = Math.min(
+      spriteSheet.frameCount - 1,
+      Math.floor(progress * spriteSheet.frameCount)
+    );
+
+    const column = frame % spriteSheet.columns;
+    const row = Math.floor(frame / spriteSheet.columns);
+
+    element.style.backgroundPosition =
+      `-${column * spriteSheet.frameWidth}px -${row * spriteSheet.frameHeight}px`;
+  },
+
+  stopContinuousLaser(attackerId) {
+    const state = this.continuousLasers.get(attackerId);
+
+    if (!state) return;
+
+    state.beam?.remove();
+    this.continuousLasers.delete(attackerId);
+  },
+
+  stopAllContinuousLasers() {
+    for (const attackerId of this.continuousLasers.keys()) {
+      this.stopContinuousLaser(attackerId);
     }
   },
 

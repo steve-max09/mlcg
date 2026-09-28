@@ -6,6 +6,15 @@ export const MovementSystem = {
       unit.updateFreeze(deltaSeconds);
       if (unit.isFrozen) continue;
 
+      // attaques continues (inferno)
+      if (unit.continuousAttack) {
+        if (!unit.target || unit.target.isDead || unit.distanceTo(unit.target) > (unit.continuousAttack.maxRange || unit.attackRange)) {
+          unit.target = this.findClosestTarget(unit, gameState);
+        }
+      } else {
+        unit.target = this.findClosestTarget(unit, gameState);
+      }
+
       if (unit.canMove) {
         const inRange = unit.target && unit.distanceTo(unit.target) <= unit.attackRange;
 

@@ -1900,3 +1900,37 @@ button {
     0 0 8px #944004,
     0 0 18px #dc2626;
 }
+
+/* attaques continnues (inferno) */
+.continuous-laser {
+  position: absolute;
+  height: 8px;
+  min-width: 4px;
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 22;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1),
+    rgba(255, 245, 80, 1) 45%,
+    rgba(255, 170, 0, 0.85)
+  );
+  box-shadow:
+    0 0 4px rgba(255, 255, 255, 1),
+    0 0 10px rgba(255, 230, 0, 0.95),
+    0 0 22px rgba(255, 130, 0, 0.75);
+  animation: continuousLaserPulse 180ms ease-in-out infinite alternate;
+}
+
+@keyframes continuousLaserPulse {
+  from {
+    opacity: 0.75;
+    filter: brightness(0.95);
+  }
+
+  to {
+    opacity: 1;
+    filter: brightness(1.45);
+  }
+}

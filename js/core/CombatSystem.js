@@ -6,6 +6,12 @@ export const CombatSystem = {
       if (unit.isDead || !unit.canAttack) continue;
       if (unit.isFrozen) continue;
 
+      // attaques continues (inferno)
+      if (unit.continuousAttack) {
+        this.updateContinuousAttack(unit, gameState, deltaSeconds);
+        continue;
+      }
+
       unit.attackCooldown = Math.max(0, unit.attackCooldown - deltaSeconds);
 
       if (this.isTargetInvalid(unit.target)) {
@@ -134,6 +140,50 @@ export const CombatSystem = {
       if (dist <= attacker.aoeRadius && typeof entity.takeDamage === "function") {
         entity.takeDamage(attacker.damage);
       }
+    }
+  },
+
+  updateContinuousAttack(unit, gameState, deltaSeconds) {
+    const target = unit.target;
+
+    if (this.isTargetInvalid(target)) {
+      unit.target = null;
+      return;
+    }
+
+    const maxRange =
+      unit.continuousAttack.maxRange ||
+      unit.attackRange;
+
+    const distance = unit.distanceTo(target);
+
+    if (distance > maxRange) {
+      unit.target = null;
+      return;
+    }
+
+    if (!unit.continuousDamageAccumulator) {
+      unit.continuousDamageAccumulator = 0;
+    }
+
+    unit.continuousDamageAccumulator +=
+      unit.continuousAttack.damagePerSecond *
+      deltaSeconds;
+
+    const damage = Math.floor(
+      unit.continuousDamageAccumulator
+    );
+
+    if (damage <= 0) return;
+
+    unit.continuousDamageAccumulator -= damage;
+
+    if (typeof target.takeDamage === "function") {
+      target.takeDamage(damage);
+    }
+
+    if (unit.aoeRadius > 0) {
+      this.applyAoeDamage(unit, target, gameState, damage);
     }
   }
 };

@@ -32,6 +32,8 @@ export class Unit {
     this.audioManager = audioManager;
     this.sounds = definition.sounds || {};
     this.projectile = definition.projectile || null;
+    // attaques continues (inferno)
+    this.continuousAttack = definition.continuousAttack || null;
 
     this.attackCooldown = 0;
     this.target = null;
@@ -39,6 +41,10 @@ export class Unit {
 
     this.isFrozen = false;
     this.freezeTimer = 0;
+
+    // attaques continues (inferno)
+    this.lockedTarget = null;
+    this.continuousDamageAccumulator = 0;
   }
 
   takeDamage(amount) {

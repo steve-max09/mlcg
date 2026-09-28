@@ -52,6 +52,12 @@ audioManager.uiSounds = UiSounds;
 Object.values(UiSounds).forEach((src) => audioManager.preload(src));
 Object.values(UnitDefinitions).forEach((def) => {
   if (def.sounds) Object.values(def.sounds).forEach((src) => audioManager.preload(src));
+  
+  const startSound = def.continuousAttack?.startSound;
+
+  if (startSound?.src) {
+    audioManager.preload(startSound.src);
+  }
 });
 // === end audioManager ===
 
@@ -686,6 +692,7 @@ arenaContinueBtn.addEventListener("click", () => {
 arenaMenuBtn.addEventListener("click", () => {
   arenaBackModal.classList.remove("active");
   gameLoop.stop();
+  AnimationSystem.stopAllContinuousLasers();
   showScreen("campaign-screen");
   campaignScreen.render();
 });
@@ -695,6 +702,7 @@ arenaMenuBtn.addEventListener("click", () => {
 backToMenuBtn.addEventListener("click", () => {
   arenaBackModal.classList.remove("active");
   gameLoop.stop();
+  AnimationSystem.stopAllContinuousLasers();
   showScreen("campaign-screen");
   campaignScreen.render();
 });
