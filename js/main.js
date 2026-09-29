@@ -26,6 +26,8 @@ import { CampaignScreen } from "./core/CampaignScreen.js";
 import { CampaignWaveController } from "./core/CampaignWaveController.js";
 import { DialogController } from "./core/DialogController.js";
 
+import { ItemsScreen } from "./core/ItemsScreen.js";
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").then((registration) => {
@@ -67,6 +69,8 @@ let activeCampaignLevel = null;
 let campaignTimer = 0;
 let campaignMode = null; // "destroyBase" | "surviveWaves"
 
+let itemsScreen = null;
+
 const playerProgress = new PlayerProgress();
 
 const deckScreen = new DeckScreen({
@@ -86,6 +90,7 @@ const deckScreen = new DeckScreen({
     collectionCount: document.getElementById("collection-count"),
     modalOverlay: document.getElementById("unit-detail-modal"),
     modalClose: document.getElementById("unit-detail-close"),
+    unitDetailStats: document.getElementById("unit-detail-stats"),
     detailName: document.getElementById("unit-detail-name"),
     detailCost: document.getElementById("unit-detail-cost"),
     detailSprite: document.getElementById("unit-detail-sprite"),
@@ -97,13 +102,17 @@ const deckScreen = new DeckScreen({
     detailMoveSpeed: document.getElementById("unit-detail-movespeed"),
     detailAction: document.getElementById("unit-detail-action"),
     detailActionLeft: document.getElementById("unit-detail-action-left"),
-    detailActionRight: document.getElementById("unit-detail-action-right")
+    detailActionRight: document.getElementById("unit-detail-action-right"),
+    itemDetailEffects: document.getElementById("item-detail-effects")
   },
   onBattleStart: () => {
     audioManager.play(UiSounds.startFreeBattle)
     startBattleWithDeck(playerProgress.deck);
   },
-  onBack: () => showScreen("main-menu")
+  onBack: () => showScreen("main-menu"),
+  onEquipmentChanged: () => {
+    itemsScreen?.render();
+  },
 });
 
 document.getElementById("open-deck-btn").addEventListener("click", () => {
@@ -853,4 +862,28 @@ function getNormalBattleDifficulty() {
 function configureNormalBattleAI() {
   aiController.configure(getNormalBattleDifficulty());
 }
+// =====
+
+// ===== écran Équipements (items)
+itemsScreen = new ItemsScreen({
+  playerProgress,
+  elements: {
+    backBtn: document.getElementById("items-back-btn"),
+    grid: document.getElementById("items-grid")
+  },
+  onBack: () => {
+    showScreen("deck-screen");
+    deckScreen.render();
+  },
+  onItemSelected: (itemId) => {
+    deckScreen.openItemModal(itemId);
+  }
+});
+
+document
+  .getElementById("open-items-btn")
+  .addEventListener("click", () => {
+    showScreen("items-screen");
+    itemsScreen.render();
+  });
 // =====

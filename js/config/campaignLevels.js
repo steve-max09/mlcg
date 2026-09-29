@@ -31,7 +31,7 @@ export const CampaignLevels = [
     },
 
     ai: {
-      unitPool: ["chauffage", "motobineuse", "compacteur"],
+      unitPool: ["chauffage", "motobineuse", "fendeuse"],
       startingEnergy: 0,
       decisionInterval: 3.5,
       energyRegenRate: 1,
@@ -62,14 +62,14 @@ export const CampaignLevels = [
       },
       {
         delay: 10,
-        units: ["motobineuse", "motobineuse", "chauffage", "motobineuse",]
+        units: ["motobineuse", "fendeuse", "chauffage", "motobineuse",]
       },
       {
-        delay: 20,
+        delay: 16,
         units: ["chauffage", "chauffage", "chauffage", "chauffage", "chauffage"],
       },
       {
-        delay: 25,
+        delay: 20,
         boss: "compacteur"
       }
     ],
@@ -97,7 +97,7 @@ export const CampaignLevels = [
     },
 
     ai: {
-      unitPool: ["chauffage", "compacteur"],
+      unitPool: ["chauffage", "compacteur", "fendeuse"],
       startingEnergy: 0,
       decisionInterval: 2.5,
       energyRegenRate: 1,

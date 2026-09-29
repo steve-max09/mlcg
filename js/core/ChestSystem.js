@@ -1,14 +1,21 @@
 import { UnitDefinitions } from "../config/unitDefinitions.js";
+import { ItemDefinitions } from "../config/itemDefinitions.js";
 
 const DEPLOYABLE_UNITS = [
-  "chariot",
-  "mat",
   "broyeur",
   "minipelle",
   "tombereau",
   "climatiseur",
-  "brumisateur"
+  "brumisateur",
+  "chariot",
+  "mat",
+  "araignee"
 ];
+
+const UNIT_REWARD_CHANCE = 0.55;
+const ITEM_REWARD_CHANCE = 0.45;
+
+const ITEM_IDS = Object.keys(ItemDefinitions);
 
 export const ChestSystem = {
   rollRarity(weights) {
@@ -24,29 +31,109 @@ export const ChestSystem = {
   pickUnitOfRarity(rarity, playerProgress) {
     const pool = DEPLOYABLE_UNITS
       .map((id) => UnitDefinitions[id])
-      .filter((def) => def && def.rarity === rarity);
+      .filter((def) => def && def.rarity === rarity && !playerProgress.isUnlocked(def.id));
 
-    if (pool.length === 0) return null;
+    if (!pool.length) return null;
 
-    const unlockedIds = pool.filter((def) => !playerProgress.isUnlocked(def.id));
-    const finalPool = unlockedIds.length > 0 ? unlockedIds : pool;
+    return pool[Math.floor(Math.random() * pool.length)];
+  },
 
-    return finalPool[Math.floor(Math.random() * finalPool.length)];
+  pickItemOfRarity(rarity) {
+    const pool = Object.values(ItemDefinitions)
+      .filter((item) => item.rarity === rarity);
+
+    if (!pool.length) return null;
+
+    return pool[
+      Math.floor(Math.random() * pool.length)
+    ];
   },
 
   open(chestDefinition, playerProgress) {
     const rarity = this.rollRarity(chestDefinition.rarityWeights);
-    let unit = this.pickUnitOfRarity(rarity, playerProgress);
 
-    if (!unit) {
-      for (const fallbackRarity of [0, 1, 2]) {
-        unit = this.pickUnitOfRarity(fallbackRarity, playerProgress);
-        if (unit) break;
-      }
+    const unitPool = DEPLOYABLE_UNITS
+      .map((id) => UnitDefinitions[id])
+      .filter((def) =>
+        def &&
+        def.rarity === rarity &&
+        !playerProgress.isUnlocked(def.id)
+      );
+
+    const itemPool = Object.values(ItemDefinitions).filter((item) => item.rarity === rarity);
+
+    const canGiveUnit = unitPool.length > 0;
+    const canGiveItem = itemPool.length > 0;
+
+    if (!canGiveUnit && !canGiveItem) {
+      return this.openFallbackReward(rarity, playerProgress);
     }
 
-    if (unit) playerProgress.unlockUnit(unit.id);
+    const roll = Math.random();
 
-    return unit;
+    if (roll < UNIT_REWARD_CHANCE && canGiveUnit) {
+      const unit = this.pickUnitOfRarity(rarity, playerProgress);
+
+      playerProgress.unlockUnit(unit.id);
+
+      return {
+        type: "unit",
+        definition: unit,
+        quantity: 1
+      };
+    }
+
+    if (canGiveItem) {
+      const item = this.pickItemOfRarity(rarity);
+
+      playerProgress.addItem(item.id, 1);
+
+      return {
+        type: "item",
+        definition: item,
+        quantity: 1
+      };
+    }
+
+    const unit = this.pickUnitOfRarity(rarity, playerProgress);
+
+    playerProgress.unlockUnit(unit.id);
+
+    return {
+      type: "unit",
+      definition: unit,
+      quantity: 1
+    };
+  },
+
+  openFallbackReward(rarity, playerProgress) {
+    const availableUnit = DEPLOYABLE_UNITS
+      .map((id) => UnitDefinitions[id])
+      .find((def) =>
+        def &&
+        !playerProgress.isUnlocked(def.id)
+      );
+
+    if (availableUnit) {
+      playerProgress.unlockUnit(availableUnit.id);
+
+      return {
+        type: "unit",
+        definition: availableUnit,
+        quantity: 1
+      };
+    }
+
+    const item = Object.values(ItemDefinitions)[0];
+
+    if (!item) return null;
+
+    playerProgress.addItem(item.id, 1);
+
+    return {
+      type: "item",
+      definition: item,
+      quantity: 1
+    };
   }
 };

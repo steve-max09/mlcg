@@ -5,6 +5,7 @@ export class Tower {
     this.instanceId = `tower-${++towerIdCounter}`;
     this.name = definition.name;
     this.sprite = definition.sprite;
+    this.renderScale = definition.renderScale ?? 1;
 
     this.team = team;
     this.x = x;

@@ -388,7 +388,10 @@ button {
   position: absolute;
   width: 48px;
   height: 48px;
-  transform: translate(-50%, -50%);
+  transform:
+    translate(-50%, -50%)
+    scale(var(--unit-scale, 1));
+  transform-origin: center center;
   pointer-events: none;
 }
 
@@ -470,8 +473,8 @@ button {
 }
 
 @keyframes spin360 {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
+  from { transform: translate(-50%, -50%) scale(var(--unit-scale, 1)) rotate(0deg); }
+  to { transform: translate(-50%, -50%) scale(var(--unit-scale, 1)) rotate(360deg); }
 }
 
 .anim-pulse {
@@ -479,7 +482,7 @@ button {
 }
 
 @keyframes pulseAttack {
-  50% { transform: translate(-50%, -50%) scale(1.2); }
+  50% { transform: translate(-50%, -50%) scale(var(--unit-scale, 1)) scale(1.2); }
 }
 
 .fire-spurt {
@@ -665,11 +668,11 @@ button {
 }
 
 @keyframes smashShake {
-  0% { transform: translate(-50%, -50%); }
-  25% { transform: translate(-52%, -48%); }
-  50% { transform: translate(-48%, -52%); }
-  75% { transform: translate(-51%, -49%); }
-  100% { transform: translate(-50%, -50%); }
+  0% { transform: translate(-50%, -50%) scale(var(--unit-scale, 1)); }
+  25% { transform: translate(-52%, -48%) scale(var(--unit-scale, 1)); }
+  50% { transform: translate(-48%, -52%) scale(var(--unit-scale, 1)); }
+  75% { transform: translate(-51%, -49%) scale(var(--unit-scale, 1)); }
+  100% { transform: translate(-50%, -50%) scale(var(--unit-scale, 1)); }
 }
 
 .ground-shock {
@@ -1934,3 +1937,132 @@ button {
     filter: brightness(1.45);
   }
 }
+
+/* === écran items === */
+#items-screen {
+  padding:
+    calc(16px + env(safe-area-inset-top))
+    16px
+    calc(16px + env(safe-area-inset-bottom));
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.items-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.items-header h2 {
+  margin: 0;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.item-card {
+  position: relative;
+  min-height: 130px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 14px;
+  background: var(--card);
+  text-align: center;
+}
+
+.item-card img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.item-card-name {
+  font-size: 0.72rem;
+  color: var(--text);
+}
+
+.item-card-quantity {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+/* modal des items */
+.item-detail-effects {
+  width: 100%;
+  margin: 12px 0;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+.item-effect-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  color: var(--muted);
+}
+
+.item-effect-row strong {
+  color: #4ade80;
+}
+
+/* équipement sur unité */
+.equip-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.equip-unit-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  text-align: left;
+}
+
+.equip-unit-option img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+/* icônes d'équipement sur les unités avec équipement */
+.deck-equipped-item {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(248, 250, 252, 0.92);
+  border: 2px solid #facc15;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.8);
+}
+
+.deck-equipped-item img {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+/* === end écran items === */

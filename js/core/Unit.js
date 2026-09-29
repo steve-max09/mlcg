@@ -6,6 +6,7 @@ export class Unit {
     this.definitionId = definition.id;
     this.name = definition.name;
     this.sprite = definition.sprite;
+    this.renderScale = definition.renderScale ?? 1;
 
     this.team = team; // "player" | "enemy"
     this.x = x;

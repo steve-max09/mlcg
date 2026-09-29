@@ -16,6 +16,8 @@ export class Renderer {
       this.elements.set(unit.instanceId, el);
     }
 
+    el.style.setProperty("--unit-scale", unit.renderScale ?? 1);
+
     el.style.left = `${unit.x}px`;
     el.style.top = `${unit.y}px`;
 
@@ -43,6 +45,8 @@ export class Renderer {
       this.arenaElement.appendChild(el);
       this.towerElements.set(tower.instanceId, el);
     }
+
+    el.style.setProperty("--unit-scale", tower.renderScale ?? 1);
 
     el.style.left = `${tower.x}px`;
     el.style.top = `${tower.y}px`;

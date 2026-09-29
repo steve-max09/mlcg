@@ -28,6 +28,10 @@ export class PlayerProgress {
     this.unlockedCampaignLevels = [1];
     this.completedCampaignLevels = [];
 
+    this.items = {};
+    // items équipés sur les unités
+    this.equippedItems = {};
+
     this.load();
   }
 
@@ -50,6 +54,14 @@ export class PlayerProgress {
       if (Array.isArray(data.completedCampaignLevels)) {
         this.completedCampaignLevels = data.completedCampaignLevels;
       }
+
+      if (data.items && typeof data.items === "object") {
+        this.items = data.items;
+      }
+
+      if (data.equippedItems && typeof data.equippedItems === "object") {
+        this.equippedItems = data.equippedItems;
+      }
     } catch (error) {
       console.error("Erreur de chargement de la progression:", error);
     }
@@ -67,7 +79,9 @@ export class PlayerProgress {
         yanga: this.yanga,
         ownedChests: this.ownedChests,
         unlockedCampaignLevels: this.unlockedCampaignLevels,
-        completedCampaignLevels: this.completedCampaignLevels
+        completedCampaignLevels: this.completedCampaignLevels,
+        items: this.items,
+        equippedItems: this.equippedItems
       })
     );
   }
@@ -193,4 +207,65 @@ export class PlayerProgress {
       unlockedUnitId
     };
   }
+
+  // items stuff ===
+  getItemQuantity(itemId) {
+    return this.items[itemId] || 0;
+  }
+
+  addItem(itemId, quantity = 1) {
+    this.items[itemId] = this.getItemQuantity(itemId) + quantity;
+    this.save();
+  }
+
+  removeItem(itemId, quantity = 1) {
+    const current = this.getItemQuantity(itemId);
+    if (current < quantity) return false;
+    this.items[itemId] = current - quantity;
+    this.save();
+    return true;
+  }
+
+  hasItem(itemId) {
+    return this.getItemQuantity(itemId) > 0;
+  }
+
+  getEquippedItem(unitId) {
+    return this.equippedItems[unitId] || null;
+  }
+
+  equipItem(unitId, itemId) {
+    if (!this.isUnlocked(unitId)) return false;
+    if (this.getItemQuantity(itemId) < 1) return false;
+
+    const previousItemId = this.getEquippedItem(unitId);
+
+    if (previousItemId === itemId) {
+      return true;
+    }
+
+    if (previousItemId) {
+      this.addItem(previousItemId, 1);
+    }
+
+    if (!this.removeItem(itemId, 1)) {
+      return false;
+    }
+
+    this.equippedItems[unitId] = itemId;
+    this.save();
+    return true;
+  }
+
+  unequipItem(unitId) {
+    const itemId = this.getEquippedItem(unitId);
+
+    if (!itemId) return false;
+
+    delete this.equippedItems[unitId];
+    this.addItem(itemId, 1);
+    this.save();
+    return true;
+  }
+  // ===
 }

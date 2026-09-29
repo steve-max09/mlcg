@@ -1,7 +1,7 @@
 import { ChestDefinitions } from "../config/chestDefinitions.js";
 import { ChestSystem } from "./ChestSystem.js";
 
-const RARITY_LABELS = { 0: "Commune", 1: "Rare", 2: "Ultra-rare" };
+const RARITY_LABELS = { 0: "Commun", 1: "Rare", 2: "Ultra-rare" };
 
 export class ChestShop {
   constructor({ playerProgress, elements, audioManager, uiSounds, onBack }) {

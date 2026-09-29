@@ -82,9 +82,21 @@
         <button class="menu-btn small" id="filter-units-btn">Unités</button>
         <button class="menu-btn small" id="filter-towers-btn">Tours</button>
         <button class="menu-btn small" id="filter-bases-btn">Bases</button>
+        <button class="menu-btn small" id="open-items-btn" type="button">Équipements</button>
       </div>
 
       <div class="collection-grid" id="collection-grid"></div>
+    </section>
+
+    <!-- Ecran "Équipements" (items) -->
+    <section id="items-screen" class="screen">
+      <header class="items-header">
+        <button id="items-back-btn" class="icon-btn" type="button">←</button>
+
+        <h2>Équipements</h2>
+      </header>
+
+      <div id="items-grid" class="items-grid"></div>
     </section>
 
     <!-- modal Détails d'unité -->
@@ -97,17 +109,21 @@
         </div>
         <img id="unit-detail-sprite" src="" alt="" />
         <p id="unit-detail-description"></p>
-        <div class="unit-detail-stats">
+
+        <!-- modal Détails d'item -->
+        <div id="item-detail-effects" class="item-detail-effects"></div>
+
+        <div class="unit-detail-stats" id="unit-detail-stats">
           <div class="stat-row"><span>PV</span><span id="unit-detail-hp"></span></div>
           <div class="stat-row"><span>Dégâts</span><span id="unit-detail-damage"></span></div>
           <div class="stat-row"><span>Vitesse d'attaque</span><span id="unit-detail-atkspeed"></span></div>
           <div class="stat-row"><span>Portée</span><span id="unit-detail-range"></span></div>
           <div class="stat-row"><span>Vitesse</span><span id="unit-detail-movespeed"></span></div>
         </div>
-        <button class="menu-btn primary" id="unit-detail-action"></button>
         <div class="detail-actions-row" id="detail-actions-row">
-          <button class="menu-btn primary detail-action" id="unit-detail-action-left"></button>
-          <button class="menu-btn primary detail-action" id="unit-detail-action-right"></button>
+          <button class="menu-btn primary" id="unit-detail-action"></button>
+          <button class="menu-btn detail-action" id="unit-detail-action-left"></button>
+          <button class="menu-btn detail-action" id="unit-detail-action-right"></button>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { ChestDefinitions } from "../config/chestDefinitions.js";
 import { UiSounds } from "../config/uiSounds.js";
 import { ChestSystem } from "./ChestSystem.js";
 
-const RARITY_LABELS = { 0: "Commune", 1: "Rare", 2: "Ultra-rare" };
+const RARITY_LABELS = { 0: "Commun", 1: "Rare", 2: "Ultra-rare" };
 
 export class ChestOpener {
   constructor({ playerProgress, elements, audioManager, uiSounds, onResolved }) {
@@ -35,14 +35,21 @@ export class ChestOpener {
       this.el.chestSprite.classList.remove("shaking");
       this.el.chestSprite.classList.add("hidden");
 
-      const unlockedUnit = ChestSystem.open(chestDef, this.playerProgress);
+      const reward = ChestSystem.open(chestDef, this.playerProgress);
       this.playerProgress.removeChest(instanceId);
 
-      if (unlockedUnit) {
-        this.el.revealSprite.src = unlockedUnit.sprite;
-        this.el.revealName.textContent = unlockedUnit.name;
-        this.el.revealRarity.textContent = RARITY_LABELS[unlockedUnit.rarity];
-        this.el.revealRarity.className = `rarity-label rarity-${unlockedUnit.rarity}`;
+      if (reward) {
+        this.el.revealSprite.src = reward.definition.sprite;
+
+        this.el.revealName.textContent = reward.type === "item"
+            ? `${reward.definition.name}`
+            : reward.definition.name;
+
+        this.el.revealRarity.textContent = reward.type === "item"
+            ? `${RARITY_LABELS[reward.definition.rarity]}`
+            : RARITY_LABELS[reward.definition.rarity];
+
+        this.el.revealRarity.className = `rarity-label rarity-${reward.definition.rarity}`;
       }
 
       this.el.reveal.classList.add("revealed", "burst");
