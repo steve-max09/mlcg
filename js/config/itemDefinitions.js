@@ -6,9 +6,15 @@ export const ItemDefinitions = {
     sprite: "assets/items/gants-titan.png",
     rarity: 2,
     effects: {
+      unitCostReduction: 1,
+      unitCostIncrease: 1,
       hpBoost: 10,
+      passiveHeal: 5,
       attackSpeedBoost: 0.1,
-      unitCostReduction: 1
+      damageBoost: 10,
+      
+      movementSpeedBoost: 5
+
     }
   },
   gantsEnduro: {
@@ -27,6 +33,16 @@ export const ItemDefinitions = {
     name: "Vitrificateur pur T3 extra mat 5L",
     description: "Vitrificateur monocomposant adapté aux forts trafics (lieux publics).",
     sprite: "assets/items/vitrificateur.png",
+    rarity: 0,
+    effects: {
+      movementSpeedBoost: 5
+    }
+  },
+  helicoidale: {
+    id: "helicoidale",
+    name: "Mêche hélicoidale pour tarière PF-403",
+    description: "Pour creuser un max. Couteau d\’attaque interchangeable.",
+    sprite: "assets/items/meche-helicoidale.png",
     rarity: 0,
     effects: {
       movementSpeedBoost: 5

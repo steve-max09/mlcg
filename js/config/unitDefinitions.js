@@ -499,7 +499,7 @@ export const UnitDefinitions = {
     attackSpeed: 0.3,
     movementSpeed: 20,
     attackRange: 130,
-    hitboxRadius: 26,
+    hitboxRadius: 28,
     targetType: "any",
     canMove: true,
     canAttack: true,

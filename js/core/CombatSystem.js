@@ -159,9 +159,7 @@ export const CombatSystem = {
       return;
     }
 
-    const maxRange =
-      unit.continuousAttack.maxRange ||
-      unit.attackRange;
+    const maxRange = unit.continuousAttack.maxRange || unit.attackRange;
 
     const distance = unit.distanceTo(target);
 
@@ -174,9 +172,7 @@ export const CombatSystem = {
       unit.continuousDamageAccumulator = 0;
     }
 
-    unit.continuousDamageAccumulator +=
-      unit.continuousAttack.damagePerSecond *
-      deltaSeconds;
+    unit.continuousDamageAccumulator += unit.continuousAttack.damagePerSecond * deltaSeconds;
 
     const damage = Math.floor(
       unit.continuousDamageAccumulator
