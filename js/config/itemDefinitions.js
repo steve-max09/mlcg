@@ -6,12 +6,9 @@ export const ItemDefinitions = {
     sprite: "assets/items/gants-titan.png",
     rarity: 2,
     effects: {
-      unitCostReduction: 1,
-      attackSpeedBoost: 0.1,
-      damageBoost: 40,
-      movementSpeedBoost: 5,
-      hpBoost: 10,
-      armor: 10, // reduce incoming damage
+      attackSpeedBoost: 1.1,
+      damageBoost: 10,
+      armor: 5
     }
   },
   gantsEnduro: {
@@ -21,8 +18,9 @@ export const ItemDefinitions = {
     sprite: "assets/items/gants-enduro.png",
     rarity: 1,
     effects: {
-      hpBoost: 20,
-      attackSpeedBoost: 0.2
+      unitCostIncrease: 5,
+      movementSpeedBoost: 2,
+      damageBoost: 100
     }
   },
   vitrificateur: {
@@ -32,7 +30,7 @@ export const ItemDefinitions = {
     sprite: "assets/items/vitrificateur.png",
     rarity: 0,
     effects: {
-      movementSpeedBoost: 5
+      unitCostReduction: 2
     }
   },
   helicoidale: {
@@ -42,7 +40,7 @@ export const ItemDefinitions = {
     sprite: "assets/items/meche-helicoidale.png",
     rarity: 0,
     effects: {
-      movementSpeedBoost: 5
+      damageBoost: 10
     }
   }
 };
