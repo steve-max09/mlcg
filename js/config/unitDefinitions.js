@@ -401,6 +401,9 @@ export const UnitDefinitions = {
     targetType: "any",
     canMove: true,
     canAttack: true,
+    effects: {
+      armor: 10
+    },
     attackAnimation: "metalSlash",
     sounds: {
       spawn: "assets/sounds/units/brumisateur-spawn.mp3",
@@ -453,10 +456,6 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "projectile",
-    effects: {
-      armor: 70,
-      targetTypeChange: "buildings"
-    },
     projectile: {
       type: "spinningLogProjectile",
       spriteSheet: {
