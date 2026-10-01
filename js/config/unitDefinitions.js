@@ -453,6 +453,10 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "projectile",
+    effects: {
+      armor: 70,
+      targetTypeChange: "buildings"
+    },
     projectile: {
       type: "spinningLogProjectile",
       spriteSheet: {

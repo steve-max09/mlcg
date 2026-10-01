@@ -1,7 +1,9 @@
+import { ItemEffectSystem } from "./ItemEffectSystem.js";
+
 let unitIdCounter = 0;
 
 export class Unit {
-  constructor(definition, team, x, y, audioManager) {
+  constructor(definition, team, x, y, audioManager, playerProgress) {
     this.instanceId = `unit-${++unitIdCounter}`;
     this.definitionId = definition.id;
     this.name = definition.name;
@@ -12,14 +14,34 @@ export class Unit {
     this.x = x;
     this.y = y;
 
-    this.maxHp = definition.hp;
-    this.hp = definition.hp;
-    this.damage = definition.damage;
-    this.attackSpeed = definition.attackSpeed;
-    this.movementSpeed = definition.movementSpeed;
-    this.attackRange = definition.attackRange;
+    // déifinition des stats en appliquant les effets bonus des items
+    this.playerProgress = playerProgress;
+    this.effects = ItemEffectSystem.getEffects(definition, playerProgress, team);
+
+    const stats = ItemEffectSystem.applyStatEffects(
+      {
+        maxHp: definition.hp,
+        hp: definition.hp,
+        damage: definition.damage,
+        attackSpeed: definition.attackSpeed,
+        movementSpeed: definition.movementSpeed,
+        attackRange: definition.attackRange,
+        cost: definition.cost || 0,
+        targetType: definition.targetType || "any"
+      },
+      this.effects
+    );
+
+    this.maxHp = stats.maxHp;
+    this.hp = stats.hp;
+    this.damage = stats.damage;
+    this.armor = this.effects.armor || 0;
+    this.attackSpeed = stats.attackSpeed;
+    this.movementSpeed = stats.movementSpeed;
+    this.attackRange = stats.attackRange;
+    this.cost = stats.cost;
+    this.targetType = stats.targetType;
     this.hitboxRadius = definition.hitboxRadius;
-    this.targetType = definition.targetType || "any";
     this.canMove = definition.canMove !== false;
     this.canAttack = definition.canAttack !== false;
 
@@ -46,10 +68,17 @@ export class Unit {
     // attaques continues (inferno)
     this.lockedTarget = null;
     this.continuousDamageAccumulator = 0;
+
+    // effets d'item
+    this.playerProgress = playerProgress;
+    this.itemEffects = {};
   }
 
   takeDamage(amount) {
-    this.hp -= amount;
+    const reducedDamage = Math.max(0, amount - this.armor);
+
+    this.hp -= reducedDamage;
+
     if (this.hp <= 0) {
       this.hp = 0;
       this.isDead = true;

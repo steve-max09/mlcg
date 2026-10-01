@@ -28,6 +28,8 @@ import { DialogController } from "./core/DialogController.js";
 
 import { ItemsScreen } from "./core/ItemsScreen.js";
 
+import { ItemEffectSystem } from "./core/ItemEffectSystem.js";
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").then((registration) => {
@@ -90,7 +92,8 @@ const deckScreen = new DeckScreen({
     collectionCount: document.getElementById("collection-count"),
     modalOverlay: document.getElementById("unit-detail-modal"),
     modalClose: document.getElementById("unit-detail-close"),
-    unitDetailStats: document.getElementById("unit-detail-stats"),
+    unitDetailStats: document.getElementById("unit-detail-stats"),    
+    itemDetailEffects: document.getElementById("item-detail-effects"),
     detailName: document.getElementById("unit-detail-name"),
     detailCost: document.getElementById("unit-detail-cost"),
     detailSprite: document.getElementById("unit-detail-sprite"),
@@ -103,7 +106,6 @@ const deckScreen = new DeckScreen({
     detailAction: document.getElementById("unit-detail-action"),
     detailActionLeft: document.getElementById("unit-detail-action-left"),
     detailActionRight: document.getElementById("unit-detail-action-right"),
-    itemDetailEffects: document.getElementById("item-detail-effects")
   },
   onBattleStart: () => {
     audioManager.play(UiSounds.startFreeBattle)
@@ -200,7 +202,9 @@ function updateEnergyUI() {
     const unitId = cardEl.dataset.unitId;
     const def = UnitDefinitions[unitId];
     if (!def) return;
-    cardEl.classList.toggle("disabled", !gameState.canAfford(def.cost));
+
+    const unitCost = ItemEffectSystem.getUnitCost(def, playerProgress);
+    cardEl.classList.toggle("disabled", !gameState.canAfford(unitCost));
   });
 }
 
@@ -349,6 +353,7 @@ const dragDropController = new DragDropController({
   arenaElement,
   gameState,
   unitDefinitions: UnitDefinitions,
+  playerProgress,
   onSpawn: (definition, x, y) => {
     spawnUnit(definition, "player", x, y);
     updateEnergyUI();
@@ -390,12 +395,19 @@ function renderHand(deck) {
     const definition = UnitDefinitions[unitId];
     if (!definition) return;
 
+    const unitCost = ItemEffectSystem.getUnitCost(definition, playerProgress);
+
     const card = document.createElement("button");
     card.className = `card rarity-${definition.rarity}`;
+
+    if (unitCost !== definition.cost) {
+      card.classList.add("cost-modified");
+    }
+
     card.dataset.unitId = unitId;
     card.innerHTML = `
       <img src="${definition.sprite}" alt="${definition.name}" />
-      <span class="card-cost">${definition.cost}</span>
+      <span class="card-cost">${unitCost}</span>
     `;
 
     dragDropController.bindCard(card, unitId);
@@ -718,7 +730,7 @@ backToMenuBtn.addEventListener("click", () => {
 
 // spawn unit
 function spawnUnit(definition, team, x, y, options = {}) {
-  const unit = new Unit(definition, team, x, y);
+  const unit = new Unit(definition, team, x, y, audioManager, playerProgress);
 
   if (options.isBoss) {
     unit.isBoss = true;

@@ -1,9 +1,12 @@
+import { ItemEffectSystem } from "../core/ItemEffectSystem.js";
+
 export class DragDropController {
-  constructor({ arenaElement, gameState, unitDefinitions, onSpawn }) {
+  constructor({ arenaElement, gameState, unitDefinitions, playerProgress, onSpawn }) {
     this.arenaElement = arenaElement;
     this.gameState = gameState;
     this.unitDefinitions = unitDefinitions;
     this.onSpawn = onSpawn;
+    this.playerProgress = playerProgress;
 
     this.draggedDefinitionId = null;
     this.ghostElement = null;
@@ -25,7 +28,12 @@ export class DragDropController {
   startDrag(definitionId, event) {
     const definition = this.unitDefinitions[definitionId];
     if (!definition) return;
-    if (!this.gameState.canAfford(definition.cost)) return;
+    
+    const cost = ItemEffectSystem.getUnitCost(definition, this.playerProgress);
+
+    if (!this.gameState.canAfford(cost)) {
+      return;
+    }
 
     this.draggedDefinitionId = definitionId;
     this.activePointerId = event.pointerId;
@@ -68,7 +76,12 @@ export class DragDropController {
   trySpawn(event) {
     const definition = this.unitDefinitions[this.draggedDefinitionId];
     if (!definition) return;
-    if (!this.gameState.canAfford(definition.cost)) return;
+
+    const cost = ItemEffectSystem.getUnitCost(definition, this.playerProgress);
+
+    if (!this.gameState.canAfford(cost)) {
+      return;
+    }
 
     const rect = this.arenaElement.getBoundingClientRect();
     let x = event.clientX - rect.left;
@@ -87,7 +100,7 @@ export class DragDropController {
     x = Math.min(Math.max(x, minX), maxX);
     y = Math.min(Math.max(y, minY), maxY);
 
-    this.gameState.spendEnergy(definition.cost);
+    this.gameState.spendEnergy(cost);
     this.onSpawn(definition, x, y);
   }
 
