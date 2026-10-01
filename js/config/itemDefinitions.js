@@ -40,7 +40,8 @@ export const ItemDefinitions = {
     sprite: "assets/items/meche-helicoidale.png",
     rarity: 0,
     effects: {
-      damageBoost: 10
+      targetTypeChange: "buildings",
+      damageBoost: 25
     }
   }
 };
