@@ -118,11 +118,7 @@ export const CombatSystem = {
     }
 
     if (attacker.aoeRadius > 0) {
-      this.applyAoeDamage(
-        attacker,
-        target,
-        gameState
-      );
+      this.applyAoeDamage(attacker, target, gameState);
     }
   },
 
