@@ -22,6 +22,7 @@ export class Unit {
       {
         maxHp: definition.hp,
         hp: definition.hp,
+        armor: definition.armor,
         damage: definition.damage,
         attackSpeed: definition.attackSpeed,
         movementSpeed: definition.movementSpeed,
@@ -35,7 +36,7 @@ export class Unit {
     this.maxHp = stats.maxHp;
     this.hp = stats.hp;
     this.damage = stats.damage;
-    this.armor = this.effects.armor || 0;
+    this.armor = stats.armor || 0;
     this.attackSpeed = stats.attackSpeed;
     this.movementSpeed = stats.movementSpeed;
     this.attackRange = stats.attackRange;

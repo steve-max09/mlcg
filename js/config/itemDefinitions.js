@@ -6,9 +6,10 @@ export const ItemDefinitions = {
     sprite: "assets/items/gants-titan.png",
     rarity: 2,
     effects: {
+      armor: 10,
+      unitCostReduction: 3,
       attackSpeedBoost: 1.1,
-      damageBoost: 10,
-      armor: 5
+      damageBoost: 10
     }
   },
   gantsEnduro: {
@@ -18,9 +19,10 @@ export const ItemDefinitions = {
     sprite: "assets/items/gants-enduro.png",
     rarity: 1,
     effects: {
+      armor: 5,
       unitCostIncrease: 5,
       movementSpeedBoost: 2,
-      damageBoost: 100
+      damageBoost: 30
     }
   },
   vitrificateur: {
@@ -30,6 +32,7 @@ export const ItemDefinitions = {
     sprite: "assets/items/vitrificateur.png",
     rarity: 0,
     effects: {
+      armor: 1,
       unitCostReduction: 2
     }
   },
@@ -40,6 +43,8 @@ export const ItemDefinitions = {
     sprite: "assets/items/meche-helicoidale.png",
     rarity: 0,
     effects: {
+      armor: 2,
+      unitCostReduction: 2,
       targetTypeChange: "buildings",
       damageBoost: 25
     }

@@ -99,6 +99,8 @@ const deckScreen = new DeckScreen({
     detailSprite: document.getElementById("unit-detail-sprite"),
     detailDescription: document.getElementById("unit-detail-description"),
     detailHp: document.getElementById("unit-detail-hp"),
+    detailArmor: document.getElementById("unit-detail-armor"),
+    unitDetailStats: document.getElementById("unit-detail-stats"),
     detailDamage: document.getElementById("unit-detail-damage"),
     detailAtkSpeed: document.getElementById("unit-detail-atkspeed"),
     detailRange: document.getElementById("unit-detail-range"),
@@ -396,18 +398,16 @@ function renderHand(deck) {
     if (!definition) return;
 
     const unitCost = ItemEffectSystem.getUnitCost(definition, playerProgress);
+    const costReduced = unitCost < definition.cost;
+    const costIncreased = unitCost > definition.cost;
 
     const card = document.createElement("button");
     card.className = `card rarity-${definition.rarity}`;
 
-    if (unitCost !== definition.cost) {
-      card.classList.add("cost-modified");
-    }
-
     card.dataset.unitId = unitId;
     card.innerHTML = `
-      <img src="${definition.sprite}" alt="${definition.name}" />
-      <span class="card-cost">${unitCost}</span>
+      <img src="${definition.sprite}" alt="${definition.name}">
+      <span class="card-cost ${costReduced ? "cost-reduced" : costIncreased ? "cost-increased" : ""}">${unitCost}</span>
     `;
 
     dragDropController.bindCard(card, unitId);

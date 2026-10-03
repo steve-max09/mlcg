@@ -525,8 +525,12 @@ button {
   color: var(--muted);
 }
 
-.cost-modified {
+.card-cost.cost-reduced {
   color: #4ade80;
+}
+
+.card-cost.cost-increased {
+  color: #f87171;
 }
 
 .card.disabled {
@@ -1047,7 +1051,7 @@ button {
 }
 
 .badge {
-  background: var(--accent);
+  background: var(--panel);
   color: white;
   padding: 4px 12px;
   border-radius: 999px;
@@ -2070,3 +2074,29 @@ button {
   object-fit: contain;
 }
 /* === end écran items === */
+
+/* --- bonus sur les stats dans la modal de détails --- */
+.stat-base-value {
+  color: var(--text);
+}
+
+.stat-bonus {
+  margin-left: 6px;
+  color: #4ade80;
+  font-weight: 800;
+}
+
+.stat-malus {
+  margin-left: 6px;
+  color: #f87171;
+  font-weight: 800;
+}
+
+#unit-detail-cost .stat-bonus {
+  color: #f87171;
+}
+
+#unit-detail-cost .stat-malus {
+  color: #4ade80;
+}
+/* ----- */

@@ -40,6 +40,10 @@ export const ItemEffectSystem = {
       stats.hp += effects.hpBoost;
     }
 
+    if (effects.armor) {
+      stats.armor += effects.armor;
+    }
+
     if (effects.damageBoost) {
       stats.damage += effects.damageBoost;
     }
@@ -92,6 +96,6 @@ export const ItemEffectSystem = {
     cost -= effects.unitCostReduction || 0;
     cost += effects.unitCostIncrease || 0;
 
-    return Math.max(0, cost);
+    return Math.max(2, cost);
     }
 };

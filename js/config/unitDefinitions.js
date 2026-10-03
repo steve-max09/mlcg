@@ -127,6 +127,7 @@ export const UnitDefinitions = {
     renderScale: 0.65,
     cost: 4,
     hp: 400,
+    armor: 5,
     damage: 25,
     attackSpeed: 1.2,
     movementSpeed: 20,
@@ -393,17 +394,15 @@ export const UnitDefinitions = {
     renderScale: 1.25,
     cost: 6,
     hp: 740,
+    armor: 10,
     damage: 100,
     attackSpeed: 0.5,
-    movementSpeed: 50,
+    movementSpeed: 40,
     attackRange: 60,
     hitboxRadius: 26,
     targetType: "any",
     canMove: true,
     canAttack: true,
-    effects: {
-      armor: 10
-    },
     attackAnimation: "metalSlash",
     sounds: {
       spawn: "assets/sounds/units/brumisateur-spawn.mp3",
@@ -498,7 +497,6 @@ export const UnitDefinitions = {
     renderScale: 1.5,
     cost: 12,
     hp: 1500,
-    damage: 290,
     attackSpeed: 0.3,
     movementSpeed: 20,
     attackRange: 130,
@@ -508,8 +506,8 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "continuousLaser",
     continuousAttack: {
-      damagePerSecond: 290,
-      maxRange: 130,
+      damagePerSecond: 50,
+      maxRange: 110,
       beam: {
         thickness: 6,
         startOffset: 18

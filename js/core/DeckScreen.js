@@ -191,6 +191,38 @@ export class DeckScreen {
     }
   }
 
+  // ajoute les infos de bonus d'équipements dans les stats de la carte
+  setStatValue(element, baseValue, delta = 0, suffix = "") {
+    if (!element) return;
+
+    const hasDelta = delta !== 0;
+    const deltaClass = delta > 0 ? "stat-bonus" : "stat-malus";
+    const deltaText = delta > 0 ? `+${delta}` : `${delta}`;
+
+    element.innerHTML = `
+      <span class="stat-base-value">${baseValue}${suffix}</span>
+      ${ hasDelta ? `<span class="${deltaClass}">${deltaText}${suffix}</span>` : "" }
+    `;
+  }
+
+  getUnitItemEffects(unitId) {
+    const itemId = this.playerProgress.getEquippedItem(unitId);
+
+    const item = itemId ? ItemDefinitions[itemId] : null;
+
+    return item?.effects || {};
+  }
+
+  // calcul du coût de l'unité après réduction (on ne descend pas en-dessous de 2)
+  getUnitCostDelta(def, effects = {}) {
+    const baseCost = def.cost || 0;
+    const rawDelta = (effects.unitCostIncrease || 0) - (effects.unitCostReduction || 0);
+
+    const finalCost = Math.max(2, baseCost + rawDelta);
+
+    return finalCost - baseCost;
+  }
+
   openModal(unitId, isInDeck, mode = "unit") {
     const def = UnitDefinitions[unitId];
     if (!def) return;
@@ -199,14 +231,24 @@ export class DeckScreen {
     this.resetModalFields();
 
     this.el.detailName.textContent = def.name;
-    this.el.detailCost.textContent = `Coût: ${def.cost}`;
     this.el.detailSprite.src = def.sprite;
     this.el.detailDescription.textContent = def.description || "Description manquante";
-    this.el.detailHp.textContent = def.hp;
-    this.el.detailDamage.textContent = def.damage;
-    this.el.detailAtkSpeed.textContent = `${def.attackSpeed}/s`;
-    this.el.detailRange.textContent = def.attackRange;
-    this.el.detailMoveSpeed.textContent = def.movementSpeed;
+
+    const effects = mode === "unit" ? this.getUnitItemEffects(unitId) : {};
+    const costDelta = this.getUnitCostDelta(def, effects);
+
+    this.setStatValue(this.el.detailCost, `Coût: ${def.cost}`, costDelta);
+    this.setStatValue(this.el.detailHp, def.hp, effects.hpBoost || 0);
+
+    this.setStatValue(this.el.detailArmor, def.armor || 0, effects.armor || 0);
+
+    const baseDamage = def.continuousAttack?.damagePerSecond ?? def.damage;
+    const damageDelta = def.continuousAttack ? effects.damageBoost || 0 : effects.damageBoost || 0;
+    this.setStatValue(this.el.detailDamage, baseDamage, damageDelta, def.continuousAttack ? "/s" : "");
+
+    this.setStatValue(this.el.detailAtkSpeed, def.attackSpeed, effects.attackSpeedBoost || 0, "/s");
+    this.setStatValue(this.el.detailRange, def.attackRange, effects.attackRangeBoost || 0);
+    this.setStatValue(this.el.detailMoveSpeed, def.movementSpeed, effects.movementSpeedBoost || 0);
 
     if (mode === "unit") {
       const equippedItemId = this.playerProgress.getEquippedItem(unitId);
@@ -306,6 +348,7 @@ export class DeckScreen {
     const statParents = [
       this.el.detailCost,
       this.el.detailHp,
+      this.el.armor,
       this.el.detailDamage,
       this.el.detailAtkSpeed,
       this.el.detailRange,
@@ -339,6 +382,7 @@ export class DeckScreen {
     const statParents = [
       this.el.detailCost,
       this.el.detailHp,
+      this.el.armor,
       this.el.detailDamage,
       this.el.detailAtkSpeed,
       this.el.detailRange,

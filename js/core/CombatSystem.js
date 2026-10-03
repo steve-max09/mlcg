@@ -172,7 +172,8 @@ export const CombatSystem = {
       unit.continuousDamageAccumulator = 0;
     }
 
-    unit.continuousDamageAccumulator += unit.continuousAttack.damagePerSecond * deltaSeconds;
+    const continuousDamage = unit.continuousAttack.damagePerSecond + (unit.effects?.damageBoost || 0);
+    unit.continuousDamageAccumulator += continuousDamage * deltaSeconds;
 
     const damage = Math.floor(
       unit.continuousDamageAccumulator
@@ -182,12 +183,14 @@ export const CombatSystem = {
 
     unit.continuousDamageAccumulator -= damage;
 
-    if (typeof target.takeDamage === "function") {
-      target.takeDamage(damage);
-    }
-
     if (unit.aoeRadius > 0) {
       this.applyAoeDamage(unit, target, gameState, damage);
+    } else {
+      if (this.isTargetInvalid(target)) return;
+
+      if (typeof target.takeDamage === "function") {
+        target.takeDamage(damage);
+      }
     }
   }
 };
