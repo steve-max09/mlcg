@@ -98,6 +98,8 @@ export class Unit {
       this.hp = 0;
       this.isDead = true;
     }
+
+    return reducedDamage;
   }
 
   distanceTo(other) {

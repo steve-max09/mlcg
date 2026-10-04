@@ -72,7 +72,8 @@ export const ItemDefinitions = {
     sprite: "assets/items/conservateur.png",
     rarity: 0,
     effects: {
-      hpBoost: 130
+      hpBoost: 130,
+      lifesteal: 20
     }
   },
   disque: {

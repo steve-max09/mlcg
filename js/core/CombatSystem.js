@@ -125,10 +125,6 @@ export const CombatSystem = {
       MovementSystem.pushAwayFrom(attacker, target, attacker.effects.knockback);
     }
 
-    if (dealtDamage > 0 && attacker.effects?.recoil) {
-      MovementSystem.pushBackFromTarget(attacker, target, attacker.effects.recoil);
-    }
-
     if (dealtDamage > 0 && attacker.effects?.lifesteal) {
       attacker.hp = Math.min(attacker.maxHp, attacker.hp + attacker.effects.lifesteal);
     }

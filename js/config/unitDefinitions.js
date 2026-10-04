@@ -169,6 +169,9 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "projectile",
+    effects: {
+      lifesteal: 30
+    },
     projectile: {
       type: "toxicProjectile",
       spriteSheet: {
@@ -306,6 +309,7 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "metalSlash",
     effects: {
+      recoil: 40,
       passiveHeal: 30,
       knockback: 40
     },
@@ -336,6 +340,7 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "projectile",
     effects: {
+      recoil: 50,
       knockback: 10
     },
     projectile: {
@@ -498,7 +503,7 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "projectile",
     effects: {
-      knockback: 30
+      recoil: 30
     },
     projectile: {
       type: "spinningLogProjectile",
