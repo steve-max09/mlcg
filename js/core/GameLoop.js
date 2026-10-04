@@ -65,6 +65,9 @@ export class GameLoop {
 
     MovementSystem.update(this.gameState, deltaSeconds);
 
+    // effets spéciaux
+    this.updatePassiveEffects(deltaSeconds);
+
     CombatSystem.update(this.gameState, deltaSeconds, (attacker, target, attackResult) => {
       const el =
         this.renderer.getUnitElement(attacker.instanceId) ||
@@ -186,6 +189,74 @@ export class GameLoop {
           el,
           this.audioManager
         );
+      }
+    }
+  }
+
+  // effets spéciaux
+  updatePassiveEffects(deltaSeconds) {
+    for (const unit of this.gameState.units) {
+      if (unit.isDead) continue;
+
+      const effects = unit.effects || {};
+
+      if (effects.passiveHeal) {
+        this.updatePassiveHeal(unit, deltaSeconds);
+      }
+
+      if (effects.passiveDamageArea && effects.passiveDamage) {
+        this.updatePassiveAreaDamage(unit, deltaSeconds);
+      }
+    }
+  }
+
+  // auto soin passif
+  updatePassiveHeal(unit, deltaSeconds) {
+    unit.passiveHealAccumulator += unit.effects.passiveHeal * deltaSeconds;
+
+    const healAmount = Math.floor(unit.passiveHealAccumulator);
+
+    if (healAmount > 0) {
+      unit.passiveHealAccumulator -= healAmount;
+      unit.hp = Math.min(unit.maxHp, unit.hp + healAmount);
+    }
+  }
+
+  // dégâts de zone passifs
+  updatePassiveAreaDamage(unit, deltaSeconds) {
+    const effects = unit.effects || {};
+    const radius = effects.passiveDamageArea;
+    const damagePerTick = effects.passiveDamage;
+    const tickInterval = effects.passiveDamageTick || 1;
+
+    unit.passiveDamageAccumulator += deltaSeconds;
+
+    if (unit.passiveDamageAccumulator < tickInterval) {
+      return;
+    }
+
+    unit.passiveDamageAccumulator -= tickInterval;
+
+    const enemies = [
+      ...this.gameState.getEnemiesOf(unit.team),
+      ...this.gameState.getTowersOf(unit.team === "player" ? "enemy" : "player")
+    ];
+
+    this.audioManager.play(this.audioManager.uiSounds.shortzap);
+
+    AnimationSystem.playPassiveDamageArea(this.renderer.arenaElement, unit, radius);
+
+    for (const enemy of enemies) {
+      if (enemy.isDead || enemy.isDestroyed) {
+        continue;
+      }
+
+      const dx = enemy.x - unit.x;
+      const dy = enemy.y - unit.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance <= radius && typeof enemy.takeDamage === "function") {
+        enemy.takeDamage(damagePerTick);
       }
     }
   }

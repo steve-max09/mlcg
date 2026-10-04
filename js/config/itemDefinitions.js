@@ -43,10 +43,20 @@ export const ItemDefinitions = {
     sprite: "assets/items/meche-helicoidale.png",
     rarity: 0,
     effects: {
-      armor: 2,
-      unitCostReduction: 2,
       targetTypeChange: "buildings",
-      damageBoost: 25
+      damageBoost: 100
+    }
+  },
+  electrogene: {
+    id: "electrogene",
+    name: "Groupe électrogène EXPERT 4010X",
+    description: "Robuste et puissant. Conçu pour un usage intensif.",
+    sprite: "assets/items/grp-electro.png",
+    rarity: 1,
+    effects: {
+      passiveDamageArea: 60,
+      passiveDamageTick: 0.8,
+      passiveDamage: 70
     }
   }
 };

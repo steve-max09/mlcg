@@ -63,6 +63,9 @@ export class Unit {
     this.target = null;
     this.isDead = false;
 
+    // truc pour permettre le knockback
+    this.movementLockTimer = 0;
+
     this.isFrozen = false;
     this.freezeTimer = 0;
 
@@ -73,6 +76,11 @@ export class Unit {
     // effets d'item
     this.playerProgress = playerProgress;
     this.itemEffects = {};
+
+    // effets spéciaux
+    this.passiveHealAccumulator = 0;
+    this.passiveDamageAccumulator = 0;
+    this.itemKillCount = 0;
   }
 
   takeDamage(amount) {

@@ -626,4 +626,19 @@ export const AnimationSystem = {
       loop: spriteSheet.loop === true
     });
   },
+
+  // zone de dégâts passifs (effet spécial)
+  playPassiveDamageArea(arenaElement, unit, radius) {
+    const effect = document.createElement("div");
+
+    effect.className = "passive-damage-area";
+    effect.style.left = `${unit.x}px`;
+    effect.style.top = `${unit.y}px`;
+    effect.style.width = `${radius * 2}px`;
+    effect.style.height = `${radius * 2}px`;
+
+    arenaElement.appendChild(effect);
+
+    setTimeout(() => effect.remove(), 350);
+  },
 };

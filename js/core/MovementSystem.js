@@ -4,7 +4,12 @@ export const MovementSystem = {
       if (unit.isDead) continue;
 
       unit.updateFreeze(deltaSeconds);
+
+      unit.movementLockTimer = Math.max(0, unit.movementLockTimer - deltaSeconds);
+
       if (unit.isFrozen) continue;
+
+      if (unit.movementLockTimer > 0) continue;
 
       // attaques continues (inferno)
       if (unit.continuousAttack) {
@@ -120,5 +125,31 @@ export const MovementSystem = {
         }
       }
     }
+  },
+
+  // knockback
+  pushAwayFrom(source, target, distance) {
+    const dx = target.x - source.x;
+    const dy = target.y - source.y;
+    const length = Math.sqrt(dx * dx + dy * dy) || 0.01;
+    const nx = dx / length;
+    const ny = dy / length;
+
+    target.x += nx * distance;
+    target.y += ny * distance;
+    target.movementLockTimer = 0.15;
+  },
+
+  // recoil
+  pushBackFromTarget(unit, target, distance) {
+    const dx = unit.x - target.x;
+    const dy = unit.y - target.y;
+    const length = Math.sqrt(dx * dx + dy * dy) || 0.01;
+    const nx = dx / length;
+    const ny = dy / length;
+
+    unit.x += nx * distance;
+    unit.y += ny * distance;
+    unit.movementLockTimer = 0.15;
   }
 };

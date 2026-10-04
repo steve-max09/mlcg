@@ -7,5 +7,8 @@ export const UiSounds = {
   openChest: "assets/sounds/ui/open.mp3",
   unlockNew: "assets/sounds/ui/unlockNew.mp3",
   startFreeBattle: "assets/sounds/ui/freeBattle.mp3",
-  yanga: "assets/sounds/ui/yanga.mp3"
+  yanga: "assets/sounds/ui/yanga.mp3",
+  zzap: "assets/sounds/ui/zzap.mp3",
+  shortzap: "assets/sounds/ui/shortzap.mp3",
+  zap: "assets/sounds/ui/zap.mp3",
 };

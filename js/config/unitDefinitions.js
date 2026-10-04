@@ -189,6 +189,9 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "spinSlash",
+    effects: {
+      knockback: 30
+    },
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
       attack: "assets/sounds/units/motobineuse-attack.mp3",
@@ -269,10 +272,14 @@ export const UnitDefinitions = {
     movementSpeed: 50,
     attackRange: 50,
     hitboxRadius: 22,
-    targetType: "buildings",
+    targetType: "any",
     canMove: true,
     canAttack: true,
     attackAnimation: "metalSlash",
+    effects: {
+      passiveHeal: 20,
+      knockback: 60
+    },
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
       attack: "assets/sounds/units/minipelle-attack.mp3",

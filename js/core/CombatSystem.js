@@ -110,19 +110,33 @@ export const CombatSystem = {
     return { delayed: false, apply: null };
   },
 
-  applyDamage(attacker, target, gameState) {
-    if (this.isTargetInvalid(target)) return;
+  applyDamage(attacker, target, gameState, damage = attacker.damage) {
+    if (this.isTargetInvalid(target)) {
+      return 0;
+    }
 
-    if (typeof target.takeDamage === "function") {
-      target.takeDamage(attacker.damage);
+    const dealtDamage = typeof target.takeDamage === "function" ? target.takeDamage(damage) : 0;
+
+    if (dealtDamage > 0 && attacker.effects?.knockback && !target.isDead && !target.isDestroyed) {
+      MovementSystem.pushAwayFrom(attacker, target, attacker.effects.knockback);
+    }
+
+    if (dealtDamage > 0 && attacker.effects?.recoil) {
+      MovementSystem.pushBackFromTarget(attacker, target, attacker.effects.recoil);
+    }
+
+    if (dealtDamage > 0 && attacker.effects?.lifesteal) {
+      attacker.hp = Math.min(attacker.maxHp, attacker.hp + attacker.effects.lifesteal);
     }
 
     if (attacker.aoeRadius > 0) {
-      this.applyAoeDamage(attacker, target, gameState);
+      this.applyAoeDamage(attacker, target, gameState, damage);
     }
+
+    return dealtDamage;
   },
 
-  applyAoeDamage(attacker, primaryTarget, gameState) {
+  applyAoeDamage(attacker, primaryTarget, gameState, damage = attacker.damage) {
     const center =
       attacker.aoeCenter === "self"
         ? { x: attacker.x, y: attacker.y }
@@ -142,7 +156,7 @@ export const CombatSystem = {
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist <= attacker.aoeRadius && typeof entity.takeDamage === "function") {
-        entity.takeDamage(attacker.damage);
+        entity.takeDamage(damage);
       }
     }
   },
@@ -179,14 +193,6 @@ export const CombatSystem = {
 
     unit.continuousDamageAccumulator -= damage;
 
-    if (unit.aoeRadius > 0) {
-      this.applyAoeDamage(unit, target, gameState, damage);
-    } else {
-      if (this.isTargetInvalid(target)) return;
-
-      if (typeof target.takeDamage === "function") {
-        target.takeDamage(damage);
-      }
-    }
+    this.applyDamage(unit, target, gameState, damage);
   }
 };

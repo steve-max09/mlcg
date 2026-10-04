@@ -478,7 +478,10 @@ export class DeckScreen {
       attackSpeedBoost: "Vitesse d'attaque",
       movementSpeedBoost: "Vitesse",
       damageBoost: "Dégâts",
-      unitCostReduction: "Réduction du coût"
+      unitCostReduction: "Réduction du coût",
+      passiveDamageArea: "Zone de choc",
+      passiveDamageTick: "Fréquence",
+      passiveDamage: "Intensité",
     };
 
     const values = {
