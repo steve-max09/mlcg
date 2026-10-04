@@ -10,6 +10,7 @@ export class Unit {
     this.sprite = definition.sprite;
     this.renderScale = definition.renderScale ?? 1;
 
+    this.isBuilding = false;
     this.team = team; // "player" | "enemy"
     this.x = x;
     this.y = y;
@@ -59,11 +60,16 @@ export class Unit {
     // attaques continues (inferno)
     this.continuousAttack = definition.continuousAttack || null;
 
-    this.attackCooldown = 0;
+    // délai avant attaque après spawn
+    this.spawnAttackDelay = definition.spawnAttackDelay ?? 0.2;
+    // délai avant prochaine attaque
+    this.attackCooldown = this.spawnAttackDelay;;
+
     this.target = null;
     this.isDead = false;
 
-    // truc pour permettre le knockback
+    // pour permettre le knockback (et animation smooth)
+    this.knockbackState = null;
     this.movementLockTimer = 0;
 
     this.isFrozen = false;

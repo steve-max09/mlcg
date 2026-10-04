@@ -94,6 +94,10 @@ export const CombatSystem = {
   createAttack(attacker, target, gameState) {
     const isProjectileAttack = Boolean(attacker.projectile);
 
+    if (attacker.effects.recoil) {
+      this.applyRecoil(attacker, target);
+    }
+
     if (isProjectileAttack) {
       return {
         delayed: true,
@@ -117,7 +121,7 @@ export const CombatSystem = {
 
     const dealtDamage = typeof target.takeDamage === "function" ? target.takeDamage(damage) : 0;
 
-    if (dealtDamage > 0 && attacker.effects?.knockback && !target.isDead && !target.isDestroyed) {
+    if (!target.isBuilding && attacker.effects?.knockback > 0 && !target.isDead && !target.isDestroyed) {
       MovementSystem.pushAwayFrom(attacker, target, attacker.effects.knockback);
     }
 
@@ -194,5 +198,13 @@ export const CombatSystem = {
     unit.continuousDamageAccumulator -= damage;
 
     this.applyDamage(unit, target, gameState, damage);
+  },
+
+  applyRecoil(attacker, target) {
+    const distance = attacker.effects?.recoil || 0;
+
+    if (distance <= 0 || attacker.isDead || attacker.isBuilding) return;
+
+    MovementSystem.pushBackFromTarget(attacker, target, distance);
   }
 };

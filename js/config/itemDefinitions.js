@@ -4,12 +4,10 @@ export const ItemDefinitions = {
     name: "Gants manutention lourde TITAN 850",
     description: "Des gants renforcés pour les travaux difficiles.",
     sprite: "assets/items/gants-titan.png",
-    rarity: 2,
+    rarity: 1,
     effects: {
-      armor: 10,
-      unitCostReduction: 3,
-      attackSpeedBoost: 1.1,
-      damageBoost: 10
+      armor: 5,
+      attackSpeedBoost: 0.1,
     }
   },
   gantsEnduro: {
@@ -17,12 +15,11 @@ export const ItemDefinitions = {
     name: "Gants manutention lourde Enduro 328",
     description: "Excellente préhension avec adhérisation anti-dérapante.",
     sprite: "assets/items/gants-enduro.png",
-    rarity: 1,
+    rarity: 0,
     effects: {
-      armor: 5,
-      unitCostIncrease: 5,
-      movementSpeedBoost: 2,
-      damageBoost: 30
+      unitCostIncrease: 1,
+      movementSpeedBoost: 10,
+      damageBoost: 23
     }
   },
   vitrificateur: {
@@ -32,14 +29,13 @@ export const ItemDefinitions = {
     sprite: "assets/items/vitrificateur.png",
     rarity: 0,
     effects: {
-      armor: 1,
       unitCostReduction: 2
     }
   },
   helicoidale: {
     id: "helicoidale",
     name: "Mêche hélicoidale pour tarière PF-403",
-    description: "Pour creuser un max. Couteau d\’attaque interchangeable.",
+    description: "Mêche avec couteau d\’attaque interchangeable pour creuser à travers les défenses ennemies.",
     sprite: "assets/items/meche-helicoidale.png",
     rarity: 0,
     effects: {
@@ -52,11 +48,42 @@ export const ItemDefinitions = {
     name: "Groupe électrogène EXPERT 4010X",
     description: "Robuste et puissant. Conçu pour un usage intensif.",
     sprite: "assets/items/grp-electro.png",
-    rarity: 1,
+    rarity: 2,
     effects: {
       passiveDamageArea: 60,
       passiveDamageTick: 0.8,
       passiveDamage: 70
+    }
+  },
+  molette: {
+    id: "molette",
+    name: "Clé à molette grande ouverture 8”",
+    description: "Pour desserrer et serrer les raccords à vis jusqu'à 39 mm.",
+    sprite: "assets/items/molette.png",
+    rarity: 0,
+    effects: {
+      passiveHeal: 10
+    }
+  },
+  conservateur: {
+    id: "conservateur",
+    name: "Conservateur ROPULS 6x1L",
+    description: "Permet de protéger les systèmes après nettoyage.",
+    sprite: "assets/items/conservateur.png",
+    rarity: 0,
+    effects: {
+      hpBoost: 130
+    }
+  },
+  disque: {
+    id: "disque",
+    name: "Disque diamant pour scie de sol et découpeuse thermique",
+    description: "Utilisation : à sec/à eau. Augmente considérablement les dégâts.",
+    sprite: "assets/items/disque.png",
+    rarity: 0,
+    effects: {
+      attackSpeedBoost: 0.6,
+      damageBoost: 50
     }
   }
 };

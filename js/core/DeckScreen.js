@@ -475,21 +475,28 @@ export class DeckScreen {
   renderItemEffects(effects = {}) {
     const labels = {
       hpBoost: "PV",
+      armor: "Armure",
       attackSpeedBoost: "Vitesse d'attaque",
       movementSpeedBoost: "Vitesse",
       damageBoost: "Dégâts",
       unitCostReduction: "Réduction du coût",
+      unitCostIncrease: "Augmentation du coût",
       passiveDamageArea: "Zone de choc",
       passiveDamageTick: "Fréquence",
       passiveDamage: "Intensité",
+      passiveHeal: "Autoréparation",
+      targetTypeChange: "Cible"
     };
 
     const values = {
       hpBoost: (value) => `+${value}`,
+      armor: (value) => `+${value}`,
       attackSpeedBoost: (value) => `+${value}`,
       movementSpeedBoost: (value) => `+${value}`,
       damageBoost: (value) => `+${value}`,
-      unitCostReduction: (value) => `-${value}`
+      unitCostReduction: (value) => `-${value}`,
+      unitCostIncrease: (value) => `+${value}`,
+      targetTypeChange: (value) => value === "buildings" ? "Bâtiments" : value === "ground" ? "Ennemis" : "Tous",
     };
 
     if (!this.el.itemDetailEffects) return;

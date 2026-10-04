@@ -63,7 +63,7 @@ export class GameLoop {
       this.updateCampaignTimer(deltaSeconds);
     }
 
-    MovementSystem.update(this.gameState, deltaSeconds);
+    MovementSystem.update(this.gameState, deltaSeconds, arenaSize);
 
     // effets spéciaux
     this.updatePassiveEffects(deltaSeconds);
@@ -80,12 +80,7 @@ export class GameLoop {
       // attaques continues (inferno)
       if (attacker.continuousAttack) {
         if (el) {
-          AnimationSystem.triggerAttackAnimation(
-            attacker,
-            target,
-            el,
-            this.audioManager
-          );
+          AnimationSystem.triggerAttackAnimation(attacker, target, el, this.audioManager);
         }
         return;
       }
@@ -195,64 +190,73 @@ export class GameLoop {
 
   // effets spéciaux
   updatePassiveEffects(deltaSeconds) {
-    for (const unit of this.gameState.units) {
-      if (unit.isDead) continue;
+    const entities = [...this.gameState.units, ...this.gameState.towers];
 
-      const effects = unit.effects || {};
+    for (const entity of entities) {
+      if (entity.isDead || entity.isDestroyed) continue;
+
+      const effects = entity.effects || {};
 
       if (effects.passiveHeal) {
-        this.updatePassiveHeal(unit, deltaSeconds);
+        entity.passiveHealAccumulator += effects.passiveHeal * deltaSeconds;
+
+        const healAmount = Math.floor(entity.passiveHealAccumulator);
+
+        if (healAmount > 0) {
+          entity.passiveHealAccumulator -= healAmount;
+          entity.hp = Math.min(entity.maxHp, entity.hp + healAmount);
+        }
       }
 
       if (effects.passiveDamageArea && effects.passiveDamage) {
-        this.updatePassiveAreaDamage(unit, deltaSeconds);
+        this.updatePassiveAreaDamage(entity, deltaSeconds);
       }
     }
   }
 
   // auto soin passif
-  updatePassiveHeal(unit, deltaSeconds) {
-    unit.passiveHealAccumulator += unit.effects.passiveHeal * deltaSeconds;
+  updatePassiveHeal(entity, deltaSeconds) {
+    entity.passiveHealAccumulator += entity.effects.passiveHeal * deltaSeconds;
 
-    const healAmount = Math.floor(unit.passiveHealAccumulator);
+    const healAmount = Math.floor(entity.passiveHealAccumulator);
 
     if (healAmount > 0) {
-      unit.passiveHealAccumulator -= healAmount;
-      unit.hp = Math.min(unit.maxHp, unit.hp + healAmount);
+      entity.passiveHealAccumulator -= healAmount;
+      entity.hp = Math.min(entity.maxHp, entity.hp + healAmount);
     }
   }
 
   // dégâts de zone passifs
-  updatePassiveAreaDamage(unit, deltaSeconds) {
-    const effects = unit.effects || {};
+  updatePassiveAreaDamage(entity, deltaSeconds) {
+    const effects = entity.effects || {};
     const radius = effects.passiveDamageArea;
     const damagePerTick = effects.passiveDamage;
     const tickInterval = effects.passiveDamageTick || 1;
 
-    unit.passiveDamageAccumulator += deltaSeconds;
+    entity.passiveDamageAccumulator += deltaSeconds;
 
-    if (unit.passiveDamageAccumulator < tickInterval) {
+    if (entity.passiveDamageAccumulator < tickInterval) {
       return;
     }
 
-    unit.passiveDamageAccumulator -= tickInterval;
+    entity.passiveDamageAccumulator -= tickInterval;
 
     const enemies = [
-      ...this.gameState.getEnemiesOf(unit.team),
-      ...this.gameState.getTowersOf(unit.team === "player" ? "enemy" : "player")
+      ...this.gameState.getEnemiesOf(entity.team),
+      ...this.gameState.getTowersOf(entity.team === "player" ? "enemy" : "player")
     ];
 
     this.audioManager.play(this.audioManager.uiSounds.shortzap);
 
-    AnimationSystem.playPassiveDamageArea(this.renderer.arenaElement, unit, radius);
+    AnimationSystem.playPassiveDamageArea(this.renderer.arenaElement, entity, radius);
 
     for (const enemy of enemies) {
       if (enemy.isDead || enemy.isDestroyed) {
         continue;
       }
 
-      const dx = enemy.x - unit.x;
-      const dy = enemy.y - unit.y;
+      const dx = enemy.x - entity.x;
+      const dy = enemy.y - entity.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
 
       if (distance <= radius && typeof enemy.takeDamage === "function") {

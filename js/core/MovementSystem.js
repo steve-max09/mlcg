@@ -1,14 +1,14 @@
 export const MovementSystem = {
-  update(gameState, deltaSeconds) {
+  update(gameState, deltaSeconds, arenaSize) {
     for (const unit of gameState.units) {
       if (unit.isDead) continue;
 
+      this.updateKnockback(unit, deltaSeconds, arenaSize);
       unit.updateFreeze(deltaSeconds);
 
       unit.movementLockTimer = Math.max(0, unit.movementLockTimer - deltaSeconds);
 
       if (unit.isFrozen) continue;
-
       if (unit.movementLockTimer > 0) continue;
 
       // attaques continues (inferno)
@@ -40,9 +40,21 @@ export const MovementSystem = {
           unit.target = this.findClosestTarget(unit, gameState);
         }
       }
+
+      if (arenaSize) {
+        this.clampUnitToArena(unit, arenaSize);
+      }
     }
 
     this.resolveAllCollisions(gameState);
+    
+    if (arenaSize) {
+      for (const unit of gameState.units) {
+        if (!unit.isDead) {
+          this.clampUnitToArena(unit, arenaSize);
+        }
+      }
+    }
   },
 
   findClosestTarget(unit, gameState) {
@@ -109,10 +121,18 @@ export const MovementSystem = {
         const a = units[i];
         const b = units[j];
 
+        if (a.knockbackState || b.knockbackState) {
+          continue;
+        }
+
         const dx = a.x - b.x;
         const dy = a.y - b.y;
         const distance = Math.sqrt(dx * dx + dy * dy) || 0.01;
         const minDistance = (a.hitboxRadius + b.hitboxRadius) * overlapTolerance;
+
+        if (a.movementLockTimer > 0 || b.movementLockTimer > 0) {
+          continue;
+        }
 
         if (distance < minDistance) {
           const overlap = minDistance - distance;
@@ -129,27 +149,81 @@ export const MovementSystem = {
 
   // knockback
   pushAwayFrom(source, target, distance) {
+    if (!target || target.isBuilding || target.isDead || target.isDestroyed) {
+      return;
+    }
+
     const dx = target.x - source.x;
     const dy = target.y - source.y;
     const length = Math.sqrt(dx * dx + dy * dy) || 0.01;
     const nx = dx / length;
     const ny = dy / length;
 
-    target.x += nx * distance;
-    target.y += ny * distance;
-    target.movementLockTimer = 0.15;
+    target.knockbackState = {
+      startX: target.x,
+      startY: target.y,
+      endX: target.x + nx * distance,
+      endY: target.y + ny * distance,
+      elapsed: 0,
+      duration: 0.18
+    };
+
+    target.movementLockTimer = 0.18;
+  },
+
+  // déplacer progressivement l'unité qui est knockback
+  updateKnockback(unit, deltaSeconds, arenaSize) {
+    const state = unit.knockbackState;
+    if (!state) return;
+
+    state.elapsed += deltaSeconds;
+
+    const progress = Math.min(state.elapsed / state.duration, 1);
+
+    const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+    unit.x = state.startX + (state.endX - state.startX) * easedProgress;
+    unit.y = state.startY + (state.endY - state.startY) * easedProgress;
+
+    // on empêche l'unité de sortir de l'arène
+    if (arenaSize) {
+      this.clampUnitToArena(unit, arenaSize);
+    }
+
+    if (progress >= 1) {
+      unit.knockbackState = null;
+    }
   },
 
   // recoil
   pushBackFromTarget(unit, target, distance) {
+    if (!unit || unit.isBuilding || unit.isDead) {
+      return;
+    }
+
     const dx = unit.x - target.x;
     const dy = unit.y - target.y;
     const length = Math.sqrt(dx * dx + dy * dy) || 0.01;
     const nx = dx / length;
     const ny = dy / length;
+    const duration = unit.effects?.recoilDuration || 0.18;
 
-    unit.x += nx * distance;
-    unit.y += ny * distance;
-    unit.movementLockTimer = 0.15;
+    unit.knockbackState = {
+      startX: unit.x,
+      startY: unit.y,
+      endX: unit.x + nx * distance,
+      endY: unit.y + ny * distance,
+      elapsed: 0,
+      duration
+    };
+
+    unit.movementLockTimer = duration;
+  },
+
+  // helper pour empêcher les unités de sortir de l'arène
+  clampUnitToArena(unit, arenaSize) {
+    const margin = unit.hitboxRadius || 0;
+    unit.x = Math.max(margin, Math.min(arenaSize.width - margin, unit.x));
+    unit.y = Math.max(margin, Math.min(arenaSize.height - margin, unit.y));
   }
 };

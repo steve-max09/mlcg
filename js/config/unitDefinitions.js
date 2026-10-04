@@ -39,6 +39,9 @@ export const UnitDefinitions = {
     canMove: false,
     canAttack: true,
     attackAnimation: "lightSpurt",
+    effects: {
+      knockback: 40
+    },
     sounds: {
       spawn: null,
       attack: "assets/sounds/units/chauffage-attack.mp3",
@@ -61,10 +64,34 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: false,
     canAttack: true,
-    attackAnimation: "coalShot",
+    attackAnimation: "projectile",
+    projectile: {
+      type: "toxicProjectile",
+      spriteSheet: {
+        image: "assets/effects/pink-strobe-projectile.png",
+        frameWidth: 128, frameHeight: 129, frameCount: 4, columns: 4, duration: 600, loop: true
+      },
+      travelDuration: {
+        min: 220,
+        max: 800,
+        pixelsPerMillisecond: 9.2
+      },
+      impact: {
+        spriteSheet: {
+          image: "assets/effects/toxic-cloud-impact.png",
+          frameWidth: 128, frameHeight: 129, frameCount: 4, columns: 4, duration: 200, loop: false
+        },
+        displayScale: 1,
+        offset: { x: 6, y: 6, random: true }
+      },
+      vibration: {
+        enabled: true,
+        pattern: [35]
+      }
+    },
     sounds: {
       spawn: null,
-      attack: "assets/sounds/units/tombereau-attack.mp3",
+      attack: "assets/sounds/units/chauffage-attack.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
@@ -110,6 +137,11 @@ export const UnitDefinitions = {
     canMove: false,
     canAttack: true,
     attackAnimation: "iceWind",
+    effects: {
+      passiveDamageArea: 40,
+      passiveDamageTick: 5,
+      passiveDamage: 70
+    },
     sounds: {
       spawn: null,
       attack: "assets/sounds/units/brumisateur-attack.mp3",
@@ -189,9 +221,6 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "spinSlash",
-    effects: {
-      knockback: 30
-    },
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
       attack: "assets/sounds/units/motobineuse-attack.mp3",
@@ -261,13 +290,13 @@ export const UnitDefinitions = {
     category: "unit",
     id: "minipelle",
     name: "Minipelle sur chenilles",
-    description: "Description manquante",
+    description: "Une minipelle rapide et puissante qui régénère ses points de vie avec le temps.",
     rarity: 1,
     sprite: "assets/loxams/Minipelle sur chenilles.png",
     renderScale: 1.0,
     cost: 5,
     hp: 300,
-    damage: 100,
+    damage: 10,
     attackSpeed: 1,
     movementSpeed: 50,
     attackRange: 50,
@@ -277,8 +306,8 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "metalSlash",
     effects: {
-      passiveHeal: 20,
-      knockback: 60
+      passiveHeal: 30,
+      knockback: 40
     },
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
@@ -306,6 +335,9 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "projectile",
+    effects: {
+      knockback: 10
+    },
     projectile: {
       type: "scrapProjectile",
       travelDuration: {
@@ -411,6 +443,9 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "metalSlash",
+    effects: {
+      knockback: 40
+    },
     sounds: {
       spawn: "assets/sounds/units/brumisateur-spawn.mp3",
       attack: "assets/sounds/units/minipelle-attack.mp3",
@@ -447,13 +482,13 @@ export const UnitDefinitions = {
     category: "unit",
     id: "fendeuse",
     name: "Fendeuse thermique",
-    description: "Cette fendeuse de bûches thermique autorise le fendage de bûches épaisses allant jusqu'à 1m de diamètre, à la verticale. Placée sur une remorque routière elle permet un acheminement sur tous les sites aisé.",
+    description: "Cette fendeuse de bûches thermique projette des bûches épaisses allant jusqu'à 1m de diamètre.",
     rarity: 0,
     sprite: "assets/loxams/Fendeuse thermique.png",
     renderScale: 0.85,
     cost: 2,
-    hp: 150,
-    damage: 80,
+    hp: 100,
+    damage: 30,
     attackSpeed: 0.3,
     movementSpeed: 20,
     attackRange: 120,
@@ -462,6 +497,9 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "projectile",
+    effects: {
+      knockback: 30
+    },
     projectile: {
       type: "spinningLogProjectile",
       spriteSheet: {
