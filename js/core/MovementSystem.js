@@ -159,11 +159,19 @@ export const MovementSystem = {
     const nx = dx / length;
     const ny = dy / length;
 
+    // apply knockbackResistance
+    const resistance = target.knockbackResistance || 0
+    const effectiveDistance = distance - resistance;
+
+    if (effectiveDistance <= 0) {
+      return;
+    }
+
     target.knockbackState = {
       startX: target.x,
       startY: target.y,
-      endX: target.x + nx * distance,
-      endY: target.y + ny * distance,
+      endX: target.x + nx * effectiveDistance,
+      endY: target.y + ny * effectiveDistance,
       elapsed: 0,
       duration: 0.18
     };

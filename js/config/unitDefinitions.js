@@ -112,6 +112,9 @@ export const UnitDefinitions = {
     canMove: false,
     canAttack: true,
     attackAnimation: "coalShot",
+    effects: {
+      knockback: 40
+    },
     aoeRadius: 80,
     aoeCenter: "target",
     sounds: {
@@ -136,7 +139,7 @@ export const UnitDefinitions = {
     targetType: "ground",
     canMove: false,
     canAttack: true,
-    attackAnimation: "iceWind",
+    attackAnimation: "lightSpurt",
     effects: {
       passiveDamageArea: 40,
       passiveDamageTick: 5,
@@ -159,7 +162,6 @@ export const UnitDefinitions = {
     renderScale: 0.65,
     cost: 4,
     hp: 400,
-    armor: 5,
     damage: 25,
     attackSpeed: 1.2,
     movementSpeed: 20,
@@ -169,9 +171,6 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "projectile",
-    effects: {
-      lifesteal: 30
-    },
     projectile: {
       type: "toxicProjectile",
       spriteSheet: {
@@ -241,6 +240,8 @@ export const UnitDefinitions = {
     renderScale: 1.2,
     cost: 6,
     hp: 2000,
+    armor: 10,
+    knockbackResistance: 40,
     damage: 60,
     attackSpeed: 0.7,
     movementSpeed: 20,
@@ -299,6 +300,7 @@ export const UnitDefinitions = {
     renderScale: 1.0,
     cost: 5,
     hp: 300,
+    knockbackResistance: 10,
     damage: 10,
     attackSpeed: 1,
     movementSpeed: 50,
@@ -309,7 +311,6 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "metalSlash",
     effects: {
-      recoil: 40,
       passiveHeal: 30,
       knockback: 40
     },
@@ -330,6 +331,8 @@ export const UnitDefinitions = {
     renderScale: 1.25,
     cost: 7,
     hp: 800,
+    armor: 20,
+    knockbackResistance: 60,
     damage: 150,
     attackSpeed: 0.3,
     movementSpeed: 20,
@@ -340,7 +343,7 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "projectile",
     effects: {
-      recoil: 50,
+      recoil: 10,
       knockback: 10
     },
     projectile: {
@@ -439,6 +442,7 @@ export const UnitDefinitions = {
     cost: 6,
     hp: 740,
     armor: 10,
+    knockbackResistance: 40,
     damage: 100,
     attackSpeed: 0.5,
     movementSpeed: 40,
@@ -449,7 +453,8 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "metalSlash",
     effects: {
-      knockback: 40
+      lifesteal: 10,
+      knockback: 70
     },
     sounds: {
       spawn: "assets/sounds/units/brumisateur-spawn.mp3",
@@ -503,7 +508,7 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "projectile",
     effects: {
-      recoil: 30
+      knockback: 80
     },
     projectile: {
       type: "spinningLogProjectile",
@@ -547,6 +552,8 @@ export const UnitDefinitions = {
     renderScale: 1.5,
     cost: 12,
     hp: 1500,
+    armor: 20,
+    knockbackResistance: 100,
     attackSpeed: 0.3,
     movementSpeed: 20,
     attackRange: 130,

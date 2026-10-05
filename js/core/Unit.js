@@ -38,6 +38,7 @@ export class Unit {
     this.hp = stats.hp;
     this.damage = stats.damage;
     this.armor = stats.armor || 0;
+    this.knockbackResistance = definition.knockbackResistance ?? 0;
     this.attackSpeed = stats.attackSpeed;
     this.movementSpeed = stats.movementSpeed;
     this.attackRange = stats.attackRange;
