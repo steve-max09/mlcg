@@ -4,8 +4,8 @@ export const MovementSystem = {
       if (unit.isDead) continue;
 
       this.updateKnockback(unit, deltaSeconds, arenaSize);
-      unit.updateFreeze(deltaSeconds);
-
+      unit.updateStatusEffects(deltaSeconds);
+      
       unit.movementLockTimer = Math.max(0, unit.movementLockTimer - deltaSeconds);
 
       if (unit.isFrozen) continue;

@@ -86,5 +86,26 @@ export const ItemDefinitions = {
       attackSpeedBoost: 0.6,
       damageBoost: 50
     }
+  },
+  eponge: {
+    id: "eponge",
+    name: "Éponge cimentier grise",
+    description: "Une éponge en mousse polyuréthane pour rester propre en détruisant les unités ennemies.",
+    sprite: "assets/items/eponge.png",
+    rarity: 0,
+    effects: {
+      targetTypeChange: "ground",
+      passiveHeal: 15
+    }
+  },
+  aspirateur: {
+    id: "aspirateur",
+    name: "Aspirateur eau et poussières",
+    description: "Cuve structofoam - NUMATIC - WVD1800DH-2 avec entonnoir obturateur et suceur.",
+    sprite: "assets/items/aspirateur.png",
+    rarity: 1,
+    effects: {
+      lifesteal: 30
+    }
   }
 };

@@ -240,7 +240,7 @@ export const UnitDefinitions = {
     renderScale: 1.2,
     cost: 6,
     hp: 2000,
-    armor: 10,
+    armor: 0,
     knockbackResistance: 40,
     damage: 60,
     attackSpeed: 0.7,
@@ -251,9 +251,14 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "groundSmash",
+    effects: {
+      slowOnSpawnArea: 200,
+      slowOnSpawnAmount: 50,
+      slowOnSpawnDuration: 4
+    },
     attackFeedback: {
       vibrateOnImpact: true,
-      vibrationPattern: [70, 35, 90]
+      vibrationPattern: [35, 35, 35]
     },
     aoeRadius: 70,
     aoeCenter: "self",
@@ -274,7 +279,7 @@ export const UnitDefinitions = {
     renderScale: 0.85,
     cost: 5,
     hp: 200,
-    damage: 110,
+    damage: 10,
     attackSpeed: 0.5,
     movementSpeed: 30,
     attackRange: 130,
@@ -283,6 +288,10 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "grassSpurt",
+    effects: {
+      slowTargetsAmount: 40,
+      slowTargetsDuration: 5.5
+    },
     sounds: {
       spawn: "assets/sounds/units/broyeur-spawn.mp3",
       attack: "assets/sounds/units/broyeur-attack.mp3",
@@ -386,7 +395,7 @@ export const UnitDefinitions = {
     renderScale: 0.65,
     cost: 4,
     hp: 130,
-    damage: 70,
+    damage: 7,
     attackSpeed: 0.8,
     movementSpeed: 30,
     attackRange: 100,
@@ -394,10 +403,12 @@ export const UnitDefinitions = {
     targetType: "any",
     canMove: true,
     canAttack: true,
-    triggeredAbilities: ["spawnFreeze"],
-    spawnFreezeRadius: 100,
-    spawnFreezeDuration: 3.5,
     attackAnimation: "iceWind",
+    effects: {
+      freezeOnSpawnArea: 170,
+      freezeOnSpawnDuration: 2,
+      freezeTargetsDuration: 1.5
+    },
     sounds: {
       spawn: "assets/sounds/units/climatiseur-spawn.mp3",
       attack: "assets/sounds/units/climatiseur-attack.mp3",
@@ -435,7 +446,7 @@ export const UnitDefinitions = {
     category: "unit",
     id: "chariot",
     name: "Chariot téléscopique diesel compact",
-    description: "Description manquante",
+    description: "Un grand chariot qui priorise les dégâts sur les bâtiments ennemis.",
     rarity: 0,
     sprite: "assets/loxams/Chariot téléscopique diesel compact.png",
     renderScale: 1.25,
@@ -445,16 +456,20 @@ export const UnitDefinitions = {
     knockbackResistance: 40,
     damage: 100,
     attackSpeed: 0.5,
-    movementSpeed: 40,
+    movementSpeed: 20,
     attackRange: 60,
     hitboxRadius: 26,
-    targetType: "any",
+    targetType: "buildings",
     canMove: true,
     canAttack: true,
     attackAnimation: "metalSlash",
     effects: {
       lifesteal: 10,
       knockback: 70
+    },
+    vibration: {
+      enabled: true,
+      pattern: [35]
     },
     sounds: {
       spawn: "assets/sounds/units/brumisateur-spawn.mp3",
@@ -500,8 +515,8 @@ export const UnitDefinitions = {
     hp: 100,
     damage: 30,
     attackSpeed: 0.3,
-    movementSpeed: 20,
-    attackRange: 120,
+    movementSpeed: 50,
+    attackRange: 80,
     hitboxRadius: 22,
     targetType: "any",
     canMove: true,
@@ -528,10 +543,6 @@ export const UnitDefinitions = {
         },
         displayScale: 1,
         offset: { x: 6, y: 6, random: true }
-      },
-      vibration: {
-        enabled: true,
-        pattern: [35]
       }
     },
     sounds: {
@@ -575,7 +586,7 @@ export const UnitDefinitions = {
       },
       vibration: {
         enabled: true,
-        pattern: [25]
+        pattern: [50]
       }
     },
     sounds: {

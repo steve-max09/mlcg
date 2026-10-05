@@ -34,6 +34,15 @@ export class Tower {
 
     this.target = null;
 
+    // état frozen
+    this.isFrozen = false;
+    this.freezeTimer = 0;
+
+    // état slow
+    this.baseAttackSpeed = this.attackSpeed;
+    this.slowAttackAmount = 0;
+    this.slowAttackTimer = 0;
+
     this.isDestroyed = false;
     this.isDead = false;
     this.sounds = definition.sounds || {};
@@ -67,5 +76,37 @@ export class Tower {
     const dx = this.x - other.x;
     const dy = this.y - other.y;
     return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  applyFreeze(duration) {
+    this.isFrozen = true;
+    this.freezeTimer = Math.max(this.freezeTimer, duration);
+  }
+
+  applySlow(amount, duration) {
+    this.slowAttackAmount = Math.max(this.slowAttackAmount, amount);
+    this.slowAttackTimer = Math.max(this.slowAttackTimer, duration);
+    this.attackSpeed = this.baseAttackSpeed * (1 - (this.slowAttackAmount * 2) / 100);
+  }
+
+  updateStatusEffects(deltaSeconds) {
+    if (this.isFrozen) {
+      this.freezeTimer -= deltaSeconds;
+
+      if (this.freezeTimer <= 0) {
+        this.isFrozen = false;
+        this.freezeTimer = 0;
+      }
+    }
+
+    if (this.slowAttackTimer > 0) {
+      this.slowAttackTimer -= deltaSeconds;
+
+      if (this.slowAttackTimer <= 0) {
+        this.slowAttackTimer = 0;
+        this.slowAttackAmount = 0;
+        this.attackSpeed = this.baseAttackSpeed;
+      }
+    }
   }
 }

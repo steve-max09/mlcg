@@ -472,6 +472,7 @@ export const AnimationSystem = {
   },
 
   playSpawnFreeze(arenaElement, unit, radius) {
+    if (!arenaElement) return;
     const ring = document.createElement("div");
     ring.className = "freeze-ring";
     ring.style.left = `${unit.x}px`;
@@ -481,10 +482,27 @@ export const AnimationSystem = {
     setTimeout(() => ring.remove(), 700);
   },
 
+  // vague de ralentissement
+  playSlowArea(arenaElement, unit, radius) {
+    if (!arenaElement) return;
+
+    const ring = document.createElement("div");
+
+    ring.className = "slow-ring";
+    ring.style.left = `${unit.x}px`;
+    ring.style.top = `${unit.y}px`;
+    ring.style.setProperty("--slow-radius", `${radius * 2}px`);
+
+    arenaElement.appendChild(ring);
+
+    setTimeout(() => ring.remove(), 700);
+  },
+
   playLightSpurt(el, attacker, target) {
     this.spawnProjectileBeam(el, attacker, target, "light-spurt");
   },
 
+  // attaques projectiles
   playProjectileAttack(el, attacker, target, audioManager) {
     const projectileConfig = attacker.projectile;
 

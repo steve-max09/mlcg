@@ -22,6 +22,7 @@ export class Renderer {
     el.style.top = `${unit.y}px`;
 
     el.classList.toggle("frozen", unit.isFrozen);
+    el.classList.toggle("slowed", unit.slowTimer > 0);
 
     const hpRatio = Math.max(0, unit.hp / unit.maxHp) * 100;
     el.querySelector(".hp-fill").style.width = `${hpRatio}%`;
@@ -45,6 +46,9 @@ export class Renderer {
       this.arenaElement.appendChild(el);
       this.towerElements.set(tower.instanceId, el);
     }
+
+    el.classList.toggle("frozen", tower.isFrozen);
+    el.classList.toggle("slowed", tower.slowTimer > 0);
 
     el.style.setProperty("--unit-scale", tower.renderScale ?? 1);
 

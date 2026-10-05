@@ -76,6 +76,14 @@ export class Unit {
     this.isFrozen = false;
     this.freezeTimer = 0;
 
+    // effet ralentissement
+    this.slowTimer = 0;
+    this.slowAmount = 0;
+    this.baseMovementSpeed = this.movementSpeed;
+    this.slowAttackTimer = 0;
+    this.slowAttackAmount = 0;
+    this.baseAttackSpeed = this.attackSpeed;
+
     // attaques continues (inferno)
     this.lockedTarget = null;
     this.continuousDamageAccumulator = 0;
@@ -116,11 +124,50 @@ export class Unit {
   }
 
   updateFreeze(deltaSeconds) {
-    if (!this.isFrozen) return;
-    this.freezeTimer -= deltaSeconds;
-    if (this.freezeTimer <= 0) {
-      this.isFrozen = false;
-      this.freezeTimer = 0;
+    this.updateStatusEffects(deltaSeconds);
+  }
+
+  applySlow(amount, duration) {
+    this.slowAmount = Math.max(this.slowAmount, amount);
+    this.slowTimer = Math.max(this.slowTimer, duration);
+    this.movementSpeed = Math.max(0, this.baseMovementSpeed - this.slowAmount);
+
+    this.slowAttackAmount = Math.max(this.slowAttackAmount || 0, amount);
+    this.slowAttackTimer = Math.max(this.slowAttackTimer || 0, duration);
+    this.attackSpeed = this.baseAttackSpeed * (1 - (this.slowAttackAmount * 2) / 100);
+  }
+
+  // mise à jour des effets (freeze, slow)
+  updateStatusEffects(deltaSeconds) {
+    // freeze
+    if (this.isFrozen) {
+      this.freezeTimer -= deltaSeconds;
+
+      if (this.freezeTimer <= 0) {
+        this.isFrozen = false;
+        this.freezeTimer = 0;
+      }
+    }
+
+    // slow (movement)
+    if (this.slowTimer > 0) {
+      this.slowTimer -= deltaSeconds;
+
+      if (this.slowTimer <= 0) {
+        this.slowTimer = 0;
+        this.slowAmount = 0;
+        this.movementSpeed = this.baseMovementSpeed;
+      }
+    }
+    // slow (attacks)
+    if (this.slowAttackTimer > 0) {
+      this.slowAttackTimer -= deltaSeconds;
+
+      if (this.slowAttackTimer <= 0) {
+        this.slowAttackTimer = 0;
+        this.slowAttackAmount = 0;
+        this.attackSpeed = this.baseAttackSpeed;
+      }
     }
   }
 }

@@ -481,10 +481,11 @@ export class DeckScreen {
       damageBoost: "Dégâts",
       unitCostReduction: "Réduction du coût",
       unitCostIncrease: "Augmentation du coût",
-      passiveDamageArea: "Zone de choc",
+      passiveDamageArea: "Zone de décharge",
       passiveDamageTick: "Fréquence",
       passiveDamage: "Intensité",
       passiveHeal: "Autoréparation",
+      lifesteal: "Absorption de PV",
       targetTypeChange: "Cible"
     };
 

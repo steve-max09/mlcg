@@ -742,12 +742,7 @@ function spawnUnit(definition, team, x, y, options = {}) {
     audioManager.play(definition.sounds.spawn);
   }
 
-  AbilitySystem.onSpawn(unit, gameState, (u, radius) => {
-    AnimationSystem.playSpawnFreeze(renderer.arenaElement, u, radius);
-    if (options.onSpawnEffect) {
-      options.onSpawnEffect(u, radius);
-    }
-  });
+  AbilitySystem.onSpawn(unit, gameState, { arenaElement: renderer.arenaElement });
 
   return unit;
 }

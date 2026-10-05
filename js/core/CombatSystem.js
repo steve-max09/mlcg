@@ -45,6 +45,7 @@ export const CombatSystem = {
 
     for (const tower of gameState.towers) {
       if (tower.isDead || !tower.canAttack) continue;
+      if (tower.isFrozen) continue;
 
       tower.attackCooldown = Math.max(0, tower.attackCooldown - deltaSeconds);
 
@@ -120,6 +121,10 @@ export const CombatSystem = {
     }
 
     const dealtDamage = typeof target.takeDamage === "function" ? target.takeDamage(damage) : 0;
+
+    if (dealtDamage > 0) {
+      this.applyTargetControlEffects(attacker, target);
+    }
 
     if (!target.isBuilding && attacker.effects?.knockback > 0 && !target.isDead && !target.isDestroyed) {
       MovementSystem.pushAwayFrom(attacker, target, attacker.effects.knockback);
@@ -202,5 +207,18 @@ export const CombatSystem = {
     if (distance <= 0 || attacker.isDead || attacker.isBuilding) return;
 
     MovementSystem.pushBackFromTarget(attacker, target, distance);
+  },
+
+  // effets freeze / slow
+  applyTargetControlEffects(attacker, target) {
+    const effects = attacker.effects || {};
+
+    if (effects.freezeTargetsDuration && typeof target.applyFreeze === "function") {
+      target.applyFreeze(effects.freezeTargetsDuration);
+    }
+
+    if (effects.slowTargetsAmount && effects.slowTargetsDuration && typeof target.applySlow === "function") {
+      target.applySlow(effects.slowTargetsAmount, effects.slowTargetsDuration);
+    }
   }
 };

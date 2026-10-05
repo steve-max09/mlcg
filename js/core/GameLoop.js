@@ -63,6 +63,10 @@ export class GameLoop {
       this.updateCampaignTimer(deltaSeconds);
     }
 
+    for (const tower of this.gameState.towers) {
+      tower.updateStatusEffects(deltaSeconds);
+    }
+
     MovementSystem.update(this.gameState, deltaSeconds, arenaSize);
 
     // effets spéciaux
