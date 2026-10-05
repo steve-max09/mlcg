@@ -83,10 +83,6 @@ export const UnitDefinitions = {
         },
         displayScale: 1,
         offset: { x: 6, y: 6, random: true }
-      },
-      vibration: {
-        enabled: true,
-        pattern: [35]
       }
     },
     sounds: {
@@ -189,10 +185,6 @@ export const UnitDefinitions = {
         },
         displayScale: 1,
         offset: { x: 6, y: 6, random: true }
-      },
-      vibration: {
-        enabled: true,
-        pattern: [35]
       }
     },
     aoeRadius: 50,
@@ -522,7 +514,7 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "projectile",
     effects: {
-      knockback: 80
+      knockback: 60
     },
     projectile: {
       type: "spinningLogProjectile",
