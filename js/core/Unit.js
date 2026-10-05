@@ -84,6 +84,10 @@ export class Unit {
     this.slowAttackAmount = 0;
     this.baseAttackSpeed = this.attackSpeed;
 
+    // explosion lors du spawn
+    this.explodeOnSpawnArea = definition.explodeOnSpawnArea || 0;
+    this.explodeOnSpawnDamage = definition.explodeOnSpawnDamage || 0;
+
     // attaques continues (inferno)
     this.lockedTarget = null;
     this.continuousDamageAccumulator = 0;

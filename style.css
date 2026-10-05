@@ -1796,6 +1796,15 @@ button {
   z-index: 20;
 }
 
+/* Couche dédiée aux effets visuels de combat SOUS les unités */
+#ground-effects-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* Animation toxic_attack.png : 9 frames de 128 x 128 px sur une ligne */
 .sprite-effect {
   position: absolute;
@@ -2180,4 +2189,54 @@ button {
   filter: sepia(0.8) saturate(1.8);
 }
 
+/* explosion au spawn */
+.spawn-explosion {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  transform:
+    translate(-50%, -50%)
+    scale(var(--explosion-scale, 1));
+  transform-origin: center;
+  background-repeat: no-repeat;
+}
+
+/* explodeOnSpawn : cercle rouge d'explosion */
+.explode-spawn-ring {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(248, 113, 113, 0.35),
+    rgba(239, 68, 68, 0.16),
+    transparent 70%
+  );
+  border: 2px solid rgba(239, 68, 68, 0.9);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 4;
+  animation: explodeSpawnExpand 0.7s ease-out backwards;
+}
+
+@keyframes explodeSpawnExpand {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.9);
+  }
+
+  45% {
+    opacity: 0.9;
+    box-shadow: 0 0 18px rgba(239, 68, 68, 0.7);
+  }
+
+  100% {
+    width: var(--explode-radius);
+    height: var(--explode-radius);
+    opacity: 0;
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0);
+  }
+}
 /* --- end effets spéciaux --- */

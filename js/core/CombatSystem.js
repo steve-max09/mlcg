@@ -161,7 +161,10 @@ export const CombatSystem = {
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist <= attacker.aoeRadius && typeof entity.takeDamage === "function") {
-        entity.takeDamage(damage);
+        const dmg = entity.takeDamage(damage);
+        if (dmg > 0) {
+          this.applyTargetControlEffects(attacker, entity);
+        }
       }
     }
   },

@@ -39,6 +39,7 @@ export class Tower {
     this.freezeTimer = 0;
 
     // état slow
+    this.slowTimer = 0;
     this.baseAttackSpeed = this.attackSpeed;
     this.slowAttackAmount = 0;
     this.slowAttackTimer = 0;
@@ -84,9 +85,10 @@ export class Tower {
   }
 
   applySlow(amount, duration) {
+    this.slowTimer = Math.max(this.slowTimer, duration);
     this.slowAttackAmount = Math.max(this.slowAttackAmount, amount);
     this.slowAttackTimer = Math.max(this.slowAttackTimer, duration);
-    this.attackSpeed = this.baseAttackSpeed * (1 - (this.slowAttackAmount * 2) / 100);
+    this.attackSpeed = Math.max(0, this.baseAttackSpeed * (1 - (this.slowAttackAmount * 2) / 100));
   }
 
   updateStatusEffects(deltaSeconds) {
@@ -99,6 +101,16 @@ export class Tower {
       }
     }
 
+    // slow (movement) (used only for css since towers don't move)
+    if (this.slowTimer > 0) {
+      this.slowTimer -= deltaSeconds;
+
+      if (this.slowTimer <= 0) {
+        this.slowTimer = 0;
+        this.slowAmount = 0;
+      }
+    }
+    // slow (attacks)
     if (this.slowAttackTimer > 0) {
       this.slowAttackTimer -= deltaSeconds;
 

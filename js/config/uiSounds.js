@@ -11,4 +11,6 @@ export const UiSounds = {
   zzap: "assets/sounds/ui/zzap.mp3",
   shortzap: "assets/sounds/ui/shortzap.mp3",
   zap: "assets/sounds/ui/zap.mp3",
+  explosion: "assets/sounds/ui/explosion.mp3",
+  rockdestroy: "assets/sounds/ui/rock-destroy.mp3"
 };

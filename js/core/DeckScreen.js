@@ -486,7 +486,10 @@ export class DeckScreen {
       passiveDamage: "Intensité",
       passiveHeal: "Autoréparation",
       lifesteal: "Absorption de PV",
-      targetTypeChange: "Cible"
+      targetTypeChange: "Cible",
+      explodeOnSpawnDamage: "Dégâts à l'invocation",
+      explodeOnSpawnArea: "Zone de dégâts",
+      // TODO: add freeze and slow effect names
     };
 
     const values = {
@@ -497,7 +500,7 @@ export class DeckScreen {
       damageBoost: (value) => `+${value}`,
       unitCostReduction: (value) => `-${value}`,
       unitCostIncrease: (value) => `+${value}`,
-      targetTypeChange: (value) => value === "buildings" ? "Bâtiments" : value === "ground" ? "Ennemis" : "Tous",
+      targetTypeChange: (value) => value === "buildings" ? "Bâtiments" : value === "ground" ? "Véhicules" : "Tous",
     };
 
     if (!this.el.itemDetailEffects) return;

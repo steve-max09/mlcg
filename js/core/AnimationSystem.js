@@ -659,4 +659,58 @@ export const AnimationSystem = {
 
     setTimeout(() => effect.remove(), 350);
   },
+
+  // explosion au spawn
+  playSpawnExplosion(arenaElement, unit, radius) {
+    const effectsLayer = arenaElement?.querySelector("#ground-effects-layer");
+
+    if (!effectsLayer) return;
+
+    const spriteSheet = {
+      image: "assets/effects/scrap-impact.png",
+      frameWidth: 128, frameHeight: 129, frameCount: 7, columns: 7, duration: 350
+    };
+
+    const explosion = document.createElement("div");
+    explosion.className = "sprite-effect spawn-explosion";
+    explosion.style.left = `${unit.x}px`;
+    explosion.style.top = `${unit.y}px`;
+    explosion.style.width = `${spriteSheet.frameWidth}px`;
+    explosion.style.height = `${spriteSheet.frameHeight}px`;
+    explosion.style.backgroundImage = `url("${spriteSheet.image}")`;
+
+    explosion.style.backgroundSize =
+      `${spriteSheet.frameWidth * spriteSheet.columns}px ` + `${spriteSheet.frameHeight}px`;
+
+    explosion.style.setProperty("--explosion-scale", `${Math.max(1, radius / 64)}`);
+
+    effectsLayer.appendChild(explosion);
+
+    this.animateSpriteSheet({
+      element: explosion,
+      frameWidth: spriteSheet.frameWidth,
+      frameHeight: spriteSheet.frameHeight,
+      frameCount: spriteSheet.frameCount,
+      duration: spriteSheet.duration,
+      columns: spriteSheet.columns
+    });
+  },
+
+  // cercle de l'explosion
+  playSpawnExplosionRing(arenaElement, unit, radius) {
+    if (!arenaElement) return;
+
+    const ring = document.createElement("div");
+
+    ring.className = "explode-spawn-ring";
+    ring.style.left = `${unit.x}px`;
+    ring.style.top = `${unit.y}px`;
+    ring.style.setProperty("--explode-radius", `${radius * 2}px`);
+
+    arenaElement.appendChild(ring);
+
+    setTimeout(() => {
+      ring.remove();
+    }, 700);
+  }
 };

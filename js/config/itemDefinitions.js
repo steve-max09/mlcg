@@ -50,9 +50,9 @@ export const ItemDefinitions = {
     sprite: "assets/items/grp-electro.png",
     rarity: 2,
     effects: {
+      passiveDamage: 70,
       passiveDamageArea: 60,
-      passiveDamageTick: 0.8,
-      passiveDamage: 70
+      passiveDamageTick: 0.8
     }
   },
   molette: {
@@ -106,6 +106,17 @@ export const ItemDefinitions = {
     rarity: 1,
     effects: {
       lifesteal: 30
+    }
+  },
+  pic: {
+    id: "pic",
+    name: "Pic pour démolition thermique et pneumatique",
+    description: "Un pic à emmanchement hexagonal 19 x 50 mm, idéal pour faire de gros dégâts de démolition.",
+    sprite: "assets/items/pic.png",
+    rarity: 1,
+    effects: {
+      explodeOnSpawnDamage: 80,
+      explodeOnSpawnArea: 120
     }
   }
 };

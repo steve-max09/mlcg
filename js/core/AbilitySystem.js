@@ -11,6 +11,10 @@ export const AbilitySystem = {
     if (effects.slowOnSpawnArea) {
       this.applySlowArea(unit, gameState, effects.slowOnSpawnArea, effects.slowOnSpawnAmount || 20, effects.slowOnSpawnDuration || 2.5, options);
     }
+
+    if (effects.explodeOnSpawnArea > 0 && effects.explodeOnSpawnDamage > 0) {
+      this.applySpawnExplosion(unit, gameState, effects.explodeOnSpawnArea, effects.explodeOnSpawnDamage, options);
+    }
   },
 
   applyFreezeArea(source, gameState, radius, duration, options = {}) {
@@ -35,6 +39,29 @@ export const AbilitySystem = {
     }
 
     AnimationSystem.playSlowArea(options.arenaElement, source, radius);
+  },
+
+  applySpawnExplosion(source, gameState, explodeOnSpawnArea, explodeOnSpawnDamage, options) {
+    const explosionRadius = explodeOnSpawnArea;
+    const explosionDamage = explodeOnSpawnDamage;
+
+    options.audioManager.play(options.audioManager.uiSounds.rockdestroy);
+    AnimationSystem.playSpawnExplosion(options.arenaElement, source, explosionRadius);
+    AnimationSystem.playSpawnExplosionRing(options.arenaElement, source, explosionRadius);
+
+    const enemies = this.getEnemiesInRadius(source, gameState, explosionRadius);
+
+    for (const enemy of enemies) {
+      if (enemy.isDead || enemy.isDestroyed) {
+        continue;
+      }
+
+      const distance = source.distanceTo(enemy);
+
+      if (distance <= explosionRadius) {
+        enemy.takeDamage(explosionDamage);
+      }
+    }
   },
 
   getEnemiesInRadius(source, gameState, radius) {

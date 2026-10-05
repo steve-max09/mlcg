@@ -742,7 +742,7 @@ function spawnUnit(definition, team, x, y, options = {}) {
     audioManager.play(definition.sounds.spawn);
   }
 
-  AbilitySystem.onSpawn(unit, gameState, { arenaElement: renderer.arenaElement });
+  AbilitySystem.onSpawn(unit, gameState, { arenaElement: renderer.arenaElement, audioManager: audioManager });
 
   return unit;
 }

@@ -252,9 +252,11 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "groundSmash",
     effects: {
-      slowOnSpawnArea: 200,
+      slowOnSpawnArea: 150,
       slowOnSpawnAmount: 50,
-      slowOnSpawnDuration: 4
+      slowOnSpawnDuration: 4,
+      explodeOnSpawnArea: 100,
+      explodeOnSpawnDamage: 40
     },
     attackFeedback: {
       vibrateOnImpact: true,
@@ -288,10 +290,6 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "grassSpurt",
-    effects: {
-      slowTargetsAmount: 40,
-      slowTargetsDuration: 5.5
-    },
     sounds: {
       spawn: "assets/sounds/units/broyeur-spawn.mp3",
       attack: "assets/sounds/units/broyeur-attack.mp3",
@@ -352,8 +350,9 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "projectile",
     effects: {
-      recoil: 10,
-      knockback: 10
+      knockback: 10,
+      slowTargetsAmount: 10,
+      slowTargetsDuration: 3.5
     },
     projectile: {
       type: "scrapProjectile",
