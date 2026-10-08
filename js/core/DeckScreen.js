@@ -488,9 +488,9 @@ export class DeckScreen {
       lifesteal: "Absorption de PV",
       targetTypeChange: "Cible",
       explodeOnSpawnDamage: "Dégâts à l'invocation",
-      explodeOnSpawnArea: "Zone de dégâts (invocation)",
+      explodeOnSpawnArea: "Zone de dégâts",
       explodeOnDeathDamage: "Dégâts de défaillance",
-      explodeOnDeathArea: "Zone de dégâts (défaillance)",
+      explodeOnDeathArea: "Zone de dégâts",
       // TODO: add freeze and slow effect names
     };
 

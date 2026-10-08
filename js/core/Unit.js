@@ -55,9 +55,16 @@ export class Unit {
     this.aoeRadius = definition.aoeRadius || 0;
     this.aoeCenter = definition.aoeCenter || "target";
 
+    // sons
     this.audioManager = audioManager;
     this.sounds = definition.sounds || {};
+
+    // vibrations
+    this.vibration = definition.vibration;
+
+    // projectile
     this.projectile = definition.projectile || null;
+
     // attaques continues (inferno)
     this.continuousAttack = definition.continuousAttack || null;
 

@@ -30,16 +30,11 @@ export const UnitDefinitions = {
         },
         displayScale: 1,
         offset: { x: 6, y: 6, random: true }
-      },
-      vibration: {
-        enabled: true,
-        pattern: [35]
       }
     },
     sounds: {
       spawn: null,
-      projectileLaunch: "assets/sounds/units/tombereau-attack.mp3",
-      //projectileImpact: "assets/sounds/units/generic-impact.mp3",
+      projectileLaunch: "assets/sounds/units/tower-attack.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
@@ -82,8 +77,8 @@ export const UnitDefinitions = {
     },
     sounds: {
       spawn: null,
-      projectileLaunch: "assets/sounds/units/slime-attack.mp3",
-      projectileImpact: "assets/sounds/units/slime-impact.mp3",
+      projectileLaunch: "assets/sounds/units/barbie-attack.mp3",
+      projectileImpact: "assets/sounds/units/barbie-impact.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
@@ -118,16 +113,11 @@ export const UnitDefinitions = {
         },
         displayScale: 1,
         offset: { x: 6, y: 6, random: true }
-      },
-      vibration: {
-        enabled: true,
-        pattern: [35]
       }
     },
     sounds: {
       spawn: null,
-      projectileLaunch: "assets/sounds/units/tombereau-attack.mp3",
-      //projectileImpact: "assets/sounds/units/generic-impact.mp3",
+      projectileLaunch: "assets/sounds/units/tower-attack.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
@@ -166,10 +156,6 @@ export const UnitDefinitions = {
         },
         displayScale: 1,
         offset: { x: 6, y: 6, random: true }
-      },
-      vibration: {
-        enabled: true,
-        pattern: [35]
       }
     },
     aoeRadius: 50,
@@ -208,10 +194,6 @@ export const UnitDefinitions = {
       startSound: {
         src: "assets/sounds/units/araignee-attack.mp3",
         volume: 0.6
-      },
-      vibration: {
-        enabled: true,
-        pattern: [35]
       }
     },
     effects: {
@@ -229,7 +211,7 @@ export const UnitDefinitions = {
     category: "unit",
     id: "chauffage",
     name: "Chauffage mobile fioul 50000 kcal/h",
-    description: "Description manquante",
+    description: "Un chauffage efficace qui explose quand il est détruit.",
     rarity: 0,
     sprite: "assets/loxams/Chauffage mobile fioul 50 000 kcal.png",
     renderScale: 0.65,
@@ -297,7 +279,7 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "spinSlash",
     sounds: {
-      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      spawn: "assets/sounds/units/motobineuse-spawn.mp3",
       attack: "assets/sounds/units/motobineuse-attack.mp3",
       death: "assets/sounds/units/motobineuse-death.mp3"
     }
@@ -338,9 +320,9 @@ export const UnitDefinitions = {
     aoeRadius: 70,
     aoeCenter: "self",
     sounds: {
-      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      spawn: "assets/sounds/units/compacteur-spawn.mp3",
       attack: "assets/sounds/units/compacteur-attack.mp3",
-      death: "assets/sounds/units/chauffage-death.mp3"
+      death: "assets/sounds/units/compacteur-death.mp3"
     }
   },
 
@@ -366,7 +348,7 @@ export const UnitDefinitions = {
     sounds: {
       spawn: "assets/sounds/units/broyeur-spawn.mp3",
       attack: "assets/sounds/units/broyeur-attack.mp3",
-      death: "assets/sounds/units/chauffage-death.mp3"
+      death: "assets/sounds/units/broyeur-death.mp3"
     }
   },
 
@@ -394,9 +376,9 @@ export const UnitDefinitions = {
       knockback: 10
     },
     sounds: {
-      spawn: "assets/sounds/units/chauffage-spawn.mp3",
+      spawn: "assets/sounds/units/minipelle-spawn.mp3",
       attack: "assets/sounds/units/minipelle-attack.mp3",
-      death: "assets/sounds/units/chauffage-death.mp3"
+      death: "assets/sounds/units/generic-death.mp3"
     }
   },
   
@@ -450,9 +432,9 @@ export const UnitDefinitions = {
     aoeCenter: "target",
     sounds: {
       spawn: "assets/sounds/units/tombereau-spawn.mp3",
-      projectileLaunch: "assets/sounds/units/tombereau-attack.mp3",
-      projectileImpact: "assets/sounds/units/tombereau-attack.mp3",
-      death: "assets/sounds/units/chauffage-death.mp3"
+      projectileLaunch: "assets/sounds/units/tombereau-launch.mp3",
+      projectileImpact: "assets/sounds/units/tombereau-hit.mp3",
+      death: "assets/sounds/units/generic-death.mp3"
     }
   },
 
@@ -538,14 +520,10 @@ export const UnitDefinitions = {
       lifesteal: 10,
       knockback: 70
     },
-    vibration: {
-      enabled: true,
-      pattern: [35]
-    },
     sounds: {
-      spawn: "assets/sounds/units/brumisateur-spawn.mp3",
-      attack: "assets/sounds/units/minipelle-attack.mp3",
-      death: "assets/sounds/units/brumisateur-death.mp3"
+      spawn: "assets/sounds/units/chariot-spawn.mp3",
+      attack: "assets/sounds/units/chariot-attack.mp3",
+      death: "assets/sounds/units/generic-death.mp3"
     },
   },
 
@@ -568,9 +546,9 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "lightSpurt",
     sounds: {
-      spawn: "assets/sounds/units/brumisateur-spawn.mp3",
-      attack: "assets/sounds/units/brumisateur-attack.mp3",
-      death: "assets/sounds/units/brumisateur-death.mp3"
+      spawn: "assets/sounds/units/mat-spawn.mp3",
+      attack: "assets/sounds/units/mat-attack.mp3",
+      death: "assets/sounds/units/generic-death.mp3"
     },
   },
 
@@ -620,7 +598,7 @@ export const UnitDefinitions = {
       spawn: "assets/sounds/units/fendeuse-spawn.mp3",
       projectileLaunch: "assets/sounds/units/fendeuse-attack.mp3",
       projectileImpact: "assets/sounds/units/fendeuse-hit.mp3",
-      death: "assets/sounds/units/chauffage-death.mp3"
+      death: "assets/sounds/units/generic-death.mp3"
     }
   },
 
@@ -654,15 +632,11 @@ export const UnitDefinitions = {
       startSound: {
         src: "assets/sounds/units/araignee-attack.mp3",
         volume: 0.6
-      },
-      vibration: {
-        enabled: true,
-        pattern: [50]
       }
     },
     sounds: {
-      spawn: "assets/sounds/units/fendeuse-spawn.mp3",
-      death: "assets/sounds/units/chauffage-death.mp3"
+      spawn: "assets/sounds/units/araignee-spawn.mp3",
+      death: "assets/sounds/units/araignee-death.mp3"
     }
   }
 };

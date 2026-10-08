@@ -6,7 +6,7 @@ export const AnimationSystem = {
       return Promise.resolve();
     }
     
-    if (attacker.vibration?.enabled) {
+    if (attacker.vibration?.enabled) {     
       this.playVibration(attacker.vibration.pattern);
     }
 
@@ -200,7 +200,6 @@ export const AnimationSystem = {
     if (!("vibrate" in navigator)) return;
 
     try {
-      console.log("vibrating")
       navigator.vibrate(pattern);
     } catch {
       // refus vibration.
@@ -373,7 +372,7 @@ export const AnimationSystem = {
     const rect = el.getBoundingClientRect();
     const arenaRect = arena.getBoundingClientRect();
     const x = rect.left - arenaRect.left + rect.width / 2;
-    const y = rect.top - arenaRect.top + rect.height;
+    const y = rect.top - arenaRect.top + rect.height / 2;
 
     const shock = document.createElement("div");
     shock.className = "ground-shock";
