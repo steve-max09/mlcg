@@ -17,6 +17,22 @@ export const AbilitySystem = {
     }
   },
 
+  // helper pour trouver les ennemis dans un rayon
+  getEnemiesInRadius(source, gameState, radius) {
+    const enemyUnits = gameState.getEnemiesOf(source.team);
+    const enemyTowers = gameState.getTowersOf(source.team === "player" ? "enemy" : "player");
+
+    return [...enemyUnits, ...enemyTowers].filter((enemy) => {
+      if (enemy.isDead || enemy.isDestroyed) return false;
+      
+      const dx = enemy.x - source.x;
+      const dy = enemy.y - source.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      return distance <= radius;
+    });
+  },
+
   applyFreezeArea(source, gameState, radius, duration, options = {}) {
     const enemies = this.getEnemiesInRadius(source, gameState, radius);
 
@@ -64,22 +80,24 @@ export const AbilitySystem = {
     }
   },
 
-  getEnemiesInRadius(source, gameState, radius) {
-    const enemyUnits =
-      gameState.getEnemiesOf(source.team);
+  applyDeathExplosion(source, gameState, radius, damage, options = {}) {
+    options.audioManager.play(options.audioManager.uiSounds.explosion);
+    AnimationSystem.playVibration([30]);
+    AnimationSystem.playDeathExplosion(options.arenaElement, source, radius);
+    AnimationSystem.playDeathExplosionRing(options.arenaElement, source, radius);
+    
+    const enemies = this.getEnemiesInRadius(source, gameState, radius);
 
-    const enemyTowers = gameState.getTowersOf(source.team === "player" ? "enemy" : "player");
-
-    return [...enemyUnits, ...enemyTowers].filter((enemy) => {
+    for (const enemy of enemies) {
       if (enemy.isDead || enemy.isDestroyed) {
-        return false;
+        continue;
       }
 
-      const dx = enemy.x - source.x;
-      const dy = enemy.y - source.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+      const distance = source.distanceTo(enemy);
 
-      return distance <= radius;
-    });
+      if (distance <= radius) {
+        enemy.takeDamage(damage);
+      }
+    }
   }
 };

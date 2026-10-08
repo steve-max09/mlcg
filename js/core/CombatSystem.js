@@ -47,6 +47,17 @@ export const CombatSystem = {
       if (tower.isDead || !tower.canAttack) continue;
       if (tower.isFrozen) continue;
 
+      if (tower.continuousAttack) {
+        if (!tower.target || this.isTargetInvalid(tower.target)
+          || tower.distanceTo(tower.target) > (tower.continuousAttack.maxRange || tower.attackRange)) {
+          tower.target = this.findClosestTargetInRange(tower, gameState);
+        }
+        
+        this.updateContinuousAttack(tower, gameState, deltaSeconds);
+
+        continue;
+      }
+
       tower.attackCooldown = Math.max(0, tower.attackCooldown - deltaSeconds);
 
       const target = this.findClosestTargetInRange(tower, gameState);
@@ -63,7 +74,6 @@ export const CombatSystem = {
       }
     }
 
-    gameState.removeDeadUnits();
     gameState.checkVictory();
   },
 

@@ -1,7 +1,7 @@
 const STORAGE_KEY = "mlcg_player_progress";
 
-const DEFAULT_UNLOCKED = ["fendeuse", "motobineuse", "compacteur", "minipelle", "base_usine", "tower_standard"];
-const DEFAULT_DECK = ["fendeuse", "motobineuse", "compacteur", "minipelle"];
+const DEFAULT_UNLOCKED = ["fendeuse", "motobineuse", "chauffage", "minipelle", "base_usine", "tower_standard"];
+const DEFAULT_DECK = ["fendeuse", "motobineuse", "chauffage", "minipelle"];
 
 const DEFAULT_BASE_ID = "base_usine";
 const DEFAULT_LEFT_TOWER_ID = "tower_standard";

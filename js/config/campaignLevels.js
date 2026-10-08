@@ -11,15 +11,15 @@ export const CampaignLevels = [
       {
         character: "Le Loup",
         sprite: "assets/ui/loup.png",
-        text: "Salut, chef ! Content de vous revoir. Nos ennemis ont établi une base juste en face de chez nous. Montrons-leur de quel bois on se chauffe !"
+        text: "Salut, chef! Content de vous revoir. Les Loxams rivaux ont établi une base juste en face de chez nous. Montrons-leur de quel bois on se chauffe!"
       }
     ]
   },
 
   {
     id: 2,
-    name: "Premiers travaux",
-    description: "Détruisez la base ennemie.",
+    name: "Défendre notre territoire",
+    description: "Détruisez la base ennemie. Ces intrus n'ont rien à faire ici.",
     objective: "destroyBase",
     map: "flat",
     unlockedByDefault: false,
@@ -31,26 +31,23 @@ export const CampaignLevels = [
     },
 
     ai: {
-      unitPool: ["chauffage", "motobineuse", "fendeuse"],
+      unitPool: ["chauffage", "motobineuse", "minipelle"],
       startingEnergy: 0,
-      decisionInterval: 3.5,
+      decisionInterval: 4.5,
       energyRegenRate: 1,
       energyRegenInterval: 1700
     },
 
     reward: {
       yanga: 50,
-      chest: {
-        chestId: "commonChest",
-        quantity: 1
-      }
+      chest: { chestId: "commonChest", quantity: 1 }
     }
   },
 
   {
     id: 3,
-    name: "Renforts industriels",
-    description: "Survivez aux vagues ennemies.",
+    name: "Renforts ennemis",
+    description: "Ils ont mis la main sur un compacteur! Survivez aux vagues ennemies.",
     objective: "surviveWaves",
     map: "flat",
     unlockedByDefault: false,
@@ -62,30 +59,31 @@ export const CampaignLevels = [
       },
       {
         delay: 10,
-        units: ["motobineuse", "fendeuse", "chauffage", "motobineuse",]
+        units: ["fendeuse", "chauffage"]
       },
       {
-        delay: 16,
-        units: ["chauffage", "chauffage", "chauffage", "chauffage", "chauffage"],
+        delay: 15,
+        boss: "compacteur"
       },
       {
         delay: 20,
-        boss: "compacteur"
-      }
+        units: ["chauffage", "chauffage", "chauffage", "chauffage", "chauffage"],
+      },
     ],
 
     surviveDuration: 60,
 
     reward: {
       yanga: 50,
+      chest: { chestId: "commonChest", quantity: 1 },
       unlockUnit: "compacteur"
     }
   },
 
   {
     id: 4,
-    name: "Passage de la rivière",
-    description: "Détruisez la base ennemie sur une nouvelle carte.",
+    name: "La Maison de Barbie",
+    description: "Une autre base ennemie a été repérée. Attention aux tours electrisées!",
     objective: "destroyBase",
     map: "flat",
     unlockedByDefault: false,
@@ -93,19 +91,19 @@ export const CampaignLevels = [
     enemyStructures: {
       baseId: "base_barbie",
       leftTowerId: "tower_mega",
-      rightTowerId: "tower_coalshot"
+      rightTowerId: "tower_mega"
     },
 
     ai: {
-      unitPool: ["chauffage", "compacteur", "fendeuse"],
+      unitPool: ["chauffage", "compacteur", "fendeuse", "motobineuse", "chariot", "broyeur"],
       startingEnergy: 0,
-      decisionInterval: 2.5,
+      decisionInterval: 5,
       energyRegenRate: 1,
       energyRegenInterval: 1700
     },
 
     reward: {
-      yanga: 50,
+      yanga: 150,
       unlockUnit: "base_barbie"
     }
   },
@@ -123,12 +121,12 @@ export const CampaignLevels = [
       {
         character: "Le Loup",
         sprite: "assets/ui/loup.png",
-        text: "Bien joué chef !"
+        text: "Bien joué chef!"
       },
       {
         character: "Cheval de la sagesse",
         sprite: "assets/ui/horse.png",
-        text: "Méfions-nous, nous voilà attaqués à nouveau ! Utilisez ces tours pour renforcer nos défenses !"
+        text: "Méfions-nous, nous voilà attaqués à nouveau! Utilisez ces tours pour renforcer nos défenses!"
       },
       {
         character: "Le Loup",
@@ -145,16 +143,16 @@ export const CampaignLevels = [
 
   {
     id: 6,
-    name: "Le chariot maléfique",
-    description: "Éliminez le chariot ennemi qui menace notre base.",
+    name: "Le tombereau maléfique",
+    description: "Éliminez le tombereau ennemi qui menace notre base.",
     objective: "bossFight",
     map: "flat",
     unlockedByDefault: false,
 
     waves: [
-      { delay: 0, units: ["compacteur", "compacteur"] },
-      { delay: 5, units: ["compacteur"] },
-      { delay: 10, boss: "chariot" }
+      { delay: 0, units: ["compacteur", "compacteur", "compacteur"] },
+      { delay: 15, units: ["chariot", "chariot"] },
+      { delay: 17, boss: "tombereau" }
     ],
 
     reward: {

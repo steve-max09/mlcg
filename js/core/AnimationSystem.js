@@ -5,6 +5,10 @@ export const AnimationSystem = {
     if (!rendererEl) {
       return Promise.resolve();
     }
+    
+    if (attacker.vibration?.enabled) {
+      this.playVibration(attacker.vibration.pattern);
+    }
 
     switch (attacker.attackAnimation) {
       case "spinSlash":
@@ -18,7 +22,6 @@ export const AnimationSystem = {
         return Promise.resolve();
       case "groundSmash":
         this.playGroundSmash(rendererEl);
-        this.playImpactFeedback(attacker);
         return Promise.resolve();
       case "metalSlash":
         this.playMetalSlash(rendererEl, attacker, target);
@@ -88,13 +91,7 @@ export const AnimationSystem = {
     }
     const { attacker, beam, config } = state;
 
-    if (
-      attacker.isDead ||
-      !attacker.canAttack ||
-      !attacker.target ||
-      attacker.target.isDead ||
-      attacker.target.isDestroyed
-    ) {
+    if (attacker.isDead || !attacker.canAttack || !attacker.target || attacker.target.isDead || attacker.target.isDestroyed) {
       this.stopContinuousLaser(attacker.instanceId);
       return;
     }
@@ -125,16 +122,9 @@ export const AnimationSystem = {
     beam.style.width = `${Math.max(0, beamDistance)}px`;
     beam.style.height = `${config.beam.thickness || 8}px`;
     beam.style.transform = `rotate(${angleDeg}deg)`;
-    beam.style.setProperty(
-      "--laser-angle",
-      `${angleDeg}deg`
-    );
+    beam.style.setProperty("--laser-angle", `${angleDeg}deg`);
 
-    this.updateSpriteSheetFrame(
-      beam,
-      config.beam,
-      state.frameStart
-    );
+    this.updateSpriteSheetFrame(beam, config.beam, state.frameStart);
 
     requestAnimationFrame(() => {
       this.animateContinuousLaser(state);
@@ -203,25 +193,38 @@ export const AnimationSystem = {
     return min + Math.random() * (max - min);
   },
 
-  playImpactFeedback(attacker) {
-    const feedback = attacker.attackFeedback;
-
-    if (!feedback?.vibrateOnImpact) { return; }
-
-    this.triggerVibration({enabled: true, pattern: feedback.vibrationPattern || [30]});
-  },
-
+  // vibration stuff
   triggerVibration({enabled = false, pattern = [30]} = {}) {
     if (!enabled) return;
 
     if (!("vibrate" in navigator)) return;
 
     try {
+      console.log("vibrating")
       navigator.vibrate(pattern);
     } catch {
       // refus vibration.
     }
   },
+
+  // helper à appeler pour déclencher une vibration
+  playVibration(pattern = [30]) {
+    if (!Array.isArray(pattern)) {
+      return;
+    }
+
+    const normalizedPattern = pattern.map(Number).filter((duration) => (Number.isFinite(duration) && duration > 0));
+
+    if (normalizedPattern.length === 0) {
+      return;
+    }
+
+    this.triggerVibration({
+      enabled: true,
+      pattern: normalizedPattern
+    });
+  },
+  // end vibration stuff
 
   animateSpriteSheet({element, frameWidth, frameHeight, frameCount, duration, columns = frameCount}) {
     const startTime = performance.now();
@@ -357,34 +360,6 @@ export const AnimationSystem = {
 
     arena.appendChild(slash);
     setTimeout(() => slash.remove(), 300);
-  },
-
-  playCoalShot(el, attacker, target) {
-    const arena = el.closest("#arena");
-    if (!arena) return;
-
-    const dx = target.x - attacker.x;
-    const dy = target.y - attacker.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
-    const projectile = document.createElement("div");
-    projectile.className = "coal-projectile";
-    projectile.style.left = `${attacker.x}px`;
-    projectile.style.top = `${attacker.y}px`;
-    projectile.style.setProperty("--travel-x", `${dx}px`);
-    projectile.style.setProperty("--travel-y", `${dy}px`);
-    arena.appendChild(projectile);
-
-    setTimeout(() => {
-      const impact = document.createElement("div");
-      impact.className = "coal-impact";
-      impact.style.left = `${target.x}px`;
-      impact.style.top = `${target.y}px`;
-      arena.appendChild(impact);
-      setTimeout(() => impact.remove(), 300);
-      projectile.remove();
-    }, 220);
   },
 
   playGroundSmash(el) {
@@ -699,18 +674,28 @@ export const AnimationSystem = {
   // cercle de l'explosion
   playSpawnExplosionRing(arenaElement, unit, radius) {
     if (!arenaElement) return;
-
     const ring = document.createElement("div");
-
     ring.className = "explode-spawn-ring";
     ring.style.left = `${unit.x}px`;
     ring.style.top = `${unit.y}px`;
     ring.style.setProperty("--explode-radius", `${radius * 2}px`);
-
     arenaElement.appendChild(ring);
+    setTimeout(() => { ring.remove(); }, 700);
+  },
 
-    setTimeout(() => {
-      ring.remove();
-    }, 700);
+  playDeathExplosion(arenaElement, unit, radius) {
+    if (!arenaElement) return;
+    this.playSpawnExplosion(arenaElement, unit, radius);
+  },
+
+  playDeathExplosionRing(arenaElement, unit, radius) {
+    if (!arenaElement) return;
+    const ring = document.createElement("div");
+    ring.className = "explode-death-ring";
+    ring.style.left = `${unit.x}px`;
+    ring.style.top = `${unit.y}px`;
+    ring.style.setProperty("--explode-death-radius", `${radius * 2}px`);
+    arenaElement.appendChild(ring);
+    setTimeout(() => { ring.remove(); }, 700);
   }
 };

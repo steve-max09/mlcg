@@ -1,4 +1,4 @@
-const CACHE_NAME = "mlcg-cache-v20";
+const CACHE_NAME = "mlcg-cache-v21";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -38,7 +38,9 @@ const ASSETS_TO_CACHE = [
   "./assets/sounds/units/climatiseur-death.mp3",
   "./assets/sounds/units/brumisateur-spawn.mp3",
   "./assets/sounds/units/brumisateur-attack.mp3",
-  "./assets/sounds/units/brumisateur-death.mp3"
+  "./assets/sounds/units/brumisateur-death.mp3",
+  "./assets/ui/loup.png",
+  "./assets/ui/horse.png"
 ];
 
 self.addEventListener("install", (event) => {

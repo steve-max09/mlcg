@@ -751,10 +751,7 @@ function spawnUnit(definition, team, x, y, options = {}) {
 function getUnlockedStructures(category) {
   return Object.entries(UnitDefinitions)
     .filter(([id, definition]) => {
-      return (
-        definition.category === category &&
-        playerProgress.isUnlocked(id)
-      );
+      return (definition.category === category && playerProgress.isUnlocked(id));
     })
     .map(([id]) => id);
 }
@@ -811,8 +808,7 @@ function getNormalBattleDifficulty() {
         "minipelle",
         "tombereau",
         "climatiseur",
-        "brumisateur",
-        "fendeuse"
+        "brumisateur"
       ],
       aggression: 0.8,
       behavior: "pressure"

@@ -79,12 +79,14 @@ export const ItemDefinitions = {
   disque: {
     id: "disque",
     name: "Disque diamant pour scie de sol et découpeuse thermique",
-    description: "Utilisation : à sec/à eau. Augmente considérablement les dégâts.",
+    description: "Utilisation : à sec/à eau. Augmente considérablement les dégâts et fait exploser l'unité quand elle est détruite.",
     sprite: "assets/items/disque.png",
     rarity: 0,
     effects: {
       attackSpeedBoost: 0.6,
-      damageBoost: 50
+      damageBoost: 50,
+      explodeOnDeathArea: 60,
+      explodeOnDeathDamage: 60
     }
   },
   eponge: {

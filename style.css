@@ -217,7 +217,7 @@ button {
   width: 100%;
   height: 3px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-  z-index: 1;
+  z-index: 0;
   transform: translateY(-50%);
 }
 
@@ -632,42 +632,6 @@ button {
     opacity: 0;
     transform: rotate(120deg) scale(1.3);
   }
-}
-
-/* coalShot : projectile de charbon qui vole puis explose */
-.coal-projectile {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  background: radial-gradient(circle, #1f2937, #000000);
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(0,0,0,0.6);
-  pointer-events: none;
-  z-index: 6;
-  transform: translate(-50%, -50%);
-  animation: coalTravel 0.22s linear forwards;
-}
-
-@keyframes coalTravel {
-  from { transform: translate(-50%, -50%); }
-  to { transform: translate(calc(-50% + var(--travel-x)), calc(-50% + var(--travel-y))); }
-}
-
-.coal-impact {
-  position: absolute;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,180,60,0.9), rgba(60,30,10,0.4), transparent);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 6;
-  animation: coalImpact 0.3s ease-out forwards;
-}
-
-@keyframes coalImpact {
-  from { opacity: 1; transform: translate(-50%, -50%) scale(0.4); }
-  to { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
 }
 
 /* groundSmash : secousse de l'unité + onde de choc au sol */
@@ -1805,7 +1769,7 @@ button {
   z-index: 0;
 }
 
-/* Animation toxic_attack.png : 9 frames de 128 x 128 px sur une ligne */
+/* Animation d'effet en spritesheet */
 .sprite-effect {
   position: absolute;
   width: 128px;
@@ -1894,6 +1858,15 @@ button {
   image-rendering: auto;
 }
 
+.projectile-defaultProjectile {
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, #1f2937, #000000);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
+
+/* TODO: unused */
 .projectile-pinkProjectile {
   background:
     radial-gradient(
@@ -2237,6 +2210,45 @@ button {
     height: var(--explode-radius);
     opacity: 0;
     box-shadow: 0 0 30px rgba(239, 68, 68, 0);
+  }
+}
+
+/* explodeOnDeath : cercle rouge d'explosion */
+.explode-death-ring {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(    circle,
+    rgba(127, 29, 29, 0.45),
+    rgba(239, 68, 68, 0.2),
+    transparent 70%
+  );
+  border: 2px solid rgba(220, 38, 38, 0.95);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 4;
+  animation: explodeDeathExpand 0.7s ease-out forwards;
+}
+
+@keyframes explodeDeathExpand {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(220, 38, 38, 0.95);
+  }
+
+  40% {
+    opacity: 0.95;
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.8);
+  }
+
+  100% {
+    width: var(--explode-death-radius);
+    height: var(--explode-death-radius);
+    opacity: 0;
+    box-shadow: 0 0 34px rgba(220, 38, 38, 0);
   }
 }
 /* --- end effets spéciaux --- */

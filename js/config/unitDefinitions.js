@@ -7,18 +7,39 @@ export const UnitDefinitions = {
     description: "Une usine standard qui fournit l'énergie et défend la ligne centrale.",
     sprite: "assets/bases/usine.png",
     rarity: 0,
-    hp: 2000,
-    damage: 10,
+    hp: 1000,
+    damage: 15,
     attackSpeed: 0.8,
     attackRange: 120,
     hitboxRadius: 60,
     targetType: "ground",
     canMove: false,
     canAttack: true,
-    attackAnimation: "coalShot",
+    attackAnimation: "projectile",
+    projectile: {
+      type: "defaultProjectile",
+      travelDuration: {
+        min: 220,
+        max: 800,
+        pixelsPerMillisecond: 4.2
+      },
+      impact: {
+        spriteSheet: {
+          image: "assets/effects/generic-impact.png",
+          frameWidth: 128, frameHeight: 129, frameCount: 7, columns: 7, duration: 350, loop: false
+        },
+        displayScale: 1,
+        offset: { x: 6, y: 6, random: true }
+      },
+      vibration: {
+        enabled: true,
+        pattern: [35]
+      }
+    },
     sounds: {
       spawn: null,
-      attack: "assets/sounds/units/tombereau-attack.mp3",
+      projectileLaunch: "assets/sounds/units/tombereau-attack.mp3",
+      //projectileImpact: "assets/sounds/units/generic-impact.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
@@ -30,37 +51,11 @@ export const UnitDefinitions = {
     description: "La maison de Barbie. Un avant-poste respectable en temps de guerre.",
     sprite: "assets/bases/barbie.png",
     rarity: 1,
-    hp: 3000,
-    damage: 70,
-    attackSpeed: 0.6,
+    hp: 1200,
+    damage: 50,
+    attackSpeed: 0.9,
     attackRange: 120,
     hitboxRadius: 60,
-    targetType: "ground",
-    canMove: false,
-    canAttack: true,
-    attackAnimation: "lightSpurt",
-    effects: {
-      knockback: 40
-    },
-    sounds: {
-      spawn: null,
-      attack: "assets/sounds/units/chauffage-attack.mp3",
-      death: "assets/sounds/ui/tower-destroyed.mp3"
-    }
-  },
-
-  tower_standard: {
-    category: "tower",
-    id: "tower_standard",
-    name: "Tour du début du jeu",
-    description: "Une tour polyvalente qui protège les flancs.",
-    sprite: "assets/bases/tour-standard.png",
-    rarity: 0,
-    hp: 1200,
-    damage: 30,
-    attackSpeed: 1.0,
-    attackRange: 120,
-    hitboxRadius: 40,
     targetType: "ground",
     canMove: false,
     canAttack: true,
@@ -87,7 +82,52 @@ export const UnitDefinitions = {
     },
     sounds: {
       spawn: null,
-      attack: "assets/sounds/units/chauffage-attack.mp3",
+      projectileLaunch: "assets/sounds/units/slime-attack.mp3",
+      projectileImpact: "assets/sounds/units/slime-impact.mp3",
+      death: "assets/sounds/ui/tower-destroyed.mp3"
+    }
+  },
+
+  tower_standard: {
+    category: "tower",
+    id: "tower_standard",
+    name: "Tour du début du jeu",
+    description: "Une tour polyvalente qui protège les flancs.",
+    sprite: "assets/bases/tour-standard.png",
+    rarity: 0,
+    hp: 700,
+    damage: 10,
+    attackSpeed: 1.0,
+    attackRange: 120,
+    hitboxRadius: 40,
+    targetType: "ground",
+    canMove: false,
+    canAttack: true,
+    attackAnimation: "projectile",
+    projectile: {
+      type: "defaultProjectile",
+      travelDuration: {
+        min: 220,
+        max: 800,
+        pixelsPerMillisecond: 4.2
+      },
+      impact: {
+        spriteSheet: {
+          image: "assets/effects/generic-impact.png",
+          frameWidth: 128, frameHeight: 129, frameCount: 7, columns: 7, duration: 350, loop: false
+        },
+        displayScale: 1,
+        offset: { x: 6, y: 6, random: true }
+      },
+      vibration: {
+        enabled: true,
+        pattern: [35]
+      }
+    },
+    sounds: {
+      spawn: null,
+      projectileLaunch: "assets/sounds/units/tombereau-attack.mp3",
+      //projectileImpact: "assets/sounds/units/generic-impact.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
@@ -99,23 +139,45 @@ export const UnitDefinitions = {
     description: "Une tour polyvalente qui protège les flancs.",
     sprite: "assets/bases/tour-coalshot.png",
     rarity: 1,
-    hp: 1600,
-    damage: 40,
-    attackSpeed: 1.0,
+    hp: 800,
+    damage: 20,
+    attackSpeed: 0.9,
     attackRange: 120,
     hitboxRadius: 40,
     targetType: "ground",
     canMove: false,
     canAttack: true,
-    attackAnimation: "coalShot",
+    attackAnimation: "projectile",
     effects: {
-      knockback: 40
+      explodeOnDeathArea: 70,
+      explodeOnDeathDamage: 200
     },
-    aoeRadius: 80,
+    projectile: {
+      type: "scrapProjectile",
+      travelDuration: {
+        min: 220,
+        max: 800,
+        pixelsPerMillisecond: 4.2
+      },
+      impact: {
+        spriteSheet: {
+          image: "assets/effects/scrap-impact.png",
+          frameWidth: 128, frameHeight: 129, frameCount: 7, columns: 7, duration: 350, loop: false
+        },
+        displayScale: 1,
+        offset: { x: 6, y: 6, random: true }
+      },
+      vibration: {
+        enabled: true,
+        pattern: [35]
+      }
+    },
+    aoeRadius: 50,
     aoeCenter: "target",
     sounds: {
       spawn: null,
-      attack: "assets/sounds/units/tombereau-attack.mp3",
+      projectileLaunch: "assets/sounds/units/tombereau-attack.mp3",
+      projectileImpact: "assets/sounds/units/tombereau-attack.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
@@ -124,26 +186,41 @@ export const UnitDefinitions = {
     category: "tower",
     id: "tower_mega",
     name: "Gratte-ciel",
-    description: "La tour idéale pour le business.",
+    description: "La tour idéale pour le business. Équipée d'un système de sécurité moderne.",
     sprite: "assets/bases/tour-mega.png",
     rarity: 1,
-    hp: 1000,
-    damage: 65,
+    hp: 800,
+    damage: 45,
     attackSpeed: 1.0,
-    attackRange: 120,
+    attackRange: 130,
     hitboxRadius: 40,
     targetType: "ground",
     canMove: false,
     canAttack: true,
-    attackAnimation: "lightSpurt",
+    attackAnimation: "continuousLaser",
+    continuousAttack: {
+      damagePerSecond: 30,
+      maxRange: 130,
+      beam: {
+        thickness: 4,
+        startOffset: 18
+      },
+      startSound: {
+        src: "assets/sounds/units/araignee-attack.mp3",
+        volume: 0.6
+      },
+      vibration: {
+        enabled: true,
+        pattern: [35]
+      }
+    },
     effects: {
-      passiveDamageArea: 40,
-      passiveDamageTick: 5,
-      passiveDamage: 70
+      passiveDamageArea: 120,
+      passiveDamageTick: 10,
+      passiveDamage: 100
     },
     sounds: {
       spawn: null,
-      attack: "assets/sounds/units/brumisateur-attack.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
@@ -157,8 +234,8 @@ export const UnitDefinitions = {
     sprite: "assets/loxams/Chauffage mobile fioul 50 000 kcal.png",
     renderScale: 0.65,
     cost: 4,
-    hp: 400,
-    damage: 25,
+    hp: 200,
+    damage: 10,
     attackSpeed: 1.2,
     movementSpeed: 20,
     attackRange: 100,
@@ -167,10 +244,14 @@ export const UnitDefinitions = {
     canMove: true,
     canAttack: true,
     attackAnimation: "projectile",
+    effects: {
+      explodeOnDeathArea: 60,
+      explodeOnDeathDamage: 60
+    },
     projectile: {
       type: "toxicProjectile",
       spriteSheet: {
-        image: "assets/effects/pink-strobe-projectile.png",
+        image: "assets/effects/fire-strobe-projectile.png",
         frameWidth: 128, frameHeight: 129, frameCount: 4, columns: 4, duration: 600, loop: true
       },
       travelDuration: {
@@ -180,7 +261,7 @@ export const UnitDefinitions = {
       },
       impact: {
         spriteSheet: {
-          image: "assets/effects/toxic-cloud-impact.png",
+          image: "assets/effects/fire-cloud-impact.png",
           frameWidth: 128, frameHeight: 129, frameCount: 4, columns: 4, duration: 200, loop: false
         },
         displayScale: 1,
@@ -205,7 +286,7 @@ export const UnitDefinitions = {
     sprite: "assets/loxams/Motobineuse.png",
     renderScale: 0.85,
     cost: 3,
-    hp: 280,
+    hp: 200,
     damage: 20,
     attackSpeed: 1.5,
     movementSpeed: 50,
@@ -231,9 +312,9 @@ export const UnitDefinitions = {
     sprite: "assets/loxams/Compacteur monocylindre Grand Travaux.png",
     renderScale: 1.2,
     cost: 6,
-    hp: 2000,
+    hp: 600,
     armor: 0,
-    knockbackResistance: 40,
+    knockbackResistance: 150,
     damage: 60,
     attackSpeed: 0.7,
     movementSpeed: 20,
@@ -250,9 +331,9 @@ export const UnitDefinitions = {
       explodeOnSpawnArea: 100,
       explodeOnSpawnDamage: 40
     },
-    attackFeedback: {
-      vibrateOnImpact: true,
-      vibrationPattern: [35, 35, 35]
+    vibration: {
+      enabled: true,
+      pattern: [35]
     },
     aoeRadius: 70,
     aoeCenter: "self",
@@ -273,7 +354,7 @@ export const UnitDefinitions = {
     renderScale: 0.85,
     cost: 5,
     hp: 200,
-    damage: 10,
+    damage: 50,
     attackSpeed: 0.5,
     movementSpeed: 30,
     attackRange: 130,
@@ -293,14 +374,14 @@ export const UnitDefinitions = {
     category: "unit",
     id: "minipelle",
     name: "Minipelle sur chenilles",
-    description: "Une minipelle rapide et puissante qui régénère ses points de vie avec le temps.",
+    description: "Une minipelle rapide et puissante.",
     rarity: 1,
     sprite: "assets/loxams/Minipelle sur chenilles.png",
     renderScale: 1.0,
-    cost: 5,
-    hp: 300,
-    knockbackResistance: 10,
-    damage: 10,
+    cost: 4,
+    hp: 350,
+    knockbackResistance: 55,
+    damage: 37,
     attackSpeed: 1,
     movementSpeed: 50,
     attackRange: 50,
@@ -310,8 +391,7 @@ export const UnitDefinitions = {
     canAttack: true,
     attackAnimation: "metalSlash",
     effects: {
-      passiveHeal: 30,
-      knockback: 40
+      knockback: 10
     },
     sounds: {
       spawn: "assets/sounds/units/chauffage-spawn.mp3",
@@ -330,9 +410,9 @@ export const UnitDefinitions = {
     renderScale: 1.25,
     cost: 7,
     hp: 800,
-    armor: 20,
+    armor: 8,
     knockbackResistance: 60,
-    damage: 150,
+    damage: 100,
     attackSpeed: 0.3,
     movementSpeed: 20,
     attackRange: 110,
@@ -385,8 +465,8 @@ export const UnitDefinitions = {
     sprite: "assets/loxams/Climatiseur mobile 6 kW.png",
     renderScale: 0.65,
     cost: 4,
-    hp: 130,
-    damage: 7,
+    hp: 180,
+    damage: 17,
     attackSpeed: 0.8,
     movementSpeed: 30,
     attackRange: 100,
@@ -416,7 +496,7 @@ export const UnitDefinitions = {
     sprite: "assets/loxams/Brumisateur mobile.png",
     renderScale: 0.65,
     cost: 3,
-    hp: 140,
+    hp: 160,
     damage: 20,
     attackSpeed: 1.5,
     movementSpeed: 50,
@@ -443,8 +523,8 @@ export const UnitDefinitions = {
     renderScale: 1.25,
     cost: 6,
     hp: 740,
-    armor: 10,
-    knockbackResistance: 40,
+    armor: 5,
+    knockbackResistance: 60,
     damage: 100,
     attackSpeed: 0.5,
     movementSpeed: 20,
@@ -503,8 +583,8 @@ export const UnitDefinitions = {
     sprite: "assets/loxams/Fendeuse thermique.png",
     renderScale: 0.85,
     cost: 2,
-    hp: 100,
-    damage: 30,
+    hp: 120,
+    damage: 20,
     attackSpeed: 0.3,
     movementSpeed: 50,
     attackRange: 80,
@@ -552,9 +632,9 @@ export const UnitDefinitions = {
     rarity: 2,
     sprite: "assets/loxams/Nacelle Araignee.png",
     renderScale: 1.5,
-    cost: 12,
-    hp: 1500,
-    armor: 20,
+    cost: 10,
+    hp: 900,
+    armor: 5,
     knockbackResistance: 100,
     attackSpeed: 0.3,
     movementSpeed: 20,

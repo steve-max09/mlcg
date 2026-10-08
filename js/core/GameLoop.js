@@ -1,6 +1,7 @@
 import { MovementSystem } from "./MovementSystem.js";
 import { CombatSystem } from "./CombatSystem.js";
 import { AnimationSystem } from "./AnimationSystem.js";
+import { AbilitySystem } from "./AbilitySystem.js";
 
 export class GameLoop {
   constructor({ gameState, renderer, onEnergyChange, onGameOver, aiController, audioManager, campaignWaveController, updateCampaignTimer, onCampaignComplete }) {
@@ -73,9 +74,7 @@ export class GameLoop {
     this.updatePassiveEffects(deltaSeconds);
 
     CombatSystem.update(this.gameState, deltaSeconds, (attacker, target, attackResult) => {
-      const el =
-        this.renderer.getUnitElement(attacker.instanceId) ||
-        this.renderer.getTowerElement(attacker.instanceId);
+      const el = this.renderer.getUnitElement(attacker.instanceId) || this.renderer.getTowerElement(attacker.instanceId);
 
       if (this.audioManager && attacker.sounds?.attack) {
         this.audioManager.play(attacker.sounds.attack);
@@ -123,16 +122,31 @@ export class GameLoop {
 
     this.checkDeaths();
     this.checkTowerDestruction();
+    this.gameState.removeDeadUnits();
     this.updateEnergy(deltaSeconds);
   }
 
   checkDeaths() {
     for (const unit of this.gameState.units) {
+      if (!unit.isDead) {
+        continue;
+      }
+
+      unit.deathEffectTriggered = true;
+
+      // bruit de mort
       if (unit.isDead && !unit.deathSoundPlayed) {
         unit.deathSoundPlayed = true;
         if (this.audioManager && unit.sounds.death) {
           this.audioManager.play(unit.sounds.death);
         }
+      }
+
+      // explosion on death
+      if (unit.effects.explodeOnDeathDamage > 0 && unit.isDead) {
+        AbilitySystem.applyDeathExplosion(unit, this.gameState, unit.effects.explodeOnDeathArea, unit.effects.explodeOnDeathDamage,
+          { arenaElement: this.renderer.arenaElement, audioManager: this.audioManager }
+        );
       }
     }
   }
@@ -142,6 +156,13 @@ export class GameLoop {
       const wasDestroyed = this.previousTowerStates.get(tower.instanceId);
       if (tower.isDestroyed && !wasDestroyed) {
         this.previousTowerStates.set(tower.instanceId, true);
+        tower.deathEffectTriggered = true;
+        // explosion on death
+        if (tower.effects.explodeOnDeathDamage > 0) {
+          AbilitySystem.applyDeathExplosion(tower, this.gameState, tower.effects.explodeOnDeathArea, tower.effects.explodeOnDeathDamage,
+            { arenaElement: this.renderer.arenaElement, audioManager: this.audioManager }
+          );
+        }
         if (this.audioManager) {
           this.audioManager.play(this.audioManager.uiSounds.towerDestroyed);
         }
@@ -164,30 +185,18 @@ export class GameLoop {
   }
 
   // attaques continues (inferno)
-  syncContinuousAnimations() {
-    for (const unit of this.gameState.units) {
-      if (unit.isDead || !unit.continuousAttack) continue;
+  syncContinuousAnimations() { 
+    const entities = [...this.gameState.units, ...this.gameState.towers];
+    for (const entity of entities) {
+      if (entity.isDead || !entity.continuousAttack) continue;
 
-      const el = this.renderer.getUnitElement(
-        unit.instanceId
-      );
+      const el = this.renderer.getUnitElement(entity.instanceId) || this.renderer.getTowerElement(entity.instanceId);     
 
       if (!el) continue;
-
-      if (
-        unit.target &&
-        !unit.target.isDead &&
-        !unit.target.isDestroyed &&
-        unit.distanceTo(unit.target) <=
-          (unit.continuousAttack.maxRange ||
-            unit.attackRange)
-      ) {
-        AnimationSystem.triggerAttackAnimation(
-          unit,
-          unit.target,
-          el,
-          this.audioManager
-        );
+      
+      if (entity.target && !entity.target.isDead && !entity.target.isDestroyed && entity.distanceTo(entity.target) <=
+          (entity.continuousAttack.maxRange || entity.attackRange)) {
+        AnimationSystem.triggerAttackAnimation(entity, entity.target, el, this.audioManager);
       }
     }
   }

@@ -1,6 +1,8 @@
 import { UnitDefinitions } from "../config/unitDefinitions.js";
 import { ItemDefinitions } from "../config/itemDefinitions.js";
 
+// WARN: ne pas simplifier en cherchant toutes les unités du json, car certaines ne doivent pas être déblocables
+// pour le joueur (en réalité il faut refactor pour chercher dans le json mais selon un critère à ajouter (ex: unlockable: true))
 const DEPLOYABLE_UNITS = [
   "broyeur",
   "minipelle",

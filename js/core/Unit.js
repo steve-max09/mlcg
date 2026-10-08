@@ -88,6 +88,13 @@ export class Unit {
     this.explodeOnSpawnArea = definition.explodeOnSpawnArea || 0;
     this.explodeOnSpawnDamage = definition.explodeOnSpawnDamage || 0;
 
+    // MORT
+    this.deathEffectTriggered = false;
+
+    // explosion on death
+    this.explodeOnDeathArea =  definition.explodeOnDeathArea || 0;
+    this.explodeOnDeathDamage = definition.explodeOnDeathDamage || 0;
+
     // attaques continues (inferno)
     this.lockedTarget = null;
     this.continuousDamageAccumulator = 0;
@@ -134,11 +141,11 @@ export class Unit {
   applySlow(amount, duration) {
     this.slowAmount = Math.max(this.slowAmount, amount);
     this.slowTimer = Math.max(this.slowTimer, duration);
-    this.movementSpeed = Math.max(0, this.baseMovementSpeed - this.slowAmount);
+    this.movementSpeed = Math.max(0, this.baseMovementSpeed * (1 - this.slowAmount / 100));
 
     this.slowAttackAmount = Math.max(this.slowAttackAmount || 0, amount);
     this.slowAttackTimer = Math.max(this.slowAttackTimer || 0, duration);
-    this.attackSpeed = this.baseAttackSpeed * (1 - (this.slowAttackAmount * 2) / 100);
+    this.attackSpeed = Math.max(0.01, this.baseAttackSpeed * (1 - this.slowAttackAmount / 100));
   }
 
   // mise à jour des effets (freeze, slow)

@@ -34,6 +34,18 @@ export class Tower {
 
     this.target = null;
 
+    // MORT
+    this.deathEffectTriggered = false;
+
+    // explosion on death
+    this.explodeOnDeathArea =  definition.explodeOnDeathArea || 0;
+    this.explodeOnDeathDamage = definition.explodeOnDeathDamage || 0;
+
+    // attaques continues (inferno)
+    this.continuousAttack = definition.continuousAttack || null;
+    this.lockedTarget = null;
+    this.continuousDamageAccumulator = 0;
+
     // état frozen
     this.isFrozen = false;
     this.freezeTimer = 0;
@@ -88,7 +100,7 @@ export class Tower {
     this.slowTimer = Math.max(this.slowTimer, duration);
     this.slowAttackAmount = Math.max(this.slowAttackAmount, amount);
     this.slowAttackTimer = Math.max(this.slowAttackTimer, duration);
-    this.attackSpeed = Math.max(0, this.baseAttackSpeed * (1 - (this.slowAttackAmount * 2) / 100));
+    this.attackSpeed = Math.max(0.01, this.baseAttackSpeed * (1 - (this.slowAttackAmount) / 100));
   }
 
   updateStatusEffects(deltaSeconds) {
