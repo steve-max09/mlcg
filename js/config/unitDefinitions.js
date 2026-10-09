@@ -162,8 +162,8 @@ export const UnitDefinitions = {
     aoeCenter: "target",
     sounds: {
       spawn: null,
-      projectileLaunch: "assets/sounds/units/tombereau-attack.mp3",
-      projectileImpact: "assets/sounds/units/tombereau-attack.mp3",
+      projectileLaunch: "assets/sounds/units/tombereau-launch.mp3",
+      projectileImpact: "assets/sounds/units/tombereau-hit.mp3",
       death: "assets/sounds/ui/tower-destroyed.mp3"
     }
   },
